@@ -1,2 +1,2 @@
 # Orbital-Mecanics-Simulator
-Orbital Mecanics Simulator written in Python
+Orbital Mecanics Simulator written in Python.
