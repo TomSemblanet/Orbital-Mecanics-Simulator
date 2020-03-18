@@ -11,10 +11,15 @@ import matplotlib.animation as animation
 
 class MainDisplay : 
 
-	def __init__ (self, satellite_list, celestial_bodies_list, display_mode="trajectory prediction", following_mode=False, parameters_on=False, simulation_speed="slow") : 
+	def __init__ (self, satellite_list, celestial_bodies_list, display_mode="trajectory prediction", following_mode=False) : 
+
+
+		self.appID = 1
+		if(self.appID == cst.leaderApplication) : self.leader = True
+		else : self.leader = False
+
 
 		plt.style.use('dark_background')
-		# plt.style.use('seaborn-dark')
 
 		self.figure, self.ax =  plt.subplots()
 
@@ -25,14 +30,8 @@ class MainDisplay :
 		self.ax.set_xlim([-4e8, 4e8])
 		self.ax.set_ylim([-4e8, 4e8])
 
-		if(simulation_speed=="slow") : self.calculation_repeat = 1
-		elif(simulation_speed=="medium") : self.calculation_repeat = 2 
-		elif(simulation_speed=="high") : self.calculation_repeat = 3
-		elif(simulation_speed=="very high") : self.calculation_repeat = 4
-
 		self.display_mode = display_mode
 		self.following_mode = following_mode
-		self.parameters_on = parameters_on
 		
 		self.satellite_list = np.array([])
 		self.celestial_bodies_list = np.array([])
@@ -77,15 +76,8 @@ class MainDisplay :
 
 	def update (self, i) :
 
-		if(self.parameters_on) : 	
-			u_f.display_parameters(self.satellite_list)
-
-		for b in range (self.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
-		
-			u_f.update_celestial_bodies_position(self.celestial_bodies_list)
-			u_f.satellites_accelerations(self.satellite_list)
-			u_f.update_ref_body(self.satellite_list, self.celestial_bodies_list)
-			u_f.update_date()
+		if(self.leader == True) :
+			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
 
 		if (self.following_mode) : 
 			self.ax.set_xlim([self.satellite_list[0].r_abs[0]-50000e3, self.satellite_list[0].r_abs[0]+50000e3])
@@ -121,14 +113,22 @@ class MainDisplay :
 
 class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN DISPLAYING A GROUND TRACK /!\
 
-	def __init__ (self, satellite_list) :
+	def __init__ (self, satellite_list, celestial_bodies_list) :
+
+
+		self.appID = 2
+		if(self.appID == cst.leaderApplication) : self.leader = True
+		else : self.leader = False
+
 
 		plt.style.use('seaborn-pastel')
 		img = plt.imread("mappemonde.jpg")
+
 		self.figure, self.ax = plt.subplots()
 		self.ax.imshow(img, extent=[0, 2048, 0, 1024])
 
 		self.satellite_list = satellite_list
+		self.celestial_bodies_list = celestial_bodies_list
 
 		self.ground_tracks = np.array([])
 		self.x_matrix = np.zeros((len(satellite_list), 1))
@@ -140,6 +140,9 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 	def update (self, i) : 
 
+		if(self.leader == True) :
+			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
+
 		self.x_matrix = np.append(self.x_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
 		self.y_matrix = np.append(self.y_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
 
@@ -147,55 +150,75 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 			self.x_matrix[j][i] = self.satellite_list[j].longitude*180/math.pi*5.688+1024
 			self.y_matrix[j][i] = self.satellite_list[j].latitude*180/math.pi*5.688+512
-			self.ground_tracks[j].set_data(self.x_matrix[j][max(0, i-200):i+1], self.y_matrix[j][max(0, i-200):i+1])
+			self.ground_tracks[j].set_data(self.x_matrix[j][max(0, i-2000):i+1], self.y_matrix[j][max(0, i-2000):i+1])
 
 		return self.ground_tracks
 
 
-class GraphDisplay : 
+# class GraphDisplay : 
 
-	def __init__ (self, data_name, body1, body2=None) : 
+# 	def __init__ (self, satellite_list, celestial_bodies_list, data_name, body1, body2=None) : 
+
+
+# 		self.appID = 3
+# 		if(self.appID == cst.leaderApplication) : self.leader = True
+# 		else : self.leader = False
 		
-		plt.style.use('dark_background')
-		self.figure, self.ax =  plt.subplots()
-		self.ax.set_ylim([0, 200e3])
 
-		self.xlim = 10e3
+# 		plt.style.use('dark_background')
+# 		self.figure, self.ax =  plt.subplots()
+# 		self.ax.set_ylim([0, 200e3])
 
-		self.curve, = self.ax.plot([],[], ls='-', color='c')
+# 		self.xlim = 10e3
 
-		self.time = np.array([])
-		self.data = np.array([])
+# 		self.satellite_list = satellite_list
+# 		self.celestial_bodies_list = celestial_bodies_list
 
-		self.body1 = body1
-		self.body2 = body2
+# 		self.curve, = self.ax.plot([],[], ls='-', color='c')
 
-		self.data_name = data_name
+# 		self.time = np.array([])
+# 		self.data = np.array([])
 
-	def update (self, i) : 
+# 		self.body1 = body1
+# 		self.body2 = body2
 
-		self.ax.set_xlim([-self.xlim+cst.time, self.xlim+cst.time])
+# 		self.data_name = data_name
 
-		if(self.data_name == "distance (reference body)") : 
-			self.data = np.append(self.data, self.body1.r_cr_std/1000)
-		elif(self.data_name == "distance (main body)") : 
-			self.data = np.append(self.data, self.body1.r_abs_std/1000)
-		elif(self.data_name == "velocity (reference body)") : 
-			self.data = np.append(self.data, self.body1.v_cr_std/1000)
-		elif(self.data_name == "velocity (main body)") : 
-			self.data = np.append(self.data, self.body1.v_abs_std/1000)
-		elif(self.data_name == "true anomaly") : 
-			self.data = np.append(self.data, self.body1.true_anomaly*180/math.pi)
-		elif(self.data_name == "distance (second body)") : 
-			self.data = np.append(self.data, np.linalg.norm(self.body1.r_cr - self.body2.r_cr)/1000)
-		elif(self.data_name == "angle") : 
-			self.data = np.append(self.data, math.acos(np.dot(self.body1.v_abs, [1, 0, 0])/self.body1.v_abs_std)*180/math.pi)
+# 	def update (self, i) : 
 
-		self.time = np.append(self.time, cst.time)
+# 		if(self.leader == True) :
 
-		self.curve.set_data(self.time[:i], self.data[:i])
+# 			if(cst.parameters_on) : 	
+# 				u_f.display_parameters(self.satellite_list)
 
-		return self.curve
+# 			for b in range (cst.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
+# 				u_f.update_celestial_bodies_position(self.celestial_bodies_list)
+# 				u_f.satellites_accelerations(self.satellite_list)
+# 				u_f.update_ref_body(self.satellite_list, self.celestial_bodies_list)
+# 				u_f.update_date()
+
+# 		self.ax.set_xlim([-self.xlim+cst.time, self.xlim+cst.time])
+
+# 		if(self.data_name == "distance (reference body)") : 
+# 			self.data = np.append(self.data, self.body1.r_cr_std/1000)
+# 		elif(self.data_name == "distance (main body)") : 
+# 			self.data = np.append(self.data, self.body1.r_abs_std/1000)
+# 		elif(self.data_name == "velocity (reference body)") : 
+# 			self.data = np.append(self.data, self.body1.v_cr_std/1000)
+# 		elif(self.data_name == "velocity (main body)") : 
+# 			self.data = np.append(self.data, self.body1.v_abs_std/1000)
+# 		elif(self.data_name == "true anomaly") : 
+# 			self.data = np.append(self.data, self.body1.true_anomaly*180/math.pi)
+# 		elif(self.data_name == "distance (second body)") : 
+# 			self.data = np.append(self.data, np.linalg.norm(self.body1.r_cr - self.body2.r_cr)/1000)
+# 		elif(self.data_name == "angle") : 
+# 			self.data = np.append(self.data, math.acos(np.dot(self.body1.v_abs, [1, 0, 0])/self.body1.v_abs_std)*180/math.pi)
+
+# 		self.time = np.append(self.time, cst.time)
+
+# 		self.curve.set_data(self.time[:i], self.data[:i])
+
+# 		return self.curve
 
 
 

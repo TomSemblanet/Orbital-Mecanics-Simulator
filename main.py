@@ -27,28 +27,9 @@ celestial_bodies_list = [earth, moon]
 
 
 p = np.array([-22000e3, 0, 0])
-v = np.array([0, -math.sqrt(cst.muTe/22000e3)+1, 0])
+v = np.array([0, -math.sqrt(cst.muTe/22000e3)-0.1, 0.])
 
 satellites_list = u_f.load_satellites( [ [p, v, "S1", earth, "m"]] )
-
-
-# u_f.load_manoeuvers(satellites_list, 
-# 					[ 
-# 						[
-# 						# ["orbital rendez-vous", [np.array([2.19911012e+08, 2.79169982e+08, 0.00000000e+00])+np.array([0., 0., 0.]), 305200], "time", 32e3, None]
-# 						# ["custom acceleration", np.linalg.norm(np.array([-1417,   750, 0.]) - np.array([-1252, 606, 0.])), "time", 162000, 
-# 						# 	(np.array([-1417,   750, 0.]) - np.array([-1252, 606, 0.]))/np.linalg.norm(np.array([-1417,   750, 0.]) - np.array([-1252, 606, 0.]))],
-# 						]
-# 					]	
-# 				    )
-
-# u_f.load_manoeuvers(satellites_list, 
-# 					[ 
-# 						[
-# 						["orbital rendez-vous", [np.array([2.23761637e+08, 2.76140949e+08, 0.00000000e+00])+np.array([-15000e3, -15000e3, 0.]), 300960], "time", 6060, None]
-# 						]
-# 					]	
-# 				    )
 
 u_f.load_manoeuvers(satellites_list, 
 					[ 
@@ -58,9 +39,17 @@ u_f.load_manoeuvers(satellites_list,
 					]	
 				    )
 
+if(1 in cst.applicationsOn) :
+	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="path", following_mode=False)
+	space_ani = animation.FuncAnimation(fig=space_displayer.figure, func=space_displayer.update, frames=range(int(cst.T/cst.H)), interval=0, repeat=False, blit=False)
 
-main_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="path", following_mode=False, parameters_on=True, simulation_speed="slow")
-ani = animation.FuncAnimation(fig=main_displayer.figure, func=main_displayer.update, frames=range(int(cst.T/cst.H)), interval=0, repeat=False, blit=False)
+if(2 in cst.applicationsOn) : 
+	ground_track_displayer = g_d.GroundTrackDisplay(satellites_list, celestial_bodies_list)
+	ground_track_ani = animation.FuncAnimation(fig=ground_track_displayer.figure, func=ground_track_displayer.update, frames=range(int(cst.T/cst.H)), interval=0, repeat=False, blit=True)
+
+# if(3 in cst.applicationsOn) : 
+# 	parameters_displayer = g_d.GraphDisplay(...)
+# 	parameters_ani = animation.FuncAnimation(fig=parameters_displayer.figure, func=parameters_displayer.update, frames=range(int(cst.T/cst.H)), interval=0, repeat=False, blit=False)
 
 plt.show()
 

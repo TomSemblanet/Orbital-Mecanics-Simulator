@@ -11,13 +11,28 @@ rtol= 1e-5
 
 
 T = 1e10
-ideal_H = 10
+ideal_H = 100
 H = ideal_H
 
 r=np.array([0., 0., 0.])
 v=np.array([0., 0., 0.])
 
 time = 0
+
+parameters_on = True
+
+simulation_speed_dict = {"slow" : 1, 
+						"medium" : 2,
+						"high" : 3,
+						"very high" : 4}
+
+simulation_speed = "medium"
+calculation_repeat = simulation_speed_dict.get(simulation_speed)
+
+applicationsOn = [1]
+leaderApplication = min(applicationsOn) # The leader application is the one which will call the calculation at each time step in order to be able
+										# to display only the ground track or only the graphical parameters display ...
+
 
 # mass data [kg]
 massSu = 1.9885e30

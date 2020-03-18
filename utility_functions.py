@@ -22,6 +22,18 @@ def update_date () :
 		cst.H = cst.ideal_H
 
 
+def Computation (satellites_list, celestial_bodies_list) :
+
+	if(cst.parameters_on) : 	
+		display_parameters(satellites_list)
+
+		for i in range (cst.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
+			update_celestial_bodies_position(celestial_bodies_list)
+			satellites_accelerations(satellites_list)
+			update_ref_body(satellites_list, celestial_bodies_list)
+			update_date() 
+
+
 #################################################
 #
 # DESCRIPTION : displays the orbital parameters of all bodies given into argument (satellite and celestial bodies)
@@ -373,18 +385,18 @@ def AnglePredictor (body, time) :
 
 def PassageTimePredictor (body, angle) : 
 
-		angle = angle*math.pi/180
+	angle = angle*math.pi/180
 
-		E1 = 2*math.atan(math.sqrt((1-body.orbit.e)/(1+body.orbit.e))*math.tan(angle/2))
-		E0 = 2*math.atan(math.sqrt((1-body.orbit.e)/(1+body.orbit.e))*math.tan(body.true_anomaly/2))
+	E1 = 2*math.atan(math.sqrt((1-body.orbit.e)/(1+body.orbit.e))*math.tan(angle/2))
+	E0 = 2*math.atan(math.sqrt((1-body.orbit.e)/(1+body.orbit.e))*math.tan(body.true_anomaly/2))
 
 
-		Dt = math.sqrt(body.orbit.a*body.orbit.a*body.orbit.a/body.corps_ref.mu)*( E1 - body.orbit.e*math.sin(E1) - E0 + body.orbit.e*math.sin(E0)) 
+	Dt = math.sqrt(body.orbit.a*body.orbit.a*body.orbit.a/body.corps_ref.mu)*( E1 - body.orbit.e*math.sin(E1) - E0 + body.orbit.e*math.sin(E0)) 
 
-		if(Dt < 0) : 
-			Dt = body.orbit.T + Dt
+	if(Dt < 0) : 
+		Dt = body.orbit.T + Dt
 		
-		return (cst.time + Dt)
+	return (cst.time + Dt)
 
 
 
