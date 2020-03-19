@@ -65,13 +65,3 @@ class Orbit :
 			coordinates = np.append(coordinates, np.array([ [x], [y], [0] ]), axis=1)
 
 		self.traj = self.R3.dot(self.R2.dot(self.R1.dot(coordinates)))
-
-
-
-
-
-
-
-
-
-
