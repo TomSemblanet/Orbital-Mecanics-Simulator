@@ -64,5 +64,9 @@ class Orbit :
 			y = (h*h/self.corps_ref.mu)*(1/(1+self.e*math.cos(u))) * math.sin(u)
 			coordinates = np.append(coordinates, np.array([ [x], [y], [0] ]), axis=1)
 
+<<<<<<< HEAD
 		self.traj = self.R3.dot(self.R2.dot(self.R1.dot(coordinates)))
 		
+=======
+		self.traj = self.R3.dot(self.R2.dot(self.R1.dot(coordinates)))
+>>>>>>> 2f8edfff707fc73309e8e095592305fd61e16209
