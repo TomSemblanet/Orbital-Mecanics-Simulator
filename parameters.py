@@ -12,10 +12,15 @@ rtol= 1e-5
 
 # Time parameters
 
-T = 1e10
 ideal_H = 10
 H = ideal_H
-time = 0
+
+starting_date = "2000/01/01 12:00:00" # [YYYY/MM/JJ HH:MM:SS]
+
+initial_julian_date = 0. # [days]
+current_julian_date = 0. # [days]
+
+elapsed_time = 0. # [sec]
 
 
 # General simulation parameters

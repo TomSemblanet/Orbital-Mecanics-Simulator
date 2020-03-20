@@ -42,15 +42,15 @@ u_f.load_manoeuvers(satellites_list,
 
 if(1 in prm.applicationsOn) :
 	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="path", following_mode=True)
-	space_ani = animation.FuncAnimation(fig=space_displayer.figure, func=space_displayer.update, frames=range(int(prm.T/prm.H)), interval=0, repeat=False, blit=False)
+	space_ani = animation.FuncAnimation(fig=space_displayer.figure, func=space_displayer.update, interval=0, repeat=False, blit=False)
 
 if(2 in prm.applicationsOn) : 
 	ground_track_displayer = g_d.GroundTrackDisplay(satellites_list, celestial_bodies_list)
-	ground_track_ani = animation.FuncAnimation(fig=ground_track_displayer.figure, func=ground_track_displayer.update, frames=range(int(prm.T/prm.H)), interval=0, repeat=False, blit=True)
+	ground_track_ani = animation.FuncAnimation(fig=ground_track_displayer.figure, func=ground_track_displayer.update, interval=0, repeat=False, blit=True)
 
 # if(3 in prm.applicationsOn) : 
 # 	parameters_displayer = g_d.GraphDisplay(...)
-# 	parameters_ani = animation.FuncAnimation(fig=parameters_displayer.figure, func=parameters_displayer.update, frames=range(int(prm.T/prm.H)), interval=0, repeat=False, blit=False)
+# 	parameters_ani = animation.FuncAnimation(fig=parameters_displayer.figure, func=parameters_displayer.update, interval=0, repeat=False, blit=False)
 
 plt.show()
 

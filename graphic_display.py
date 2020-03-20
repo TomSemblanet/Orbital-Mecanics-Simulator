@@ -198,7 +198,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 # 				u_f.update_ref_body(self.satellite_list, self.celestial_bodies_list)
 # 				u_f.update_date()
 
-# 		self.ax.set_xlim([-self.xlim+prm.time, self.xlim+prm.time])
+# 		self.ax.set_xlim([-self.xlim+prm.elapsed_time, self.xlim+prm.elapsed_time])
 
 # 		if(self.data_name == "distance (reference body)") : 
 # 			self.data = np.append(self.data, self.body1.r_cr_std/1000)
@@ -215,7 +215,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 # 		elif(self.data_name == "angle") : 
 # 			self.data = np.append(self.data, math.acos(np.dot(self.body1.v_abs, [1, 0, 0])/self.body1.v_abs_std)*180/math.pi)
 
-# 		self.time = np.append(self.time, prm.time)
+# 		self.time = np.append(self.time, prm.elapsed_time)
 
 # 		self.curve.set_data(self.time[:i], self.data[:i])
 

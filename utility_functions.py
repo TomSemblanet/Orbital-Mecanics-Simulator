@@ -17,7 +17,7 @@ import numerical_integration as n_i
 #################################################
 
 def update_date () : 
-	prm.time += prm.H
+	prm.elapsed_time += prm.H
 	if(prm.H == 0) : 
 		prm.H = prm.ideal_H
 
@@ -45,7 +45,7 @@ def display_parameters (bodies) :
 
 	os.system("clear")
 
-	print("Time : {} sec\n".format(prm.time))
+	print("Elapsed time : {} sec\n".format(prm.elapsed_time))
 
 	for body in bodies : 
 		print('> {}\n'.format(body.name))
@@ -390,7 +390,7 @@ def PassageTimePredictor (body, angle) :
 	if(Dt < 0) : 
 		Dt = body.orbit.T + Dt
 		
-	return (prm.time + Dt)
+	return (prm.elapsed_time + Dt)
 
 
 

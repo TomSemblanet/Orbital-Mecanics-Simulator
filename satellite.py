@@ -212,7 +212,7 @@ class Satellite :
 			if(self.v_cr[0] > 0) : 
 				self.true_anomaly = 2*math.pi -  self.true_anomaly
 
-		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.time) % (2*math.pi) - math.pi
+		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.elapsed_time) % (2*math.pi) - math.pi
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
 
 		a =  (-self.corps_ref.mu)*(self.r_cr/(np.linalg.norm(self.r_cr)**3))
@@ -249,18 +249,18 @@ class Satellite :
 
 			self.thrust_acc_vect = self.current_maneuver.maneuver_data.direction
 
-			self.state_vector = n_i.burlirsch_stoer_method(self, prm.time, prm.A, prm.N, self.state_vector, prm.m, adapted_thrust=True)
+			self.state_vector = n_i.burlirsch_stoer_method(self, prm.elapsed_time, prm.A, prm.N, self.state_vector, prm.m, adapted_thrust=True)
 			self.thrust_acc_std = 0
 
 			self.loadParameters()
 
-			self.time_last_manoeuver = prm.time
+			self.time_last_manoeuver = prm.elapsed_time
 			self.LoadNextManeuver()
 
 			prm.H = 0
 
 		else : 
-			self.state_vector = n_i.burlirsch_stoer_method(self, prm.time, prm.A, prm.N, self.state_vector, prm.m)
+			self.state_vector = n_i.burlirsch_stoer_method(self, prm.elapsed_time, prm.A, prm.N, self.state_vector, prm.m)
 
 	#################################################
 	#
@@ -380,7 +380,7 @@ class Satellite :
 
 		difference = (2*math.pi - (self.true_anomaly-angle)) % (2*math.pi)
 
-		if(difference < 2*point_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 
+		if(difference < 2*point_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.elapsed_time) >= 0.5*self.orbit.T/2) : 
 			adapted_time_step = round(precision/(2*point_angular_velocity), 2)
 			prm.H = min(adapted_time_step, prm.H)
 
@@ -413,7 +413,7 @@ class Satellite :
 
 		difference = (2*math.pi - self.true_anomaly) % (2*math.pi)
 
-		if(difference < 2*perigee_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 
+		if(difference < 2*perigee_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.elapsed_time) >= 0.5*self.orbit.T/2) : 
 
 			adapted_time_step = round(precision/(2*perigee_angular_velocity), 2)
 			prm.H = min(adapted_time_step, prm.H)
@@ -451,7 +451,7 @@ class Satellite :
 
 		difference = (2*math.pi - (self.true_anomaly-apogee_angle)) % (2*math.pi)
 	
-		if(difference < 2*apogee_angular_velocity*prm.H and self.true_anomaly < math.pi and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 	
+		if(difference < 2*apogee_angular_velocity*prm.H and self.true_anomaly < math.pi and abs(self.time_last_manoeuver-prm.elapsed_time) >= 0.5*self.orbit.T/2) : 	
 			adapted_time_step = round(precision/(2*apogee_angular_velocity), 2)
 			prm.H = min(adapted_time_step, prm.H)
 
@@ -488,7 +488,7 @@ class Satellite :
 
 		difference = (2*math.pi - (self.true_anomaly-ascending_node_angle)) % (2*math.pi)
 
-		if(difference < 2*ascending_node_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 
+		if(difference < 2*ascending_node_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.elapsed_time) >= 0.5*self.orbit.T/2) : 
 			prm.H = min(round(precision/ascending_node_angular_velocity, 2), prm.H)
 
 			if( difference < precision) :
@@ -525,7 +525,7 @@ class Satellite :
 		descending_node_angular_velocity = descending_node_velocity/descending_node_radius
 		difference = (2*math.pi - (self.true_anomaly-descending_node_angle)) % (2*math.pi)
 
-		if(difference < 2*descending_node_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 
+		if(difference < 2*descending_node_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.elapsed_time) >= 0.5*self.orbit.T/2) : 
 			prm.H = min(round(precision/descending_node_angular_velocity, 2), prm.H)
 
 			if( difference < precision) :
@@ -573,7 +573,7 @@ class Satellite :
 				difference = abs(u_f.get_angle(self, target)-angle)
 		
 
-		if(difference < 2*max_angular_velocity*prm.H and prm.time > 10*prm.H) : 
+		if(difference < 2*max_angular_velocity*prm.H and prm.elapsed_time > 10*prm.H) : 
 			adapted_time_step = round(precision/(2*max_angular_velocity), 2)
 			prm.H = min(adapted_time_step, prm.H)
 

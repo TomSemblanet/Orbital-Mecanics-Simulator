@@ -28,9 +28,9 @@ class TriggerDetector :
 		return self.trigger_value
 
 	def TriggerTimeSupervisor (self) : 
-		if(abs(prm.time - self.trigger_time) <= prm.H) :
-			if(abs(prm.time - self.trigger_time) != 0) :
-				prm.H =  abs(prm.time - self.trigger_time)
+		if(abs(prm.elapsed_time - self.trigger_time) <= prm.H) :
+			if(abs(prm.elapsed_time - self.trigger_time) != 0) :
+				prm.H =  abs(prm.elapsed_time - self.trigger_time)
 			else : 
 				return True
 
@@ -105,7 +105,7 @@ class OrbitalRendezVous :
 
 	def ParameterLoader (self) : 
 
-		travel_time = self.arrival_time - prm.time
+		travel_time = self.arrival_time - prm.elapsed_time
 
 		dV_vector = u_f.LambertProblem(self.satellite.r_abs, self.position_to_reach, travel_time, self.satellite.corps_ref.mu) - self.satellite.v_abs 
 		dV = np.linalg.norm(dV_vector)
