@@ -6,7 +6,7 @@ from scipy.optimize import fsolve
 
 import satellite as sat
 import celestial_body as c_b
-import constants as cst
+import parameters as prm
 import numerical_integration as n_i
 
 
@@ -17,17 +17,17 @@ import numerical_integration as n_i
 #################################################
 
 def update_date () : 
-	cst.time += cst.H
-	if(cst.H == 0) : 
-		cst.H = cst.ideal_H
+	prm.time += prm.H
+	if(prm.H == 0) : 
+		prm.H = prm.ideal_H
 
 
 def Computation (satellites_list, celestial_bodies_list) :
 
-	if(cst.parameters_on) : 	
+	if(prm.parameters_on) : 	
 		display_parameters(satellites_list)
 
-		for i in range (cst.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
+		for i in range (prm.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
 			update_celestial_bodies_position(celestial_bodies_list)
 			satellites_accelerations(satellites_list)
 			update_ref_body(satellites_list, celestial_bodies_list)
@@ -45,7 +45,7 @@ def display_parameters (bodies) :
 
 	os.system("clear")
 
-	print("Time : {} sec\n".format(cst.time))
+	print("Time : {} sec\n".format(prm.time))
 
 	for body in bodies : 
 		print('> {}\n'.format(body.name))
@@ -60,7 +60,7 @@ def display_parameters (bodies) :
 		print('- Velocity : {} km/s'.format(round(body.v_cr_std/1000, 2)))
 		print('- Cartesian Coord : {}'.format(body.r_cr))
 		print('- Cartesian Velocity : {}'.format(body.v_cr))
-		print('- H : {}'.format(cst.H))
+		print('- H : {}'.format(prm.H))
 		print("\n\n")
 
 
@@ -238,7 +238,7 @@ def UAdtoMs (v) :
 
 def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) : 
 
-	# flight_time -= cst.H # il faut enlever cst.H au temps de vol car il se passe un tour de boucle le temps que le satellite adapte sa vitesse
+	# flight_time -= prm.H # il faut enlever prm.H au temps de vol car il se passe un tour de boucle le temps que le satellite adapte sa vitesse
 
 	r_init_std = np.linalg.norm(r_init)
 	r_final_std = np.linalg.norm(r_final)
@@ -264,12 +264,6 @@ def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) :
 
 	v_init = (r_final - f*r_init)/g
 	v_final = (gdot * r_final - r_init)/g
-
-	# print(r_init)
-	# print(v_init)
-
-	cst.r = r_init
-	cst.v = v_init
 
 	return v_init
 
@@ -396,7 +390,7 @@ def PassageTimePredictor (body, angle) :
 	if(Dt < 0) : 
 		Dt = body.orbit.T + Dt
 		
-	return (cst.time + Dt)
+	return (prm.time + Dt)
 
 
 

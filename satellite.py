@@ -4,6 +4,7 @@ import math
 
 import celestial_body as c_b
 import constants as cst
+import parameters as prm
 import numerical_integration as n_i
 import utility_functions as u_f
 import orbit as orb
@@ -211,7 +212,7 @@ class Satellite :
 			if(self.v_cr[0] > 0) : 
 				self.true_anomaly = 2*math.pi -  self.true_anomaly
 
-		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*cst.time) % (2*math.pi) - math.pi
+		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.time) % (2*math.pi) - math.pi
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
 
 		a =  (-self.corps_ref.mu)*(self.r_cr/(np.linalg.norm(self.r_cr)**3))
@@ -240,26 +241,26 @@ class Satellite :
 
 		if(next_acceleration_on == True) :
 
-			cst.H = 1e-10
+			prm.H = 1e-10
 
-			self.thrust_acc_std = self.current_maneuver.maneuver_data.dV/cst.H
+			self.thrust_acc_std = self.current_maneuver.maneuver_data.dV/prm.H
 			if(np.linalg.norm(self.thrust_acc_vect) == 0) : 
 				self.thrust_acc_vect = self.v_cr/self.v_cr_std
 
 			self.thrust_acc_vect = self.current_maneuver.maneuver_data.direction
 
-			self.state_vector = n_i.burlirsch_stoer_method(self, cst.time, cst.A, cst.N, self.state_vector, cst.m, adapted_thrust=True)
+			self.state_vector = n_i.burlirsch_stoer_method(self, prm.time, prm.A, prm.N, self.state_vector, prm.m, adapted_thrust=True)
 			self.thrust_acc_std = 0
 
 			self.loadParameters()
 
-			self.time_last_manoeuver = cst.time
+			self.time_last_manoeuver = prm.time
 			self.LoadNextManeuver()
 
-			cst.H = 0
+			prm.H = 0
 
 		else : 
-			self.state_vector = n_i.burlirsch_stoer_method(self, cst.time, cst.A, cst.N, self.state_vector, cst.m)
+			self.state_vector = n_i.burlirsch_stoer_method(self, prm.time, prm.A, prm.N, self.state_vector, prm.m)
 
 	#################################################
 	#
@@ -379,9 +380,9 @@ class Satellite :
 
 		difference = (2*math.pi - (self.true_anomaly-angle)) % (2*math.pi)
 
-		if(difference < 2*point_angular_velocity*cst.H and abs(self.time_last_manoeuver-cst.time) >= 0.5*self.orbit.T/2) : 
+		if(difference < 2*point_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 
 			adapted_time_step = round(precision/(2*point_angular_velocity), 2)
-			cst.H = min(adapted_time_step, cst.H)
+			prm.H = min(adapted_time_step, prm.H)
 
 			if(difference < precision) : 
 				return True
@@ -412,10 +413,10 @@ class Satellite :
 
 		difference = (2*math.pi - self.true_anomaly) % (2*math.pi)
 
-		if(difference < 2*perigee_angular_velocity*cst.H and abs(self.time_last_manoeuver-cst.time) >= 0.5*self.orbit.T/2) : 
+		if(difference < 2*perigee_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 
 
 			adapted_time_step = round(precision/(2*perigee_angular_velocity), 2)
-			cst.H = min(adapted_time_step, cst.H)
+			prm.H = min(adapted_time_step, prm.H)
 
 			if(difference < precision) :
 				return True
@@ -450,9 +451,9 @@ class Satellite :
 
 		difference = (2*math.pi - (self.true_anomaly-apogee_angle)) % (2*math.pi)
 	
-		if(difference < 2*apogee_angular_velocity*cst.H and self.true_anomaly < math.pi and abs(self.time_last_manoeuver-cst.time) >= 0.5*self.orbit.T/2) : 	
+		if(difference < 2*apogee_angular_velocity*prm.H and self.true_anomaly < math.pi and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 	
 			adapted_time_step = round(precision/(2*apogee_angular_velocity), 2)
-			cst.H = min(adapted_time_step, cst.H)
+			prm.H = min(adapted_time_step, prm.H)
 
 			if( difference < precision ) : 
 				return True
@@ -487,8 +488,8 @@ class Satellite :
 
 		difference = (2*math.pi - (self.true_anomaly-ascending_node_angle)) % (2*math.pi)
 
-		if(difference < 2*ascending_node_angular_velocity*cst.H and abs(self.time_last_manoeuver-cst.time) >= 0.5*self.orbit.T/2) : 
-			cst.H = min(round(precision/ascending_node_angular_velocity, 2), cst.H)
+		if(difference < 2*ascending_node_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 
+			prm.H = min(round(precision/ascending_node_angular_velocity, 2), prm.H)
 
 			if( difference < precision) :
 				return True
@@ -524,8 +525,8 @@ class Satellite :
 		descending_node_angular_velocity = descending_node_velocity/descending_node_radius
 		difference = (2*math.pi - (self.true_anomaly-descending_node_angle)) % (2*math.pi)
 
-		if(difference < 2*descending_node_angular_velocity*cst.H and abs(self.time_last_manoeuver-cst.time) >= 0.5*self.orbit.T/2) : 
-			cst.H = min(round(precision/descending_node_angular_velocity, 2), cst.H)
+		if(difference < 2*descending_node_angular_velocity*prm.H and abs(self.time_last_manoeuver-prm.time) >= 0.5*self.orbit.T/2) : 
+			prm.H = min(round(precision/descending_node_angular_velocity, 2), prm.H)
 
 			if( difference < precision) :
 				return True
@@ -572,9 +573,9 @@ class Satellite :
 				difference = abs(u_f.get_angle(self, target)-angle)
 		
 
-		if(difference < 2*max_angular_velocity*cst.H and cst.time > 10*cst.H) : 
+		if(difference < 2*max_angular_velocity*prm.H and prm.time > 10*prm.H) : 
 			adapted_time_step = round(precision/(2*max_angular_velocity), 2)
-			cst.H = min(adapted_time_step, cst.H)
+			prm.H = min(adapted_time_step, prm.H)
 
 
 			if(difference < precision) :

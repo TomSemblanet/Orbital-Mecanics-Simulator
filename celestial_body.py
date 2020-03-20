@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import math
 
-import constants as cst
+import parameters as prm
 import utility_functions as u_f
 import orbit as orb
 
@@ -114,7 +114,7 @@ class CelestialBody :
 
 	def set_position (self) : 
 
-		self.M = self.M + (2*math.pi/self.orbit.T)*cst.H
+		self.M = self.M + (2*math.pi/self.orbit.T)*prm.H
 		self.E = self.M
 
 		delt = 1

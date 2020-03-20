@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 import celestial_body as c_b
-import constants as cst
+import parameters as prm
 import numerical_integration as n_i
 import utility_functions as u_f
 
@@ -28,9 +28,9 @@ class TriggerDetector :
 		return self.trigger_value
 
 	def TriggerTimeSupervisor (self) : 
-		if(abs(cst.time - self.trigger_time) <= cst.H) :
-			if(abs(cst.time - self.trigger_time) != 0) :
-				cst.H =  abs(cst.time - self.trigger_time)
+		if(abs(prm.time - self.trigger_time) <= prm.H) :
+			if(abs(prm.time - self.trigger_time) != 0) :
+				prm.H =  abs(prm.time - self.trigger_time)
 			else : 
 				return True
 
@@ -105,7 +105,7 @@ class OrbitalRendezVous :
 
 	def ParameterLoader (self) : 
 
-		travel_time = self.arrival_time - cst.time
+		travel_time = self.arrival_time - prm.time
 
 		dV_vector = u_f.LambertProblem(self.satellite.r_abs, self.position_to_reach, travel_time, self.satellite.corps_ref.mu) - self.satellite.v_abs 
 		dV = np.linalg.norm(dV_vector)

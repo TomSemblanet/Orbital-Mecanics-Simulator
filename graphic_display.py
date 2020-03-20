@@ -4,6 +4,7 @@ import math
 
 import celestial_body as c_b
 import constants as cst
+import parameters as prm
 import numerical_integration as n_i
 import utility_functions as u_f
 import maneuver
@@ -15,7 +16,7 @@ class MainDisplay :
 
 
 		self.appID = 1
-		if(self.appID == cst.leaderApplication) : self.leader = True
+		if(self.appID == prm.leaderApplication) : self.leader = True
 		else : self.leader = False
 
 
@@ -117,7 +118,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 
 		self.appID = 2
-		if(self.appID == cst.leaderApplication) : self.leader = True
+		if(self.appID == prm.leaderApplication) : self.leader = True
 		else : self.leader = False
 
 
@@ -161,7 +162,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 
 # 		self.appID = 3
-# 		if(self.appID == cst.leaderApplication) : self.leader = True
+# 		if(self.appID == prm.leaderApplication) : self.leader = True
 # 		else : self.leader = False
 		
 
@@ -188,7 +189,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 # 		if(self.leader == True) :
 
-# 			if(cst.parameters_on) : 	
+# 			if(prm.parameters_on) : 	
 # 				u_f.display_parameters(self.satellite_list)
 
 # 			for b in range (cst.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
@@ -197,7 +198,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 # 				u_f.update_ref_body(self.satellite_list, self.celestial_bodies_list)
 # 				u_f.update_date()
 
-# 		self.ax.set_xlim([-self.xlim+cst.time, self.xlim+cst.time])
+# 		self.ax.set_xlim([-self.xlim+prm.time, self.xlim+prm.time])
 
 # 		if(self.data_name == "distance (reference body)") : 
 # 			self.data = np.append(self.data, self.body1.r_cr_std/1000)
@@ -214,7 +215,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 # 		elif(self.data_name == "angle") : 
 # 			self.data = np.append(self.data, math.acos(np.dot(self.body1.v_abs, [1, 0, 0])/self.body1.v_abs_std)*180/math.pi)
 
-# 		self.time = np.append(self.time, cst.time)
+# 		self.time = np.append(self.time, prm.time)
 
 # 		self.curve.set_data(self.time[:i], self.data[:i])
 
