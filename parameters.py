@@ -1,4 +1,5 @@
 import numpy as np
+import datetime as dt
 
 # Mathematical processing parameters (Burlisch Stoer Method)
 
@@ -12,16 +13,19 @@ rtol= 1e-5
 
 # Time parameters
 
-ideal_H = 10
+ideal_H = 100
 H = ideal_H
 
-starting_date = "2000/01/01 12:00:00" # [YYYY/MM/JJ HH:MM:SS]
+starting_date = "2000-01-03 12:00:00" # [YYYY/MM/JJ HH:MM:SS]
+current_date = ""
 
-initial_julian_date = 0. # [days]
+initial_julian_date = 367*int(starting_date[0:4]) - int((7*(int(starting_date[0:4])+int((int(starting_date[5:7])+9)/12)))/4) \
+					+ int(275*int(starting_date[5:7])/9) + int(starting_date[8:10]) + 1721013.5 + (((int(starting_date[17:19])/60) \
+					+ int(starting_date[14:16]))/60+int(starting_date[11:13]))/24 - 2451545 # [days]  following J2000
 current_julian_date = 0. # [days]
 
-elapsed_time = 0. # [sec]
 
+elapsed_time = 0. # [sec]
 
 # General simulation parameters
 
@@ -30,10 +34,10 @@ simulation_speed_dict = {"slow" : 1,
 						"high" : 3,
 						"very high" : 4}
 
-simulation_speed = "medium"
+simulation_speed = "slow"
 calculation_repeat = simulation_speed_dict.get(simulation_speed)
 
-applicationsOn = [1, 2]
+applicationsOn = [2]
 leaderApplication = min(applicationsOn) # The leader application is the one which will call the calculation at each time step in order to be able
 										# to display only the ground track or only the graphical parameters display ...
 
