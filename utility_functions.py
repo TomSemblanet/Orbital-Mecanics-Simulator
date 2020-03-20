@@ -21,7 +21,7 @@ import datetime as dt
 def update_date () : 
 	prm.elapsed_time += prm.H
 
-	prm.current_date = str(datetime.fromtimestamp(946724400+prm.initial_julian_date*86400+prm.elapsed_time))
+	prm.current_date = str(datetime.fromtimestamp(946724400+prm.initial_julian_date*86400+prm.elapsed_time))[:19]
 	prm.current_julian_date = 367*int(prm.current_date[0:4]) - int((7*(int(prm.current_date[0:4])+int((int(prm.current_date[5:7])+9)/12)))/4) \
 					+ int(275*int(prm.current_date[5:7])/9) + int(prm.current_date[8:10]) + 1721013.5 + (((int(prm.current_date[17:19])/60) \
 					+ int(prm.current_date[14:16]))/60+int(prm.current_date[11:13]))/24 - 2451545
