@@ -30,12 +30,15 @@ celestial_bodies_list = [earth, moon]
 p = np.array([-22000e3, 0, 0])
 v = np.array([0, -math.sqrt(cst.muTe/22000e3)-0.1, 1000])
 
-satellites_list = u_f.load_satellites( [ [p, v, "S1", earth, "m"]] )
+satellites_list = u_f.load_satellites( [ [p, v, "SAT1", earth, "m"], [p+np.array([1000e3]), v+np.array([100, 300, 0.]), "SAT2", earth, "c"]] )
 
 u_f.load_manoeuvers(satellites_list, 
 					[ 
 						[
 						
+						],
+						[
+
 						]
 					]	
 				    )
@@ -48,9 +51,9 @@ if(2 in prm.applicationsOn) :
 	ground_track_displayer = g_d.GroundTrackDisplay(satellites_list, celestial_bodies_list)
 	ground_track_ani = animation.FuncAnimation(fig=ground_track_displayer.figure, func=ground_track_displayer.update, interval=0, repeat=False, blit=True)
 
-# if(3 in prm.applicationsOn) : 
-# 	parameters_displayer = g_d.GraphDisplay(...)
-# 	parameters_ani = animation.FuncAnimation(fig=parameters_displayer.figure, func=parameters_displayer.update, interval=0, repeat=False, blit=False)
+if(3 in prm.applicationsOn) : 
+	parameters_displayer = g_d.GraphDisplay(satellites_list, celestial_bodies_list, "Speed relative to referent body : SAT1 SAT2")
+	parameters_ani = animation.FuncAnimation(fig=parameters_displayer.figure, func=parameters_displayer.update, interval=0, repeat=False, blit=False)
 
 plt.show()
 

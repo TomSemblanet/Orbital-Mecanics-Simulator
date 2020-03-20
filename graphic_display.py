@@ -156,70 +156,150 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 		return self.ground_tracks
 
 
-# class GraphDisplay : 
+class GraphDisplay : 
 
-# 	def __init__ (self, satellite_list, celestial_bodies_list, data_name, body1, body2=None) : 
+	def __init__ (self, satellite_list, celestial_bodies_list, request) : 
 
 
-# 		self.appID = 3
-# 		if(self.appID == prm.leaderApplication) : self.leader = True
-# 		else : self.leader = False
+		self.appID = 3
+		if(self.appID == prm.leaderApplication) : self.leader = True
+		else : self.leader = False
+
+		self.func_dictionnary = {
+								"Distance to referent body" : getattr(GraphDisplay, 'getDistanceToReferentBody'),
+								"Distance to central body" : getattr(GraphDisplay, 'getDistanceToCentralBody'),
+								"Distance to other body" : getattr(GraphDisplay, 'getDistanceToOtherBody'),
+								"Speed relative to referent body" : getattr(GraphDisplay, 'getSpeedRelativeToReferentBody'),
+								"Speed relative to central body" : getattr(GraphDisplay, 'getSpeedRelativeToCentralBody'),
+								"True anomaly" : getattr(GraphDisplay, 'getTrueAnomaly'),
+								"Longitude" : getattr(GraphDisplay, 'getLongitude'),
+								"Latitude" : getattr(GraphDisplay, 'getLatitude'),
+								"Semi major-axis" : getattr(GraphDisplay, 'getSemiMajorAxis'),
+								"Eccentricity" : getattr(GraphDisplay, 'getEccentricity'),
+								"Longitude of ascending node" : getattr(GraphDisplay, 'getLongitudeOfAscendingNode'),
+								"Longitude of perigee" : getattr(GraphDisplay, 'getLongitudeOfPerigee')
+								}
 		
 
-# 		plt.style.use('dark_background')
-# 		self.figure, self.ax =  plt.subplots()
-# 		self.ax.set_ylim([0, 200e3])
+		plt.style.use('dark_background')
+		self.figure, self.ax =  plt.subplots()
 
-# 		self.xlim = 10e3
+		self.ax.set_xlim([0, 1e3])
+		self.ax.set_ylim([0, 360])
 
-# 		self.satellite_list = satellite_list
-# 		self.celestial_bodies_list = celestial_bodies_list
+		self.max = -1e10
+		self.min =  1e10
 
-# 		self.curve, = self.ax.plot([],[], ls='-', color='c')
+		self.satellite_list = satellite_list
+		self.celestial_bodies_list = celestial_bodies_list
 
-# 		self.time = np.array([])
-# 		self.data = np.array([])
+		requested_func = request.split(":")[0].lstrip()[:-1]
+		args = request.split(":")[1].lstrip().split(" ")
 
-# 		self.body1 = body1
-# 		self.body2 = body2
+		self.body_list = [body for body in np.concatenate((self.satellite_list, self.celestial_bodies_list)) if (body.name in args)]
+		self.func_to_call = self.func_dictionnary.get(requested_func)
 
-# 		self.data_name = data_name
+		self.time = np.array([])
+		self.recorded_data = np.zeros((len(self.body_list), 1))
 
-# 	def update (self, i) : 
+		self.curves = np.array([])
+		for body in self.body_list : 
+			curve, = self.ax.plot([],[], ls="-", color=body.color)
+			self.curves = np.append(self.curves, curve)
 
-# 		if(self.leader == True) :
 
-# 			if(prm.parameters_on) : 	
-# 				u_f.display_parameters(self.satellite_list)
+	def update (self, i) : 
 
-# 			for b in range (cst.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
-# 				u_f.update_celestial_bodies_position(self.celestial_bodies_list)
-# 				u_f.satellites_accelerations(self.satellite_list)
-# 				u_f.update_ref_body(self.satellite_list, self.celestial_bodies_list)
-# 				u_f.update_date()
+		self.ax.set_xlim([prm.elapsed_time-1000*prm.ideal_H, prm.elapsed_time+10])
+		self.ax.set_ylim([self.min-0.1*self.min, self.max+0.1*self.max])
 
-# 		self.ax.set_xlim([-self.xlim+prm.elapsed_time, self.xlim+prm.elapsed_time])
+		if(self.leader == True) :
+			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
 
-# 		if(self.data_name == "distance (reference body)") : 
-# 			self.data = np.append(self.data, self.body1.r_cr_std/1000)
-# 		elif(self.data_name == "distance (main body)") : 
-# 			self.data = np.append(self.data, self.body1.r_abs_std/1000)
-# 		elif(self.data_name == "velocity (reference body)") : 
-# 			self.data = np.append(self.data, self.body1.v_cr_std/1000)
-# 		elif(self.data_name == "velocity (main body)") : 
-# 			self.data = np.append(self.data, self.body1.v_abs_std/1000)
-# 		elif(self.data_name == "true anomaly") : 
-# 			self.data = np.append(self.data, self.body1.true_anomaly*180/math.pi)
-# 		elif(self.data_name == "distance (second body)") : 
-# 			self.data = np.append(self.data, np.linalg.norm(self.body1.r_cr - self.body2.r_cr)/1000)
-# 		elif(self.data_name == "angle") : 
-# 			self.data = np.append(self.data, math.acos(np.dot(self.body1.v_abs, [1, 0, 0])/self.body1.v_abs_std)*180/math.pi)
+		new_data = self.func_to_call(self.body_list)
+		self.recorded_data = np.append(self.recorded_data, np.zeros((len(self.body_list), 1)), axis=1)
 
-# 		self.time = np.append(self.time, prm.elapsed_time)
+		for data in new_data : 
+			if(data < self.min) : self.min = data
+			elif(data > self.max) : self.max = data
 
-# 		self.curve.set_data(self.time[:i], self.data[:i])
+		self.time = np.append(self.time, prm.elapsed_time)
 
-# 		return self.curve
+		for j in range(len(self.curves)) :
+			self.recorded_data[j][i] = new_data[j]
+			self.curves[j].set_data(self.time[:i], self.recorded_data[j][:i])
+
+		return self.curves
+
+
+	def getDistanceToReferentBody (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.r_cr_std)
+		return list_
+
+	def getDistanceToCentralBody (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.r_abs_std)
+		return list_
+
+	def getDistanceToOtherBody (*bodies) : 
+		return [np.linalg.norm(bodies[0][0].r_abs-bodies[0][1].r_abs)]
+
+	def getSpeedRelativeToReferentBody (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.v_cr_std)
+		return list_
+
+	def getSpeedRelativeToCentralBody (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.v_abs_std)
+		return list_
+
+	def getTrueAnomaly (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.true_anomaly*180/math.pi)
+		return list_
+
+	def getLongitude (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.longitude*180/math.pi)
+		return list_
+
+	def getLatitude (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.latitude*180/math.pi)
+		return list_
+
+	def getSemiMajorAxis (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.a)
+		return list_
+
+	def getEccentricity (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.e)
+		return list_
+
+	def getLongitudeOfAscendingNode (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.Lnode*180/math.pi)
+		return list_
+
+	def getLongitudeOfPerigee (*bodies) : 
+		list_ = list()
+		for body in bodies[0] : 
+			list_.append(body.Lperi*180/math.pi)
+		return list_
 
 
 

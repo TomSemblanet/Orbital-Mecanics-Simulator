@@ -35,11 +35,11 @@ def Computation (satellites_list, celestial_bodies_list) :
 	if(prm.parameters_on) : 	
 		display_parameters(satellites_list)
 
-		for i in range (prm.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
-			update_celestial_bodies_position(celestial_bodies_list)
-			satellites_accelerations(satellites_list)
-			update_ref_body(satellites_list, celestial_bodies_list)
-			update_date() 
+	for i in range (prm.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
+		update_celestial_bodies_position(celestial_bodies_list)
+		satellites_accelerations(satellites_list)
+		update_ref_body(satellites_list, celestial_bodies_list)
+		update_date() 
 
 
 #################################################
