@@ -27,7 +27,7 @@ celestial_bodies_list = [earth, moon]
 
 
 p = np.array([-22000e3, 0, 0])
-v = np.array([0, -math.sqrt(cst.muTe/22000e3)-0.1, 0.])
+v = np.array([0, -math.sqrt(cst.muTe/22000e3)-0.1, 1000])
 
 satellites_list = u_f.load_satellites( [ [p, v, "S1", earth, "m"]] )
 
@@ -40,7 +40,7 @@ u_f.load_manoeuvers(satellites_list,
 				    )
 
 if(1 in cst.applicationsOn) :
-	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="path", following_mode=False)
+	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="path", following_mode=True)
 	space_ani = animation.FuncAnimation(fig=space_displayer.figure, func=space_displayer.update, frames=range(int(cst.T/cst.H)), interval=0, repeat=False, blit=False)
 
 if(2 in cst.applicationsOn) : 

@@ -150,7 +150,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 			self.x_matrix[j][i] = self.satellite_list[j].longitude*180/math.pi*5.688+1024
 			self.y_matrix[j][i] = self.satellite_list[j].latitude*180/math.pi*5.688+512
-			self.ground_tracks[j].set_data(self.x_matrix[j][max(0, i-2000):i+1], self.y_matrix[j][max(0, i-2000):i+1])
+			self.ground_tracks[j].set_data(self.x_matrix[j][max(0, i-250):i+1], self.y_matrix[j][max(0, i-250):i+1])
 
 		return self.ground_tracks
 

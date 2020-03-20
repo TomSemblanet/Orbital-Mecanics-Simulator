@@ -1,25 +1,24 @@
 import numpy as np
 
+# Mathematical processing parameters (Burlisch Stoer Method)
+
 jmax = 10
 N = 6  
 A = np.zeros((jmax+1, jmax+1, N))
 m = 2*(np.arange(jmax+1)+1)
-
 atol = 1e-12
 rtol= 1e-5
 
 
+# Time parameters
 
 T = 1e10
-ideal_H = 100
+ideal_H = 10
 H = ideal_H
-
-r=np.array([0., 0., 0.])
-v=np.array([0., 0., 0.])
-
 time = 0
 
-parameters_on = True
+
+# General simulation parameters
 
 simulation_speed_dict = {"slow" : 1, 
 						"medium" : 2,
@@ -29,12 +28,28 @@ simulation_speed_dict = {"slow" : 1,
 simulation_speed = "medium"
 calculation_repeat = simulation_speed_dict.get(simulation_speed)
 
-applicationsOn = [1]
+applicationsOn = [1, 2]
 leaderApplication = min(applicationsOn) # The leader application is the one which will call the calculation at each time step in order to be able
 										# to display only the ground track or only the graphical parameters display ...
 
 
+# MainDisplay parameters
+
+parameters_on = True
+
+
+# GroundTrackDisplay parameters
+
+
+
+
+# GraphDisplay parameters
+
+
+
+
 # mass data [kg]
+
 massSu = 1.9885e30
 massMe = 3.3011e23
 massVe = 4.8675e24
@@ -46,7 +61,9 @@ massUr = 8.6810e25
 massNe = 1.02413e26
 massLu = 7.34767309e22
 
+
 # standard gravitational parameter data [m^3/s^2]
+
 muSu = 1.32712440018e20
 muMe = 2.2032e13
 muVe = 3.24859e14
@@ -58,7 +75,9 @@ muUr = 5.793939e15
 muNe = 6.836529e15
 muLu = 4.9048695e12
 
+
 # equatorial radius data [m]
+
 radSu = 696342e3
 radMe = 2439.7e3
 radVe = 6051.8e3
@@ -76,7 +95,6 @@ radLu = 1737.4e3
 wTe = 7.292115e-5
 
 
-
 # ephemerides on 01.01.2000 00:00:00 (heliocentric, rectangular coordinates systeme)
 
 eSu = np.array([0., 0., 0., 0., 0., 0.])
@@ -89,7 +107,6 @@ eSa = np.array([6.4085515448418,    6.5680470297778,   -0.3691278222728,   -0.00
 eUr = np.array([14.4305201906630,  -13.7356550097684,   -0.2381262370293,    0.0026783792149,    0.0026724431971,   -0.0000247775904])
 eNe = np.array([16.8107670197170,  -24.9926503203752,    0.1272760867179,    0.0025793709492,    0.0017767692067,   -0.0000959086099])
 eMo = np.array([-0.1706605703450,    0.9671638383115,    0.0002402387170,   -0.0169099517768,   -0.0034698287592,   -0.0000009195883])
-
 
 
 
