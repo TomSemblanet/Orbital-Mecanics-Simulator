@@ -12,7 +12,7 @@ class TriggerDetector :
 	def __init__ (self, satellite, type, trigger_value) : 
 
 		self.dict = {"true anomaly": getattr(TriggerDetector, 'TargetedTrueAnomalySupervisor'), 
-					 "time" : getattr(TriggerDetector, 'TargetedTimeSupervisor')} 
+					 "date" : getattr(TriggerDetector, 'TargetedTimeSupervisor')} 
 
 		self.satellite = satellite
 		self.trigger_value = trigger_value
@@ -25,7 +25,7 @@ class TriggerDetector :
 		return t
 
 	def TargetedTimeSupervisor (self) : 
-		return self.trigger_value
+		return u_f.DateToSeconds(prm.starting_date, self.trigger_value)
 
 	def TriggerTimeSupervisor (self) : 
 		if(abs(prm.elapsed_time - self.trigger_time) <= prm.H) :
@@ -116,7 +116,7 @@ class OrbitalRendezVous :
 
 class Maneuver : 
 
-	def __init__ (self, satellite, maneuver_name, value, trigger_type, trigger_value, direction=None) : 
+	def __init__ (self, satellite, man_name, value, trigger_type, trigger_value, direction) : 
 
 		self.dict = {"apogee modification": getattr(Maneuver, 'ComputeOrbitalModificationManeuver'), 
 					 "perigee modification": getattr(Maneuver, 'ComputeOrbitalModificationManeuver'),
@@ -127,23 +127,28 @@ class Maneuver :
 		self.satellite = satellite
 		self.trigger_type = trigger_type
 		self.trigger_value = trigger_value
-		self.maneuver_name = maneuver_name
+		self.man_name = man_name
 		self.value = value
 		self.direction = direction
 
-		self.data_loader = self.dict.get(maneuver_name)
+		if(trigger_type == "date") : 
+			trigger_value = u_f.DateToSeconds(prm.starting_date, trigger_value)
+
+		self.data_loader = self.dict[man_name]
 
 		self.trigger_detector = TriggerDetector(self.satellite, self.trigger_type, self.trigger_value)
+
 		self.maneuver_data = None
 
 	def ComputeOrbitalModificationManeuver (self) : 
-		self.maneuver_data = OrbitModificationManeuver(self.satellite, self.maneuver_name, self.value, self.trigger_value)
+		self.maneuver_data = OrbitModificationManeuver(self.satellite, self.man_name, self.value, self.trigger_value)
 
 	def ComputeCustomManeuver (self) : 
 		self.maneuver_data = FreeAcceleration(self.satellite, self.value, self.direction)
 
 	def ComputeOrbitalRendezVous (self) :
-		self.maneuver_data = OrbitalRendezVous(self.satellite, self.value[0], self.value[1])
+		self.value["date"] = u_f.DateToSecond(prm.starting_date, self.value["date"])
+		self.maneuver_data = OrbitalRendezVous(self.satellite, self.value["position_to_reach"], self.value["date"])
 
 
 

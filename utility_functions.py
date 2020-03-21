@@ -21,7 +21,7 @@ import datetime as dt
 def update_date () : 
 	prm.elapsed_time += prm.H
 
-	prm.current_date = str(datetime.fromtimestamp(946724400+prm.initial_julian_date*86400+prm.elapsed_time))[:19]
+	prm.current_date = str(datetime.fromtimestamp(946724400+prm.initial_julian_date*86400+prm.elapsed_time))[:23]
 	prm.current_julian_date = 367*int(prm.current_date[0:4]) - int((7*(int(prm.current_date[0:4])+int((int(prm.current_date[5:7])+9)/12)))/4) \
 					+ int(275*int(prm.current_date[5:7])/9) + int(prm.current_date[8:10]) + 1721013.5 + (((int(prm.current_date[17:19])/60) \
 					+ int(prm.current_date[14:16]))/60+int(prm.current_date[11:13]))/24 - 2451545
@@ -54,7 +54,7 @@ def display_parameters (bodies) :
 	os.system("clear")
 
 	print(prm.current_date)
-	print("-------------------\n")
+	print("-----------------------\n")
 	print("Elapsed time : {} sec\n".format(round(prm.elapsed_time)))
 
 	for body in bodies : 
@@ -70,8 +70,7 @@ def display_parameters (bodies) :
 		print('- Velocity : {} km/s'.format(round(body.v_cr_std/1000, 2)))
 		print('- Cartesian Coord : {}'.format(body.r_cr))
 		print('- Cartesian Velocity : {}'.format(body.v_cr))
-		print('- H : {}'.format(prm.H))
-		print("\n\n")
+		print("\n")
 
 
 #################################################
@@ -132,10 +131,17 @@ def load_celestial_bodies (celestial_bodies_data_dicts) :
 #
 #################################################
 
-def load_manoeuvers (satellites_list, manoeuvers_lists) : 
+def load_manoeuvers (satellites_list, maneuvers_dicts) :
 
-	for i in range (0, len(manoeuvers_lists)) :	
-		satellites_list[i].load_manoeuvers_list(manoeuvers_lists[i])
+	satellites_dict = {}
+	for sat in satellites_list :
+		print("Sat <{}> : {} maneuvers.".format(sat.name, len([man for man in maneuvers_dicts if man["sat_name"]==sat.name])))
+		input()
+		sat.load_manoeuvers_list([man for man in maneuvers_dicts if man["sat_name"]==sat.name]) 
+
+	# for man in maneuvers_dicts :	
+	# 	satellites_dict[man["sat_name"]].load_manoeuvers_list()
+	# 	satellites_list[i].load_manoeuvers_list(manoeuvers_lists[i])
 
 
 #################################################
@@ -198,7 +204,8 @@ def satellites_accelerations (satellites_list) :
 		fire_on = False 
 		if(satellite.current_maneuver is not None) : 
 			fire_on = satellite.current_maneuver.trigger_detector.TriggerTimeSupervisor()
-			if(fire_on == True) : satellite.current_maneuver.data_loader(satellite.current_maneuver)
+			if(fire_on == True) : 
+				satellite.current_maneuver.data_loader(satellite.current_maneuver)
 		satellite.acceleration_manager(fire_on)
 
 
@@ -428,6 +435,14 @@ def CoordinatesPredictor (body, time) :
 	state_vector = KeplerianToCartesian(body.orbit.a, body.orbit.e, body.orbit.i, body.orbit.Lperi, body.orbit.Lnode, true_anomaly, body.corps_ref.mu)
 
 	return state_vector
+
+
+def DateToSeconds (date1, date2) : 
+
+	object_date1 = datetime.strptime(date1, "%Y-%m-%d %H:%M:%S.%f")
+	object_date2 = datetime.strptime(date2, "%Y-%m-%d %H:%M:%S.%f")
+	
+	return (object_date2-object_date1).total_seconds()
 
 
 

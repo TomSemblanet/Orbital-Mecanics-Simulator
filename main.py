@@ -32,14 +32,14 @@ celestial_bodies_list = u_f.load_celestial_bodies([
 												  ])
 
 
-										################ - INITIALISATION OF SATELLITE(S) PARAMETERS - ################
+										################## - INITIALISATION OF SATELLITE(S) - ##################
 
 
 satellites_list = u_f.load_satellites( [ 
 										{
 										"name" : "SAT1",
 										"r0" : np.array([-22000e3, 0, 0]),
-										"v0" : np.array([0, -math.sqrt(cst.muTe/22000e3)-0.1, 1000]),
+										"v0" : np.array([0, -3000-0.1, 1000]),
 										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
 										"color" : "m"
 										}, 
@@ -53,19 +53,24 @@ satellites_list = u_f.load_satellites( [
 										}
 									   ] )
 
-u_f.load_manoeuvers(satellites_list, 
-					[ 
-						[
-						
-						],
-						[
 
-						]
+										################## - INITIALISATION OF MANEUVERS - ##################
+
+u_f.load_manoeuvers(satellites_list, 
+					[
+						{
+						"sat_name" : "SAT1",
+						"man_name" : "apogee modification",
+						"value" : 100e3,
+						"trigger_type" : "true anomaly",
+						"trigger_value" : 180,
+						"direction" : None
+						}
 					]	
 				    )
 
 if(1 in prm.applicationsOn) :
-	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="path", following_mode=True)
+	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="trajectory prediction", following_mode=False)
 	space_ani = animation.FuncAnimation(fig=space_displayer.figure, func=space_displayer.update, interval=0, repeat=False, blit=False)
 
 if(2 in prm.applicationsOn) : 

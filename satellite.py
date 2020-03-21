@@ -155,11 +155,11 @@ class Satellite :
 		self.next_manoeuver += 1
 		if(self.next_manoeuver <= len(self.manoeuvers_list)-1) : 
 			self.current_maneuver = maneuver.Maneuver(self, 
-												  self.manoeuvers_list[self.next_manoeuver][0], 
-												  self.manoeuvers_list[self.next_manoeuver][1],
-												  self.manoeuvers_list[self.next_manoeuver][2],
-												  self.manoeuvers_list[self.next_manoeuver][3],
-												  self.manoeuvers_list[self.next_manoeuver][4])
+												  self.manoeuvers_list[self.next_manoeuver]["man_name"], 
+												  self.manoeuvers_list[self.next_manoeuver]["value"],
+												  self.manoeuvers_list[self.next_manoeuver]["trigger_type"],
+												  self.manoeuvers_list[self.next_manoeuver]["trigger_value"],
+												  self.manoeuvers_list[self.next_manoeuver]["direction"])
 		else : 
 			self.current_maneuver = None
 
@@ -217,6 +217,8 @@ class Satellite :
 
 		a =  (-self.corps_ref.mu)*(self.r_cr/(np.linalg.norm(self.r_cr)**3))
 
+
+
 		#############################################
 		#
 		# Lorsque nous voulons un dV précis (par exemple pour une manoeuvre issue de
@@ -246,8 +248,8 @@ class Satellite :
 			self.thrust_acc_std = self.current_maneuver.maneuver_data.dV/prm.H
 			if(np.linalg.norm(self.thrust_acc_vect) == 0) : 
 				self.thrust_acc_vect = self.v_cr/self.v_cr_std
-
-			self.thrust_acc_vect = self.current_maneuver.maneuver_data.direction
+			else :
+				self.thrust_acc_vect = self.current_maneuver.maneuver_data.direction
 
 			self.state_vector = n_i.burlirsch_stoer_method(self, prm.elapsed_time, prm.A, prm.N, self.state_vector, prm.m, adapted_thrust=True)
 			self.thrust_acc_std = 0

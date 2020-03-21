@@ -122,7 +122,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 		else : self.leader = False
 
 
-		plt.style.use('seaborn-pastel')
+		plt.style.use('dark_background')
 		img = plt.imread("mappemonde.jpg")
 
 		self.figure, self.ax = plt.subplots()

@@ -13,10 +13,10 @@ rtol= 1e-5
 
 # Time parameters
 
-ideal_H = 100
+ideal_H = 10
 H = ideal_H
 
-starting_date = "2020-03-20 22:02:00" # [YYYY/MM/JJ HH:MM:SS]
+starting_date = "2000-01-01 12:00:00.000" # [YYYY/MM/JJ HH:MM:SS]
 current_date = ""
 
 initial_julian_date = 367*int(starting_date[0:4]) - int((7*(int(starting_date[0:4])+int((int(starting_date[5:7])+9)/12)))/4) \
@@ -37,14 +37,14 @@ simulation_speed_dict = {"slow" : 1,
 simulation_speed = "slow"
 calculation_repeat = simulation_speed_dict.get(simulation_speed)
 
-applicationsOn = [3]
+applicationsOn = [1]
 leaderApplication = min(applicationsOn) # The leader application is the one which will call the calculation at each time step in order to be able
 										# to display only the ground track or only the graphical parameters display ...
 
 
 # MainDisplay parameters
 
-parameters_on = False
+parameters_on = True
 
 
 # GroundTrackDisplay parameters
