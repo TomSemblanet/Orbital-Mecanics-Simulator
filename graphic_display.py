@@ -28,8 +28,8 @@ class MainDisplay :
 		cur_axes.axes.get_xaxis().set_visible(False)
 		cur_axes.axes.get_yaxis().set_visible(False)
 
-		self.ax.set_xlim([-4e8, 4e8])
-		self.ax.set_ylim([-4e8, 4e8])
+		self.ax.set_xlim([-20e10, 20e10])
+		self.ax.set_ylim([-20e10, 20e10])
 
 		self.display_mode = display_mode
 		self.following_mode = following_mode
@@ -102,7 +102,7 @@ class MainDisplay :
 
 			 self.celestial_bodies_points[j].set_data(self.celestial_bodies_list[j].r_abs[0], self.celestial_bodies_list[j].r_abs[1])
 
-			 if(i == 0 and self.celestial_bodies_list[j].corps_ref is not None) : 
+			 if((self.celestial_bodies_list[j].moving_body == True) or (i == 0 and self.celestial_bodies_list[j].corps_ref is not None)) : 
 			 	self.celestial_bodies_traj[j].set_data(self.celestial_bodies_list[j].orbit.traj[0]+self.celestial_bodies_list[j].corps_ref.r_abs[0], 
 													   self.celestial_bodies_list[j].orbit.traj[1]+self.celestial_bodies_list[j].corps_ref.r_abs[1])
 

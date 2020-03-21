@@ -149,8 +149,6 @@ class Maneuver :
 
 	def ComputeOrbitalRendezVous (self) :
 		self.value["date"] = u_f.DateToSeconds(prm.starting_date, self.value["date"])
-		print(self.value["date"])
-		input()
 		self.maneuver_data = OrbitalRendezVous(self.satellite, self.value["position_to_reach"], self.value["date"])
 
 

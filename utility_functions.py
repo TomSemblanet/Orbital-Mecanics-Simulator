@@ -137,8 +137,6 @@ def load_manoeuvers (satellites_list, maneuvers_dicts) :
 
 	satellites_dict = {}
 	for sat in satellites_list :
-		print("Sat <{}> : {} maneuvers.".format(sat.name, len([man for man in maneuvers_dicts if man["sat_name"]==sat.name])))
-		input()
 		sat.load_manoeuvers_list([man for man in maneuvers_dicts if man["sat_name"]==sat.name]) 
 
 	# for man in maneuvers_dicts :	

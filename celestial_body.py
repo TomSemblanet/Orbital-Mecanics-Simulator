@@ -37,7 +37,7 @@ class CelestialBody :
 	def __init__ (self, name, r0, v0) : 
 
 		self.name = name
-		self.color = "c"
+		self.color = "w"
 
 		self.moving_body = not(np.linalg.norm(r0) == 0)
 
@@ -102,6 +102,10 @@ class CelestialBody :
 		
 		# True anomaly : setted in the orbitals parameters calculation (orbit constructor)
 		self.initial_true_anomaly = self.true_anomaly
+		
+		print(self.r_cr)
+		print(self.v_cr)
+		input()
 
 		self.E = 2*math.atan( math.sqrt((1-self.orbit.e)/(1+self.orbit.e)) *  math.tan(self.true_anomaly/2))
 		self.M = self.E - self.orbit.e*math.sin(self.E)
