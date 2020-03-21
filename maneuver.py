@@ -68,7 +68,7 @@ class OrbitModificationManeuver :
 			dV = math.sqrt( 2*self.satellite.corps_ref.mu*(1/(self.satellite.orbit.a*(1+self.satellite.orbit.e)) - 1/(2*self.satellite.orbit.a)) + self.satellite.corps_ref.mu*(1/self.satellite.orbit.a - 1/(self.satellite.orbit.a+0.5*self.modification_value)) ) - math.sqrt( 2*self.satellite.corps_ref.mu*(1/(self.satellite.orbit.a*(1+self.satellite.orbit.e)) - 1/(2*self.satellite.orbit.a)) )
 		else : 
 			self.modification_value = -self.modification_value
-			dV = -(math.sqrt( 2*self.satellite.corps_ref.mu*( 1/(self.satellite.orbit.a*(1+self.satellite.orbit.e)) - 1/(2*self.satellite.orbit.a) ) ) - math.sqrt( 2*self.satellite.corps_ref.mu*( 1/(self.satellite.orbit.a*(1+self.satellite.orbit.e)) - 1/(2*self.satellite.orbit.a+self.modification_value))))
+			dV = (math.sqrt( 2*self.satellite.corps_ref.mu*( 1/(self.satellite.orbit.a*(1+self.satellite.orbit.e)) - 1/(2*self.satellite.orbit.a) ) ) - math.sqrt( 2*self.satellite.corps_ref.mu*( 1/(self.satellite.orbit.a*(1+self.satellite.orbit.e)) - 1/(2*self.satellite.orbit.a+self.modification_value))))
 
 		direction = np.array([0., 0., 0.])
 
@@ -79,6 +79,7 @@ class OrbitModificationManeuver :
 		self.modification_value = self.modification_value*(math.pi/180)
 		dV = 2*self.satellite.v_cr_std*math.sin(abs(self.modification_value)/2)
 		direction = math.cos(abs(self.modification_value)/2)*(self.satellite.h/self.satellite.h_std) - math.sin(abs(self.modification_value)/2)*(self.satellite.v_cr/self.satellite.v_cr_std)
+
 		if(self.modification_value < 0) :
 			direction[2] = -direction[2]
 
@@ -147,7 +148,9 @@ class Maneuver :
 		self.maneuver_data = FreeAcceleration(self.satellite, self.value, self.direction)
 
 	def ComputeOrbitalRendezVous (self) :
-		self.value["date"] = u_f.DateToSecond(prm.starting_date, self.value["date"])
+		self.value["date"] = u_f.DateToSeconds(prm.starting_date, self.value["date"])
+		print(self.value["date"])
+		input()
 		self.maneuver_data = OrbitalRendezVous(self.satellite, self.value["position_to_reach"], self.value["date"])
 
 

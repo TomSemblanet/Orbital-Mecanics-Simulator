@@ -38,8 +38,8 @@ celestial_bodies_list = u_f.load_celestial_bodies([
 satellites_list = u_f.load_satellites( [ 
 										{
 										"name" : "SAT1",
-										"r0" : np.array([-22000e3, 0, 0]),
-										"v0" : np.array([0, -3000-0.1, 1000]),
+										"r0" : np.array([-7200e3, 0, 0]),
+										"v0" : np.array([0, -8000.1, 0]),
 										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
 										"color" : "m"
 										}, 
@@ -60,10 +60,10 @@ u_f.load_manoeuvers(satellites_list,
 					[
 						{
 						"sat_name" : "SAT1",
-						"man_name" : "apogee modification",
-						"value" : 100e3,
-						"trigger_type" : "true anomaly",
-						"trigger_value" : 180,
+						"man_name" : "orbital rendez-vous",
+						"value" : {"position_to_reach" : np.array([20000e3, 10000e3, 0.]), "date" : "2000-01-01 14:30:00.000"},
+						"trigger_type" : "date",
+						"trigger_value" : "2000-01-01 12:30:00.000",
 						"direction" : None
 						}
 					]	
@@ -78,7 +78,7 @@ if(2 in prm.applicationsOn) :
 	ground_track_ani = animation.FuncAnimation(fig=ground_track_displayer.figure, func=ground_track_displayer.update, interval=0, repeat=False, blit=True)
 
 if(3 in prm.applicationsOn) : 
-	parameters_displayer = g_d.GraphDisplay(satellites_list, celestial_bodies_list, "Speed relative to referent body : SAT1 SAT2")
+	parameters_displayer = g_d.GraphDisplay(satellites_list, celestial_bodies_list, "Distance to referent body : SAT1 SAT2")
 	parameters_ani = animation.FuncAnimation(fig=parameters_displayer.figure, func=parameters_displayer.update, interval=0, repeat=False, blit=False)
 
 plt.show()

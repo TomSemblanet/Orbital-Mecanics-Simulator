@@ -19,6 +19,7 @@ import datetime as dt
 #################################################
 
 def update_date () : 
+
 	prm.elapsed_time += prm.H
 
 	prm.current_date = str(datetime.fromtimestamp(946724400+prm.initial_julian_date*86400+prm.elapsed_time))[:23]
@@ -70,6 +71,7 @@ def display_parameters (bodies) :
 		print('- Velocity : {} km/s'.format(round(body.v_cr_std/1000, 2)))
 		print('- Cartesian Coord : {}'.format(body.r_cr))
 		print('- Cartesian Velocity : {}'.format(body.v_cr))
+		print('- Perigee radius : {}'.format(body.perigee_radius/1000))
 		print("\n")
 
 
@@ -441,7 +443,7 @@ def DateToSeconds (date1, date2) :
 
 	object_date1 = datetime.strptime(date1, "%Y-%m-%d %H:%M:%S.%f")
 	object_date2 = datetime.strptime(date2, "%Y-%m-%d %H:%M:%S.%f")
-	
+
 	return (object_date2-object_date1).total_seconds()
 
 
