@@ -17,20 +17,41 @@ import matplotlib.animation as animation
 
 									   	################ - INITIALISATION OF CELESTIAL BODIES - ################
 
-earth = c_b.CelestialBody(np.array([0., 0., 0.]), np.array([0., 0., 0.]), mass=cst.massTe, mu=cst.muTe, radius=cst.radTe, name="Earth", moving_body=False)
-moon = c_b.CelestialBody(np.array([356700e3, 0., 0.]), np.array([0., 1052, 0.]), mass=cst.massLu, mu=cst.muLu, radius=cst.radLu, name="Moon", moving_body=True, corps_ref=earth)
+celestial_bodies_list = u_f.load_celestial_bodies([
+												   {
+												   "name" : "Earth",
+												   "r0" : np.array([0., 0., 0.]),
+												   "v0" : np.array([0., 0., 0.])
+												   },
 
-# The body n°1 of the celestial_bodies_list has to be the "main" body (sun in an heliocentric referential, earth in a geocentric one ...)
+												   {
+												   "name" : "Moon",
+												   "r0" : np.array([356700e3, 0., 0.]),
+												   "v0" : np.array([0., 1052, 0.])
+												   }
+												  ])
 
-celestial_bodies_list = [earth, moon]
 
 										################ - INITIALISATION OF SATELLITE(S) PARAMETERS - ################
 
 
-p = np.array([-22000e3, 0, 0])
-v = np.array([0, -math.sqrt(cst.muTe/22000e3)-0.1, 1000])
+satellites_list = u_f.load_satellites( [ 
+										{
+										"name" : "SAT1",
+										"r0" : np.array([-22000e3, 0, 0]),
+										"v0" : np.array([0, -math.sqrt(cst.muTe/22000e3)-0.1, 1000]),
+										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
+										"color" : "m"
+										}, 
 
-satellites_list = u_f.load_satellites( [ [p, v, "SAT1", earth, "m"], [p+np.array([1000e3]), v+np.array([100, 300, 0.]), "SAT2", earth, "c"]] )
+										{
+										"name" : "SAT2",
+										"r0" : np.array([-29000e3, 0, 0]),
+										"v0" : np.array([0, -2000-0.1, 2000]),
+										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
+										"color" : "c"
+										}
+									   ] )
 
 u_f.load_manoeuvers(satellites_list, 
 					[ 

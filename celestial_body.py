@@ -3,6 +3,7 @@ import numpy as np
 import math
 
 import parameters as prm
+import constants as cst
 import utility_functions as u_f
 import orbit as orb
 
@@ -33,21 +34,21 @@ class CelestialBody :
 	#
 	#################################################
 
-	def __init__ (self, r0, v0, mass, mu, radius, moving_body, name, corps_ref=None, color="c") : 
+	def __init__ (self, name, r0, v0) : 
 
 		self.name = name
-		self.color = color
+		self.color = "c"
 
-		self.moving_body = moving_body
+		self.moving_body = not(np.linalg.norm(r0) == 0)
+
 
 		self.influence_sphere_radius = 0.
-		self.mass = mass
-		self.mu = mu
-		self.radius = radius
+		self.mass = cst.Celestial_Bodies_Dict[self.name]["mass"]
+		self.mu = cst.Celestial_Bodies_Dict[self.name]["mu"]
+		self.radius = cst.Celestial_Bodies_Dict[self.name]["radius"]
 
-		self.k = 0
-
-		self.corps_ref = corps_ref
+		self.corps_ref_name = cst.Celestial_Bodies_Dict[self.name]["corps_ref"]
+		self.corps_ref = None
 
 		self.r_abs = r0
 		self.r_abs_std = np.linalg.norm(r0)
@@ -70,9 +71,8 @@ class CelestialBody :
 		self.E = 0.
 		self.M = 0.
 
-		if(self.r_abs_std != 0) :
-			self.loadParameters()
-			# self.loadPlot()
+		# if(self.r_abs_std != 0) :
+		# 	self.loadParameters()
 
 
 	#################################################
@@ -82,7 +82,9 @@ class CelestialBody :
 	#
 	#################################################
 
-	def loadParameters (self) :
+	def loadParameters (self, corps_ref) :
+
+		self.corps_ref = corps_ref
 
 		for i in [0, 1, 2] : 
 			self.r_cr[i] = self.r_abs[i] - self.corps_ref.r_cr[i]

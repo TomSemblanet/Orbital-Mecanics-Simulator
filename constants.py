@@ -1,5 +1,88 @@
 import numpy as np
 
+Celestial_Bodies_Dict = {
+	"Sun" : {
+			"name"   : "Sun",
+			"mass"   : 1.9885e30,
+			"mu"     : 1.32712440018e20,
+			"radius" : 696342e3,
+			"corps_ref" : None
+	 	  },
+
+	"Mercure" : {
+			"name"   : "Mercure",
+			"mass"   : 3.3011e23,
+			"mu"     : 2.2032e13,
+			"radius" : 2439.7e3,
+			"corps_ref" : "Sun"
+		  },
+
+	"Venus" : {
+			"name"   : "Venus",
+			"mass"   : 4.8675e24,
+			"mu"     : 3.24859e14,
+			"radius" : 6051.8e3,
+			"corps_ref" : "Sun"
+		  },
+
+	"Earth" : {
+			"name"   : "Earth",
+			"mass"   : 5.97237e24,
+			"mu"     : 3.986004418e14,
+			"radius" : 6378.137e3,
+			"corps_ref" : "Sun"
+		 },
+
+	"Mars" : {
+			"name"   : "Mars",
+			"mass"   : 6.4171e23,
+			"mu"     : 4.282837e13,
+			"radius" : 3389.5e3,
+			"corps_ref" : "Sun"
+		 },
+
+	"Jupiter" : {
+			"name"   : "Jupiter",
+			"mass"   : 1.8982e27,
+			"mu"     : 1.26686534e17,
+			"radius" : 69911e3,
+			"corps_ref" : "Sun"
+		 },
+
+	"Saturn" : {
+			"name"   : "Saturn",
+			"mass"   : 5.6834e26,
+			"mu"     : 3.7931187e16,
+			"radius" : 58232e3,
+			"corps_ref" : "Sun"
+		 },
+
+	"Uranus" : {
+			"name"   : "Uranus",
+			"mass"   : 8.6810e25,
+			"mu"     : 5.793939e15,
+			"radius" : 25362e3,
+			"corps_ref" : "Sun"
+		 },
+
+	"Neptune" : {
+			"name"   : "Neptune",
+			"mass"   : 1.02413e26,
+			"mu"     : 6.836529e15,
+			"radius" : 24622e3,
+			"corps_ref" : "Sun"
+		 },
+
+	"Moon" : {
+			"name"   : "Moon",
+			"mass"   : 7.34767309e22,
+			"mu"     : 4.9048695e12,
+			"radius" : 1737.4e3,
+			"corps_ref" : "Earth"
+		 }
+}
+
+
 # mass data [kg]
 
 massSu = 1.9885e30
