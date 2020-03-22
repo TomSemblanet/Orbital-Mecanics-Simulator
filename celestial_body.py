@@ -34,13 +34,10 @@ class CelestialBody :
 	#
 	#################################################
 
-	def __init__ (self, name, r0, v0) : 
+	def __init__ (self, name) : 
 
 		self.name = name
 		self.color = "w"
-
-		self.moving_body = not(np.linalg.norm(r0) == 0)
-
 
 		self.influence_sphere_radius = 0.
 		self.mass = cst.Celestial_Bodies_Dict[self.name]["mass"]
@@ -50,14 +47,14 @@ class CelestialBody :
 		self.corps_ref_name = cst.Celestial_Bodies_Dict[self.name]["corps_ref"]
 		self.corps_ref = None
 
-		self.r_abs = r0
-		self.r_abs_std = np.linalg.norm(r0)
+		self.r_abs = cst.Celestial_Bodies_Dict[self.name]['initial_position']
+		self.r_abs_std = np.linalg.norm(self.r_abs)
 
 		self.r_cr = np.array([0., 0., 0.])
 		self.r_cr_std = 0.
 		
-		self.v_abs = v0
-		self.v_abs_std = np.linalg.norm(v0)
+		self.v_abs = cst.Celestial_Bodies_Dict[self.name]['initial_velocity']
+		self.v_abs_std = np.linalg.norm(self.v_abs)
 
 		self.v_cr = np.array([0., 0., 0.])
 		self.v_cr_std = 0.
@@ -71,8 +68,8 @@ class CelestialBody :
 		self.E = 0.
 		self.M = 0.
 
-		# if(self.r_abs_std != 0) :
-		# 	self.loadParameters()
+		self.moving_body = not(np.linalg.norm(self.r_abs) == 0)
+
 
 
 	#################################################
@@ -102,10 +99,6 @@ class CelestialBody :
 		
 		# True anomaly : setted in the orbitals parameters calculation (orbit constructor)
 		self.initial_true_anomaly = self.true_anomaly
-		
-		print(self.r_cr)
-		print(self.v_cr)
-		input()
 
 		self.E = 2*math.atan( math.sqrt((1-self.orbit.e)/(1+self.orbit.e)) *  math.tan(self.true_anomaly/2))
 		self.M = self.E - self.orbit.e*math.sin(self.E)

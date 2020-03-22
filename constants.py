@@ -7,8 +7,8 @@ Celestial_Bodies_Dict = {
 			"mu"     : 1.32712440018e20,
 			"radius" : 696342e3,
 			"corps_ref" : None,
-			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_position" : [0., 0., 0.],
+			"initial_velocity" : [0., 0., 0.]
 	 	  },
 
 	"Mercury" : {
@@ -103,6 +103,7 @@ Celestial_Bodies_Dict = {
 }
 
 
+
 def EphemeridesLoader () : 
 	global Celestial_Bodies_Dict
 
@@ -119,9 +120,6 @@ def EphemeridesLoader () :
 			Celestial_Bodies_Dict[splited_line[0]]["initial_velocity"] = [1.731e6*float(elt) for elt in splited_line[4:7]]
 
 EphemeridesLoader()
-
-for value in Celestial_Bodies_Dict.values() : 
-	print("{} > {}\n".format(value["name"], value))
 
 # rotationnal velocity data [rad/s]
 

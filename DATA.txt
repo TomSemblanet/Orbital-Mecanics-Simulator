@@ -1,0 +1,51 @@
+~=~=~=~=~=~=  PARAMETERS FILE  ~=~=~=~=~=~=     /!\ NE PAS MODIFIER LA STRUCTURE DE CE FICHIER /!\
+~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~	--------------------------------------------------
+
+
+========= CELESTIAL BODIES =========
+
+- Sun [v] Mercury [v] Venus [v] Earth [v] Mars [x] Jupiter [x] Saturn [x] Uranus [x] Neptune [x] 
+
+
+=========    SATELLITES    =========
+
+- --SAT1 --[22000000, 0, 0] --[0, 3000, 0] --Earth --m
+- --SAT2 --[22000000, 0, 0] --[0, -3000, 0] --Earth --c
+
+
+=========    MANEUVERS    =========
+
+- --[satellite name] --[maneuver name] --[data] --[trigger type] --[trigger value] --[dx, dy, dz]
+- --[satellite name] --[maneuver name] --[data] --[trigger type] --[trigger value] --[dx, dy, dz]
+...
+- --[satellite name] --[maneuver name] --[data] --[trigger type] --[trigger value] --[dx, dy, dz]
+
+
+=========      TIME      =========
+
+- starting date : [YYYY-MM-DD HH:MM:SS.MSMSMS]
+- time step : [dT]
+
+
+=========  APPLICATIONS  =========
+
+- applications to run : Spatial View [v]  Ground Track [x]  Parameters Plot [v]
+- simulation speed : low [x]  medium [v]  high [x]  very high [x]
+- show bodies data : [v]
+- bodies data displayed : [name] [name] ... [name]
+
+
+=========  SPATIAL VIEW  =========
+
+- display mode : Satellite path [v]  Trajectory prediction [x]
+- following mode : [x]
+
+
+=========  GROUND TRACK  =========
+
+
+=======  PARAMETERS PLOT  ========
+
+- parameter to plot : Distance to referent body
+- satellites displayed : [name] [name]
+- historic length : [secondes]

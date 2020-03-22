@@ -91,23 +91,24 @@ def display_parameters (bodies) :
 #
 #################################################
 
-def load_satellites (satellites_data_dicts) : 
+def load_satellites (satellites_data_dicts, celestial_bodies_list) : 
 
 	satellites_list = []
 
 	for satellite_dict in satellites_data_dicts :
+		satellite_dict["corps_ref"] = [body for body in celestial_bodies_list if body.name==satellite_dict["corps_ref"]][0]
 		new_satellite = sat.Satellite(**satellite_dict)
 		satellites_list.append(new_satellite)
 	
 	return satellites_list
 
 
-def load_celestial_bodies (celestial_bodies_data_dicts) : 
+def load_celestial_bodies (celestial_bodies_to_compute) : 
 
 	first_celestial_bodies_list = []
 
-	for celestial_body_dict in celestial_bodies_data_dicts :
-		new_celestial_body = c_b.CelestialBody(**celestial_body_dict)
+	for celestial_body_name in celestial_bodies_to_compute :
+		new_celestial_body = c_b.CelestialBody(celestial_body_name)
 		first_celestial_bodies_list.append(new_celestial_body)
 
 	celestial_bodies_list = [] 

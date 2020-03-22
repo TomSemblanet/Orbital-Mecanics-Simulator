@@ -56,3 +56,92 @@ parameters_on = True
 
 
 
+def initialLoader () : 
+	pass
+
+def celestialBodiesLoader () :
+
+	celestial_bodies_to_load = [] 
+
+	with open("DATA.txt", 'r') as data_file : 
+
+		begin_indice = 0
+		lines = data_file.readlines()
+		while (lines[begin_indice] != "========= CELESTIAL BODIES =========\n") : begin_indice+=1
+		begin_indice+=2
+
+		line = lines[begin_indice][2:]
+		splited_line = line.split('] ')
+
+		for l in splited_line[:-1] :
+			if(l[-1] == 'v') : 
+				celestial_bodies_to_load.append(l.split(' ')[0])
+
+	return celestial_bodies_to_load
+
+
+def satellitesLoader () : 
+
+	dicts_to_send = []
+
+	with open("DATA.txt", 'r') as data_file : 
+
+		begin_indice, end_indice = 0, 0
+		lines = data_file.readlines()
+
+		while (lines[begin_indice] != "=========    SATELLITES    =========\n") : begin_indice+=1
+		begin_indice+=2
+		end_indice=begin_indice
+
+		while (lines[end_indice] != "=========    MANEUVERS    =========\n") :	end_indice+=1
+		end_indice-=2
+
+		for line in lines[begin_indice:end_indice] : 
+			splited_line = line.split('--')
+			line_dict = dict()
+
+			line_dict['name'] = splited_line[1].lstrip().replace(" ", "")
+
+			string_tab = splited_line[2][1:-2]
+			line_dict['r0'] = np.array([float(string_tab.split(',')[0].lstrip()), float(string_tab.split(',')[1].lstrip()), float(string_tab.split(',')[2].lstrip())])
+			
+			string_tab = splited_line[3][1:-2]
+			line_dict['v0'] = np.array([float(string_tab.split(',')[0].lstrip()), float(string_tab.split(',')[1].lstrip()), float(string_tab.split(',')[2].lstrip())])
+			
+			line_dict['corps_ref'] = splited_line[4].replace(" ", "")
+			
+			line_dict['color'] = splited_line[5][:-1]
+
+			dicts_to_send.append(line_dict)
+
+	return dicts_to_send
+
+
+def maneuverLoader () : 
+
+	dict_to_send = []
+
+	with open("DATA.txt", 'r') as data_file : 
+
+		begin_indice, end_indice = 0, 0
+		lines = data_file.readlines()
+
+		while (lines[begin_indice] != "=========    MANEUVERS    =========\n") : begin_indice+=1
+		begin_indice+=2
+		end_indice=begin_indice
+
+		while (lines[end_indice] != "=========      TIME      =========\n") :	end_indice+=1
+		end_indice-=2
+
+		for line in lines[begin_indice:end_indice] : 
+			splited_line = line.split('--')
+			line_dict = dict()
+
+			line_dict['sat_name'] = splited_line[1][:-1]
+
+			line_dict['man_name'] = splited_line[2][:-1]
+			
+			
+
+maneuverLoader()
+

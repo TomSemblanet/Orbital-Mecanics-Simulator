@@ -17,47 +17,32 @@ import matplotlib.animation as animation
 
 									   	################ - INITIALISATION OF CELESTIAL BODIES - ################
 
-celestial_bodies_list = u_f.load_celestial_bodies([
-												   {
-												   "name" : "Sun",
-												   "r0" : np.array([0., 0., 0.]),
-												   "v0" : np.array([0., 0., 0.])
-												   },
 
-												   {
-												   "name" : "Earth",
-												   "r0" : np.array([u_f.UAtoM(-0.1685374502545),    u_f.UAtoM(0.9687810706516),   u_f.UAtoM(-0.0000041211671)]),
-												   "v0" : np.array([u_f.UAdtoMs(-0.0172339077638),  u_f.UAdtoMs( -0.0030078848975),    u_f.UAdtoMs(0.0000000357456)])
-												   },
-
-												   {
-												   "name" : "Moon",
-												   "r0" : np.array([u_f.UAtoM(-0.1706605703450),    u_f.UAtoM(0.9671638383115),   u_f.UAtoM(0.0002402387170)]),
-												   "v0" : np.array([u_f.UAdtoMs(-0.0169099517768),  u_f.UAdtoMs(  -0.0034698287592),    u_f.UAdtoMs(-0.0000009195883)])
-												   }
-												  ])
+celestial_bodies_list = u_f.load_celestial_bodies(prm.celestialBodiesLoader())
 
 
 										################## - INITIALISATION OF SATELLITE(S) - ##################
 
 
-satellites_list = u_f.load_satellites( [ 
-										{
-										"name" : "SAT1",
-										"r0" : np.array([-7200e3, 0, 0]),
-										"v0" : np.array([0, -8000.1, 0]),
-										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
-										"color" : "m"
-										}, 
+# satellites_list = u_f.load_satellites( [ 
+# 										{
+# 										"name" : "SAT1",
+# 										"r0" : np.array([-7200e3, 0, 0]),
+# 										"v0" : np.array([0, -8000.1, 0]),
+# 										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
+# 										"color" : "m"
+# 										}, 
 
-										{
-										"name" : "SAT2",
-										"r0" : np.array([-29000e3, 0, 0]),
-										"v0" : np.array([0, -2000-0.1, 2000]),
-										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
-										"color" : "c"
-										}
-									   ] )
+# 										{
+# 										"name" : "SAT2",
+# 										"r0" : np.array([-29000e3, 0, 0]),
+# 										"v0" : np.array([0, -2000-0.1, 2000]),
+# 										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
+# 										"color" : "c"
+# 										}
+# 									   ] )
+
+satellites_list = u_f.load_satellites(prm.satellitesLoader(), celestial_bodies_list)
 
 
 										################## - INITIALISATION OF MANEUVERS - ##################
@@ -76,7 +61,7 @@ u_f.load_manoeuvers(satellites_list,
 				    )
 
 if(1 in prm.applicationsOn) :
-	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="path", following_mode=False)
+	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="trajectory prediction", following_mode=False)
 	space_ani = animation.FuncAnimation(fig=space_displayer.figure, func=space_displayer.update, interval=0, repeat=False, blit=False)
 
 if(2 in prm.applicationsOn) : 
