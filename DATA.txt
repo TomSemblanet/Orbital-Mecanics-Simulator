@@ -4,7 +4,7 @@
 
 ========= CELESTIAL BODIES =========
 
-- Sun [v] Mercury [v] Venus [v] Earth [v] Mars [x] Jupiter [x] Saturn [x] Uranus [x] Neptune [x] 
+- Sun [v] Mercury [v] Venus [v] Earth [v] Mars [v] Jupiter [x] Saturn [x] Uranus [x] Neptune [x] 
 
 
 =========    SATELLITES    =========
@@ -15,10 +15,7 @@
 
 =========    MANEUVERS    =========
 
-- --[satellite name] --[maneuver name] --[data] --[trigger type] --[trigger value] --[dx, dy, dz]
-- --[satellite name] --[maneuver name] --[data] --[trigger type] --[trigger value] --[dx, dy, dz]
-...
-- --[satellite name] --[maneuver name] --[data] --[trigger type] --[trigger value] --[dx, dy, dz]
+- --SAT1 --apogee modification --1000000 --true anomaly --0 --[0, 0, 0]
 
 
 =========      TIME      =========

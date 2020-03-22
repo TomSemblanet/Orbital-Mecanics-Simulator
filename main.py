@@ -47,18 +47,7 @@ satellites_list = u_f.load_satellites(prm.satellitesLoader(), celestial_bodies_l
 
 										################## - INITIALISATION OF MANEUVERS - ##################
 
-u_f.load_manoeuvers(satellites_list, 
-					[
-						# {
-						# "sat_name" : "SAT1",
-						# "man_name" : "orbital rendez-vous",
-						# "value" : {"position_to_reach" : np.array([ -2872483, -12622718, 12622087]), "date" : "2000-01-01 14:54:00.000"},
-						# "trigger_type" : "date",
-						# "trigger_value" : "2000-01-01 13:50:00.000",
-						# "direction" : None
-						# }
-					]	
-				    )
+u_f.load_manoeuvers(satellites_list, prm.maneuverLoader())
 
 if(1 in prm.applicationsOn) :
 	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="trajectory prediction", following_mode=False)

@@ -13,10 +13,10 @@ rtol= 1e-5
 
 # Time parameters
 
-ideal_H = 10
+ideal_H = 5
 H = ideal_H
 
-starting_date = "2000-01-01 12:00:00.000" # [YYYY/MM/JJ HH:MM:SS]
+starting_date = "2000-01-01 12:30:00.000" # [YYYY/MM/JJ HH:MM:SS]
 current_date = ""
 
 initial_julian_date = 367*int(starting_date[0:4]) - int((7*(int(starting_date[0:4])+int((int(starting_date[5:7])+9)/12)))/4) \
@@ -119,7 +119,7 @@ def satellitesLoader () :
 
 def maneuverLoader () : 
 
-	dict_to_send = []
+	dicts_to_send = []
 
 	with open("DATA.txt", 'r') as data_file : 
 
@@ -134,14 +134,35 @@ def maneuverLoader () :
 		end_indice-=2
 
 		for line in lines[begin_indice:end_indice] : 
+			print(">>>>>>>>>>>>>>")
 			splited_line = line.split('--')
 			line_dict = dict()
 
 			line_dict['sat_name'] = splited_line[1][:-1]
 
 			line_dict['man_name'] = splited_line[2][:-1]
-			
-			
 
-maneuverLoader()
+			if(line_dict['man_name'] == "orbital rendez-vous") : 
+				line_dict["value"] = dict()
+				split = splited_line[3][:-1].replace("[", "").replace("]", "").replace(",", "").split(" ")
+				line_dict["value"]["position_to_reach"] = np.array([float(split[0]), float(split[1]), float(split[2])])
+				line_dict["value"]["date"] = float(split[3])
+			else : 
+				line_dict['value'] = float(splited_line[3][:-1])
+
+			line_dict['trigger_type'] = splited_line[4][:-1]
+
+			line_dict['trigger_value'] = float(splited_line[5][:-1])
+
+			line_dict['direction'] = splited_line[6][:-1]
+
+			if(splited_line[6][:-1] == "None") : 
+				line_dict['direction'] = None
+			else : 
+				line_tab = splited_line[6][:-1][1:-1].replace("]", "").replace(",", "").split(" ")
+				line_dict['direction'] = np.array([float(line_tab[0]), float(line_tab[1]), float(line_tab[2])])
+
+			dicts_to_send.append(line_dict)
+				
+	return dicts_to_send
 

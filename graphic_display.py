@@ -72,7 +72,7 @@ class MainDisplay :
 
 			point, = self.ax.plot([], [], ls="none", marker="o", color=body.color)
 			self.celestial_bodies_points = np.append(self.celestial_bodies_points, point)
-			traj, = self.ax.plot([],[], color=body.color)
+			traj, = self.ax.plot([],[],ls=":" ,color=body.color)
 			self.celestial_bodies_traj = np.append(self.celestial_bodies_traj, traj)
 
 	def update (self, i) :
@@ -81,8 +81,8 @@ class MainDisplay :
 			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
 
 		if (self.following_mode) : 
-			self.ax.set_xlim([self.satellite_list[0].r_abs[0]-50000e3, self.satellite_list[0].r_abs[0]+50000e3])
-			self.ax.set_ylim([self.satellite_list[0].r_abs[1]-50000e3, self.satellite_list[0].r_abs[1]+50000e3])
+			self.ax.set_xlim([self.satellite_list[0].r_abs[0]-5000e3, self.satellite_list[0].r_abs[0]+5000e3])
+			self.ax.set_ylim([self.satellite_list[0].r_abs[1]-5000e3, self.satellite_list[0].r_abs[1]+5000e3])
 		if(self.display_mode != "trajectory prediction" and i>0) : 
 			self.x_matrix = np.append(self.x_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
 			self.y_matrix = np.append(self.y_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
