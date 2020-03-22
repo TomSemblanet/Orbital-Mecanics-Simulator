@@ -75,12 +75,6 @@ class Satellite :
 
 		self.perigee_radius = 0.
 
-		print(self.name)
-		print(self.r_cr)
-		print(self.v_cr)
-		print(self.corps_ref.name)
-		input()
-
 		self.loadParameters(first_load=True)
 
 

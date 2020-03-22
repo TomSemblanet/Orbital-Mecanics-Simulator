@@ -1,5 +1,6 @@
 import numpy as np
 import datetime as dt
+import time
 
 # Mathematical processing parameters (Burlisch Stoer Method)
 
@@ -9,7 +10,6 @@ A = np.zeros((jmax+1, jmax+1, N))
 m = 2*(np.arange(jmax+1)+1)
 atol = 1e-12
 rtol= 1e-5
-
 
 # Time parameters
 
@@ -134,7 +134,6 @@ def maneuverLoader () :
 		end_indice-=2
 
 		for line in lines[begin_indice:end_indice] : 
-			print(">>>>>>>>>>>>>>")
 			splited_line = line.split('--')
 			line_dict = dict()
 
@@ -152,7 +151,10 @@ def maneuverLoader () :
 
 			line_dict['trigger_type'] = splited_line[4][:-1]
 
-			line_dict['trigger_value'] = float(splited_line[5][:-1])
+			try :
+				line_dict['trigger_value'] = float(splited_line[5][:-1])
+			except : 
+				line_dict['trigger_value'] = datetime.strptime(splited_line[5][:-1], "%Y-%m-%d %H:%M:%S.%f")
 
 			line_dict['direction'] = splited_line[6][:-1]
 
@@ -165,4 +167,10 @@ def maneuverLoader () :
 			dicts_to_send.append(line_dict)
 				
 	return dicts_to_send
+
+
+
+
+# datetime.strptime("2000-01-01 12:30:00.000", "%Y-%m-%d %H:%M:%S.%f")
+# print(dt.fromtimestamp(time.time()))
 
