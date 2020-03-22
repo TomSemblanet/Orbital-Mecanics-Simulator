@@ -28,8 +28,8 @@ class MainDisplay :
 		cur_axes.axes.get_xaxis().set_visible(False)
 		cur_axes.axes.get_yaxis().set_visible(False)
 
-		self.ax.set_xlim([-20e10, 20e10])
-		self.ax.set_ylim([-20e10, 20e10])
+		self.ax.set_xlim([-20e11, 20e11])
+		self.ax.set_ylim([-20e11, 20e11])
 
 		self.display_mode = display_mode
 		self.following_mode = following_mode

@@ -15,13 +15,7 @@ import maneuver
 import matplotlib.animation as animation
 
 
-									   	################ - INITIALISATION OF CELESTIAL BODIES - ################
-
-
 celestial_bodies_list = u_f.load_celestial_bodies(prm.celestialBodiesLoader())
-
-
-										################## - INITIALISATION OF SATELLITE(S) - ##################
 
 
 # satellites_list = u_f.load_satellites( [ 
@@ -43,9 +37,6 @@ celestial_bodies_list = u_f.load_celestial_bodies(prm.celestialBodiesLoader())
 # 									   ] )
 
 satellites_list = u_f.load_satellites(prm.satellitesLoader(), celestial_bodies_list)
-
-
-										################## - INITIALISATION OF MANEUVERS - ##################
 
 u_f.load_manoeuvers(satellites_list, prm.maneuverLoader())
 

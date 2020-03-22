@@ -9,7 +9,6 @@ import celestial_body as c_b
 import parameters as prm
 from datetime import datetime
 import numerical_integration as n_i
-import datetime as dt
 
 
 #################################################
@@ -444,3 +443,4 @@ def DateToSeconds (date1, date2) :
 	object_date2 = datetime.strptime(date2, "%Y-%m-%d %H:%M:%S.%f")
 
 	return (object_date2-object_date1).total_seconds()
+
