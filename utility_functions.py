@@ -19,23 +19,26 @@ import numerical_integration as n_i
 
 def update_date () : 
 
-	prm.elapsed_time += prm.H
+	prm.parameters["time"]["elapsed time"] += prm.parameters["time"]["time step"]
 
-	prm.current_date = str(datetime.fromtimestamp(946724400+prm.initial_julian_date*86400+prm.elapsed_time))[:23]
-	prm.current_julian_date = 367*int(prm.current_date[0:4]) - int((7*(int(prm.current_date[0:4])+int((int(prm.current_date[5:7])+9)/12)))/4) \
-					+ int(275*int(prm.current_date[5:7])/9) + int(prm.current_date[8:10]) + 1721013.5 + (((int(prm.current_date[17:19])/60) \
-					+ int(prm.current_date[14:16]))/60+int(prm.current_date[11:13]))/24 - 2451545
+	prm.parameters["time"]["current date"] = str(datetime.fromtimestamp(946724400+prm.parameters["time"]["initial julian date"]*86400+prm.parameters["time"]["elapsed time"]))[:23]
+	prm.current_julian_date = 367*int(prm.parameters["time"]["current date"][0:4]) - int((7*(int(prm.parameters["time"]["current date"][0:4])
+					+ int((int(prm.parameters["time"]["current date"][5:7])+9)/12)))/4) \
+					+ int(275*int(prm.parameters["time"]["current date"][5:7])/9) + int(prm.parameters["time"]["current date"][8:10]) + 1721013.5 \
+					+ (((int(prm.parameters["time"]["current date"][17:19])/60) \
+					+ int(prm.parameters["time"]["current date"][14:16]))/60+int(prm.parameters["time"]["current date"][11:13]))/24 - 2451545 \
 
-	if(prm.H == 0) : 
-		prm.H = prm.ideal_H
+	if(prm.parameters["time"]["time step"] == 0) : 
+		prm.parameters["time"]["time step"] = prm.parameters["time"]["general time step"]
+		
 
 
 def Computation (satellites_list, celestial_bodies_list) :
 
-	if(prm.parameters_on) : 	
+	if(prm.parameters["applications"]["show bodies data"] == True) : 	
 		display_parameters(satellites_list)
 
-	for i in range (prm.calculation_repeat) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
+	for i in range (prm.parameters["applications"]["calculation repeat"]) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
 		update_celestial_bodies_position(celestial_bodies_list)
 		satellites_accelerations(satellites_list)
 		update_ref_body(satellites_list, celestial_bodies_list)
@@ -53,9 +56,9 @@ def display_parameters (bodies) :
 
 	os.system("clear")
 
-	print(prm.current_date)
+	print(prm.parameters["time"]["current date"])
 	print("-----------------------\n")
-	print("Elapsed time : {} sec\n".format(round(prm.elapsed_time)))
+	print("Elapsed time : {} sec\n".format(round(prm.parameters["time"]["elapsed time"])))
 
 	for body in bodies : 
 		print('> {}\n'.format(body.name))
@@ -70,7 +73,6 @@ def display_parameters (bodies) :
 		print('- Velocity : {} km/s'.format(round(body.v_cr_std/1000, 2)))
 		print('- Cartesian Coord : {}'.format(body.r_cr))
 		print('- Cartesian Velocity : {}'.format(body.v_cr))
-		print('- Perigee radius : {}'.format(body.perigee_radius/1000))
 		print("\n")
 
 
@@ -138,10 +140,6 @@ def load_manoeuvers (satellites_list, maneuvers_dicts) :
 	satellites_dict = {}
 	for sat in satellites_list :
 		sat.load_manoeuvers_list([man for man in maneuvers_dicts if man["sat_name"]==sat.name]) 
-
-	# for man in maneuvers_dicts :	
-	# 	satellites_dict[man["sat_name"]].load_manoeuvers_list()
-	# 	satellites_list[i].load_manoeuvers_list(manoeuvers_lists[i])
 
 
 #################################################
@@ -273,7 +271,7 @@ def UAdtoMs (v) :
 
 def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) : 
 
-	# flight_time -= prm.H # il faut enlever prm.H au temps de vol car il se passe un tour de boucle le temps que le satellite adapte sa vitesse
+	# flight_time -= prm.dT # il faut enlever prm.dT au temps de vol car il se passe un tour de boucle le temps que le satellite adapte sa vitesse
 
 	r_init_std = np.linalg.norm(r_init)
 	r_final_std = np.linalg.norm(r_final)
@@ -425,7 +423,7 @@ def PassageTimePredictor (body, angle) :
 	if(Dt < 0) : 
 		Dt = body.orbit.T + Dt
 		
-	return (prm.elapsed_time + Dt)
+	return (prm.parameters["time"]["elapsed time"] + Dt)
 
 
 
@@ -443,4 +441,5 @@ def DateToSeconds (date1, date2) :
 	object_date2 = datetime.strptime(date2, "%Y-%m-%d %H:%M:%S.%f")
 
 	return (object_date2-object_date1).total_seconds()
+
 

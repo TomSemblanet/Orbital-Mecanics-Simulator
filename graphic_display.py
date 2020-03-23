@@ -12,11 +12,11 @@ import matplotlib.animation as animation
 
 class MainDisplay : 
 
-	def __init__ (self, satellite_list, celestial_bodies_list, display_mode="trajectory prediction", following_mode=False) : 
+	def __init__ (self, satellite_list, celestial_bodies_list) : 
 
 
-		self.appID = 1
-		if(self.appID == prm.leaderApplication) : self.leader = True
+		self.app_name = "Spatial View"
+		if(self.app_name == prm.parameters["applications"]["leader application"]) : self.leader = True
 		else : self.leader = False
 
 
@@ -31,8 +31,8 @@ class MainDisplay :
 		self.ax.set_xlim([-20e11, 20e11])
 		self.ax.set_ylim([-20e11, 20e11])
 
-		self.display_mode = display_mode
-		self.following_mode = following_mode
+		self.display_mode = prm.parameters["spatial view"]["display mode"]
+		self.following_mode = prm.parameters["spatial view"]["following mode"]
 		
 		self.satellite_list = np.array([])
 		self.celestial_bodies_list = np.array([])
@@ -41,8 +41,6 @@ class MainDisplay :
 		self.celestial_bodies_points = np.array([])
 
 		self.celestial_bodies_traj = np.array([])
-
-		self.value = celestial_bodies_list[0].mu
 
 		if(self.display_mode == "trajectory prediction") :
 			self.satellite_traj = np.array([])
@@ -81,8 +79,8 @@ class MainDisplay :
 			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
 
 		if (self.following_mode) : 
-			self.ax.set_xlim([self.satellite_list[0].r_abs[0]-5000e3, self.satellite_list[0].r_abs[0]+5000e3])
-			self.ax.set_ylim([self.satellite_list[0].r_abs[1]-5000e3, self.satellite_list[0].r_abs[1]+5000e3])
+			self.ax.set_xlim([self.satellite_list[0].r_abs[0]-50000e3, self.satellite_list[0].r_abs[0]+50000e3])
+			self.ax.set_ylim([self.satellite_list[0].r_abs[1]-50000e3, self.satellite_list[0].r_abs[1]+50000e3])
 		if(self.display_mode != "trajectory prediction" and i>0) : 
 			self.x_matrix = np.append(self.x_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
 			self.y_matrix = np.append(self.y_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
@@ -117,8 +115,11 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 	def __init__ (self, satellite_list, celestial_bodies_list) :
 
 
-		self.appID = 2
-		if(self.appID == prm.leaderApplication) : self.leader = True
+		self.app_name = "Ground Track"
+		if(self.app_name == prm.parameters["applications"]["leader application"]) : 
+			print(":)")
+			input()
+			self.leader = True
 		else : self.leader = False
 
 
@@ -158,11 +159,12 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 class GraphDisplay : 
 
-	def __init__ (self, satellite_list, celestial_bodies_list, request) : 
+	def __init__ (self, satellite_list, celestial_bodies_list) : 
 
 
-		self.appID = 3
-		if(self.appID == prm.leaderApplication) : self.leader = True
+		self.app_name = "Parameters Plot"
+		if(self.app_name == prm.parameters["applications"]["leader application"]) : 
+			self.leader = True
 		else : self.leader = False
 
 		self.func_dictionnary = {
@@ -193,8 +195,8 @@ class GraphDisplay :
 		self.satellite_list = satellite_list
 		self.celestial_bodies_list = celestial_bodies_list
 
-		requested_func = request.split(":")[0].lstrip()[:-1]
-		args = request.split(":")[1].lstrip().split(" ")
+		requested_func = prm.parameters["parameters plot"]["parameter to plot"]
+		args = prm.parameters["parameters plot"]["satellites displayed"]
 
 		self.body_list = [body for body in np.concatenate((self.satellite_list, self.celestial_bodies_list)) if (body.name in args)]
 		self.func_to_call = self.func_dictionnary.get(requested_func)
@@ -210,7 +212,7 @@ class GraphDisplay :
 
 	def update (self, i) : 
 
-		self.ax.set_xlim([prm.elapsed_time-1000*prm.ideal_H, prm.elapsed_time+10])
+		self.ax.set_xlim([prm.parameters["time"]["elapsed time"]-prm.parameters["parameters plot"]["historic length"], prm.parameters["time"]["elapsed time"]+10])
 		self.ax.set_ylim([self.min-0.1*self.min, self.max+0.1*self.max])
 
 		if(self.leader == True) :
@@ -223,7 +225,7 @@ class GraphDisplay :
 			if(data < self.min) : self.min = data
 			elif(data > self.max) : self.max = data
 
-		self.time = np.append(self.time, prm.elapsed_time)
+		self.time = np.append(self.time, prm.parameters["time"]["elapsed time"])
 
 		for j in range(len(self.curves)) :
 			self.recorded_data[j][i] = new_data[j]

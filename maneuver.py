@@ -25,12 +25,12 @@ class TriggerDetector :
 		return t
 
 	def TargetedTimeSupervisor (self) : 
-		return u_f.DateToSeconds(prm.starting_date, self.trigger_value)
+		return u_f.DateToSeconds(prm.parameters["time"]["starting date"], self.trigger_value)
 
 	def TriggerTimeSupervisor (self) : 
-		if(abs(prm.elapsed_time - self.trigger_time) <= prm.H) :
-			if(abs(prm.elapsed_time - self.trigger_time) != 0) :
-				prm.H =  abs(prm.elapsed_time - self.trigger_time)
+		if(abs(prm.parameters["time"]["elapsed time"] - self.trigger_time) <= prm.parameters["time"]["time step"]) :
+			if(abs(prm.parameters["time"]["elapsed time"] - self.trigger_time) != 0) :
+				prm.parameters["time"]["time step"] =  abs(prm.parameters["time"]["elapsed time"] - self.trigger_time)
 			else : 
 				return True
 
@@ -106,7 +106,7 @@ class OrbitalRendezVous :
 
 	def ParameterLoader (self) : 
 
-		travel_time = self.arrival_time - prm.elapsed_time
+		travel_time = self.arrival_time - prm.parameters["time"]["elapsed time"]
 
 		dV_vector = u_f.LambertProblem(self.satellite.r_abs, self.position_to_reach, travel_time, self.satellite.corps_ref.mu) - self.satellite.v_abs 
 		dV = np.linalg.norm(dV_vector)
@@ -133,7 +133,7 @@ class Maneuver :
 		self.direction = direction
 
 		if(trigger_type == "date") : 
-			trigger_value = u_f.DateToSeconds(prm.starting_date, trigger_value)
+			trigger_value = u_f.DateToSeconds(prm.parameters["time"]["starting date"], trigger_value)
 
 		self.data_loader = self.dict[man_name]
 
@@ -148,7 +148,7 @@ class Maneuver :
 		self.maneuver_data = FreeAcceleration(self.satellite, self.value, self.direction)
 
 	def ComputeOrbitalRendezVous (self) :
-		self.value["date"] = u_f.DateToSeconds(prm.starting_date, self.value["date"])
+		self.value["date"] = u_f.DateToSeconds(prm.parameters["time"]["starting date"], self.value["date"])
 		self.maneuver_data = OrbitalRendezVous(self.satellite, self.value["position_to_reach"], self.value["date"])
 
 

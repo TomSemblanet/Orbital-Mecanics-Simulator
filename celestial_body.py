@@ -113,7 +113,7 @@ class CelestialBody :
 
 	def set_position (self) : 
 
-		self.M = self.M + (2*math.pi/self.orbit.T)*prm.H
+		self.M = self.M + (2*math.pi/self.orbit.T)*prm.parameters["time"]["time step"]
 		self.E = self.M
 
 		delt = 1

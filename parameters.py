@@ -1,68 +1,78 @@
 import numpy as np
-from datetime import datetime
 
-# Mathematical processing parameters (Burlisch Stoer Method)
+DATA_FILE = "Scenarios/DATA_example1.txt"
 
-jmax = 10
-N = 6  
-A = np.zeros((jmax+1, jmax+1, N))
-m = 2*(np.arange(jmax+1)+1)
-atol = 1e-12
-rtol= 1e-5
+def parametersLoader () : 
+	
+	with open(DATA_FILE, 'r') as data_file : 
 
-# Time parameters
+		lines = data_file.readlines()
 
-ideal_H = 5
-H = ideal_H
-
-starting_date = "2000-01-01 12:30:00.000" # [YYYY/MM/JJ HH:MM:SS]
-current_date = ""
-
-initial_julian_date = 367*int(starting_date[0:4]) - int((7*(int(starting_date[0:4])+int((int(starting_date[5:7])+9)/12)))/4) \
-					+ int(275*int(starting_date[5:7])/9) + int(starting_date[8:10]) + 1721013.5 + (((int(starting_date[17:19])/60) \
-					+ int(starting_date[14:16]))/60+int(starting_date[11:13]))/24 - 2451545 # [days]  following J2000
-current_julian_date = 0. # [days]
+		for catgr in parameters.keys() : 
+			for indic, line in enumerate(lines) : 
+				if(catgr.upper() in line) : 
+					begin_indice = indic+2
+					end_indice = begin_indice
+					while(not('=' in lines[end_indice])) : end_indice += 1
+					end_indice -= 2
+					parameters[catgr]["loader func"](lines[begin_indice:end_indice])
 
 
-elapsed_time = 0. # [sec]
+def timeParametersLoader (lines) :  
 
-# General simulation parameters
-
-simulation_speed_dict = {"slow" : 1, 
-						"medium" : 2,
-						"high" : 3,
-						"very high" : 4}
-
-simulation_speed = "slow"
-calculation_repeat = simulation_speed_dict.get(simulation_speed)
-
-applicationsOn = [1]
-leaderApplication = min(applicationsOn) # The leader application is the one which will call the calculation at each time step in order to be able
-										# to display only the ground track or only the graphical parameters display ...
+	parameters["time"]["general time step"] = int(lines[1].split('~')[1])
+	parameters["time"]["time step"] = parameters["time"]["general time step"]
+	parameters["time"]["starting date"] = lines[0].split('~')[1].lstrip()[:-1]
+	parameters["time"]["initial julian date"] = 367*int(parameters["time"]["starting date"][0:4]) - int((7*(int(parameters["time"]["starting date"][0:4])+int((int(parameters["time"]["starting date"][5:7])+9)/12)))/4) \
+					+ int(275*int(parameters["time"]["starting date"][5:7])/9) + int(parameters["time"]["starting date"][8:10]) + 1721013.5 + (((int(parameters["time"]["starting date"][17:19])/60) \
+					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
+	parameters["time"]["elapsed time"] = 0
 
 
-# MainDisplay parameters
+def applicationsParametersLoader (lines) : 
 
-parameters_on = True
+	for x in lines[1].split(':')[1].split(']')[:-1] :
+		if(x[-1] == 'v') : 
+			parameters["applications"]["simulation speed"] = x.lstrip().replace("[v", '')[:-1]
+
+	parameters["applications"]["calculation repeat"] = parameters["applications"]["simulation speed dict"][parameters["applications"]["simulation speed"]]
+	
+	for x in lines[0].split(':')[1].split(']')[:-1] : 
+		if(x[-1] == 'v') : 
+			parameters["applications"]["applications on"].append(x.lstrip().replace(" [v", ""))
+
+	parameters["applications"]["leader application"] = parameters["applications"]["applications on"][0]
+
+	if(lines[2].split(':')[1].lstrip()[:-1].split(' ')[0].replace('[', '').replace(']', '') == 'v') : parameters["applications"]["show bodies data"] = True
+	else : parameters["applications"]["show bodies data"] = False
+
+	for sat_name in lines[3].split(':')[1].lstrip()[:-1].split(' ') :
+		parameters["applications"]["bodies data displayed"].append(sat_name)
+
+def spatialViewParametersLoader (lines) : 
+	
+	for x in lines[0].split(':')[1].split(']')[:-1] : 
+		if(x[-1] == 'v') : 
+			parameters["spatial view"]["display mode"] = x.lstrip().replace(' [v', '')
+
+	parameters["spatial view"]["following mode"] = (lines[1].split('[')[1][0] == 'v') 
 
 
-# GroundTrackDisplay parameters
-
-
-
-
-# GraphDisplay parameters
-
-
-
-def initialLoader () : 
+def groundTrackParametersLoader (lines) : 
 	pass
 
-def celestialBodiesLoader () :
+def parametersPlotParametersLoader (lines) :
+
+	parameters["parameters plot"]["parameter to plot"] = lines[0].split(':')[1][:-1].lstrip()
+	parameters["parameters plot"]["satellites displayed"] = lines[1].split(':')[1].lstrip()[:-1].split(' ')
+	parameters["parameters plot"]["historic length"] = float(lines[2].split(':')[1])
+
+
+def celestialBodiesLoader () : 
 
 	celestial_bodies_to_load = [] 
 
-	with open("DATA.txt", 'r') as data_file : 
+	with open(DATA_FILE, 'r') as data_file : 
 
 		begin_indice = 0
 		lines = data_file.readlines()
@@ -83,7 +93,7 @@ def satellitesLoader () :
 
 	dicts_to_send = []
 
-	with open("DATA.txt", 'r') as data_file : 
+	with open(DATA_FILE, 'r') as data_file : 
 
 		begin_indice, end_indice = 0, 0
 		lines = data_file.readlines()
@@ -120,7 +130,7 @@ def maneuverLoader () :
 
 	dicts_to_send = []
 
-	with open("DATA.txt", 'r') as data_file : 
+	with open(DATA_FILE, 'r') as data_file : 
 
 		begin_indice, end_indice = 0, 0
 		lines = data_file.readlines()
@@ -167,3 +177,52 @@ def maneuverLoader () :
 				
 	return dicts_to_send
 
+parameters = {
+	"time" : 
+	{
+		"loader func" : timeParametersLoader,
+		"general time step" : int(),
+		"time step" : int(),
+		"starting date" : str(),
+		"current date" : str(),
+		"initial julian date" : int(), # [days]  ~ following J2000
+		"current julian date" : int(), # [days]
+
+		"elapsed time" : int() # [sec]
+	},
+
+	"applications" : 
+	{
+		"loader func" : applicationsParametersLoader,
+		"simulation speed dict" : {"slow" : 1, 
+								   "medium" : 2,
+								   "high" : 3,
+								   "very high" : 4},
+		"simulation speed" : str(),
+		"calculation repeat" : int(),
+		"applications on" : list(),
+		"leader application" : int(),
+		"show bodies data" : bool(),
+		"bodies data displayed" : list()
+	},
+
+	"spatial view" : 
+	{
+		"loader func" : spatialViewParametersLoader,
+		"display mode" : str(),
+		"following mode" : bool()
+	},
+
+	"ground track" : 
+	{
+		"loader func" : groundTrackParametersLoader,
+	},
+
+	"parameters plot" : 
+	{
+		"loader func" : parametersPlotParametersLoader,
+		"parameter to plot" : str(),
+		"satellites displayed" : list(),
+		"historic length" : int()
+	},
+}

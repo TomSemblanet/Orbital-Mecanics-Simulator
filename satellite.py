@@ -73,8 +73,6 @@ class Satellite :
 		self.next_manoeuver = -1
 		self.time_last_manoeuver = 0.
 
-		self.perigee_radius = 0.
-
 		self.loadParameters(first_load=True)
 
 
@@ -125,8 +123,6 @@ class Satellite :
 		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1))) % (2*math.pi) - math.pi
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
 
-		self.perigee_radius = self.orbit.a*(1-self.orbit.e)
-
 
 	#################################################
 	#
@@ -162,6 +158,10 @@ class Satellite :
 												  self.manoeuvers_list[self.next_manoeuver]["trigger_type"],
 												  self.manoeuvers_list[self.next_manoeuver]["trigger_value"],
 												  self.manoeuvers_list[self.next_manoeuver]["direction"])
+			
+			# print("Next maneuver : {}".format(self.current_maneuver.data_loader.dV))
+			# input()
+
 		else : 
 			self.current_maneuver = None
 
@@ -214,7 +214,7 @@ class Satellite :
 			if(self.v_cr[0] > 0) : 
 				self.true_anomaly = 2*math.pi -  self.true_anomaly
 
-		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.elapsed_time) % (2*math.pi) - math.pi
+		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.parameters["time"]["elapsed time"]) % (2*math.pi) - math.pi
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
 
 		a =  (-self.corps_ref.mu)*(self.r_cr/(np.linalg.norm(self.r_cr)**3))
@@ -245,25 +245,25 @@ class Satellite :
 
 		if(next_acceleration_on == True) :
 
-			prm.H = 1e-10
+			prm.parameters["time"]["time step"] = 1e-10
 
-			self.thrust_acc_std = self.current_maneuver.maneuver_data.dV/prm.H
+			self.thrust_acc_std = self.current_maneuver.maneuver_data.dV/prm.parameters["time"]["time step"]
 			self.thrust_acc_vect = self.current_maneuver.maneuver_data.direction
 			if(np.linalg.norm(self.thrust_acc_vect) == 0) :
 				self.thrust_acc_vect = self.v_cr/self.v_cr_std
 
-			self.state_vector = n_i.burlirsch_stoer_method(self, prm.elapsed_time, prm.A, prm.N, self.state_vector, prm.m, adapted_thrust=True)
+			self.state_vector = n_i.burlirsch_stoer_method(self, prm.parameters["time"]["elapsed time"], n_i.A, n_i.N, self.state_vector, n_i.m, adapted_thrust=True)
 			self.thrust_acc_std = 0
 
 			self.loadParameters()
 
-			self.time_last_manoeuver = prm.elapsed_time
+			self.time_last_manoeuver = prm.parameters["time"]["elapsed time"]
 			self.LoadNextManeuver()
 
-			prm.H = 0
+			prm.parameters["time"]["time step"] = 0
 
 		else : 
-			self.state_vector = n_i.burlirsch_stoer_method(self, prm.elapsed_time, prm.A, prm.N, self.state_vector, prm.m)
+			self.state_vector = n_i.burlirsch_stoer_method(self, prm.parameters["time"]["elapsed time"], n_i.A, n_i.N, self.state_vector, n_i.m)
 
 	#################################################
 	#

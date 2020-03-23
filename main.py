@@ -15,42 +15,24 @@ import maneuver
 import matplotlib.animation as animation
 
 
+prm.parametersLoader()
 celestial_bodies_list = u_f.load_celestial_bodies(prm.celestialBodiesLoader())
-
-
-# satellites_list = u_f.load_satellites( [ 
-# 										{
-# 										"name" : "SAT1",
-# 										"r0" : np.array([-7200e3, 0, 0]),
-# 										"v0" : np.array([0, -8000.1, 0]),
-# 										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
-# 										"color" : "m"
-# 										}, 
-
-# 										{
-# 										"name" : "SAT2",
-# 										"r0" : np.array([-29000e3, 0, 0]),
-# 										"v0" : np.array([0, -2000-0.1, 2000]),
-# 										"corps_ref" : [body for body in celestial_bodies_list if body.name=="Earth"][0],
-# 										"color" : "c"
-# 										}
-# 									   ] )
-
 satellites_list = u_f.load_satellites(prm.satellitesLoader(), celestial_bodies_list)
-
 u_f.load_manoeuvers(satellites_list, prm.maneuverLoader())
 
-if(1 in prm.applicationsOn) :
-	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list, display_mode="trajectory prediction", following_mode=False)
+
+if('Spatial View' in prm.parameters["applications"]["applications on"]) :
+	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list)
 	space_ani = animation.FuncAnimation(fig=space_displayer.figure, func=space_displayer.update, interval=0, repeat=False, blit=False)
 
-if(2 in prm.applicationsOn) : 
+if('Ground Track' in prm.parameters["applications"]["applications on"]) : 
 	ground_track_displayer = g_d.GroundTrackDisplay(satellites_list, celestial_bodies_list)
 	ground_track_ani = animation.FuncAnimation(fig=ground_track_displayer.figure, func=ground_track_displayer.update, interval=0, repeat=False, blit=True)
 
-if(3 in prm.applicationsOn) : 
-	parameters_displayer = g_d.GraphDisplay(satellites_list, celestial_bodies_list, "Distance to referent body : SAT1 SAT2")
+if('Parameters Plot' in prm.parameters["applications"]["applications on"]) : 
+	parameters_displayer = g_d.GraphDisplay(satellites_list, celestial_bodies_list)
 	parameters_ani = animation.FuncAnimation(fig=parameters_displayer.figure, func=parameters_displayer.update, interval=0, repeat=False, blit=False)
+
 
 plt.show()
 
