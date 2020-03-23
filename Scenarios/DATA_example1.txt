@@ -1,0 +1,53 @@
+~=~=~=~=~=~=  PARAMETERS FILE  ~=~=~=~=~=~=     /!\ NE PAS MODIFIER LA STRUCTURE DE CE FICHIER /!\
+~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~	--------------------------------------------------
+
+
+========= CELESTIAL BODIES =========
+
+- Sun [v] Mercury [v] Venus [v] Earth [v] Mars [v] Jupiter [v] Saturn [v] Uranus [v] Neptune [v] 
+
+
+=========    SATELLITES    =========
+
+- --SAT1 --[42522140, 0, 0] --[0, 3074, 2000] --Earth --m
+- --SAT2 --[42522140, 0, 0] --[0, -2074, 2000] --Earth --c
+- --SAT3 --[42522140, 0, 0] --[0, -2574, 2000] --Earth --r
+- --SAT4 --[42522140, 0, 0] --[0, -3574, 2000] --Earth --g
+
+
+=========    MANEUVERS    =========
+
+- --SAT1 --apogee modification --2000000 --true anomaly --0 --[0, 0, 0]
+
+
+=========      TIME      =========
+
+- starting date ~ 2000-01-01 12:00:00.000
+- time step ~ 50
+
+
+=========  APPLICATIONS  =========
+
+- applications to run : Spatial View [v]  Ground Track [x]  Parameters Plot [x]
+- simulation speed : low [x]  medium [v]  high [x]  very high [x]
+- show bodies data : [x]
+- bodies data displayed : SAT1
+
+
+=========  SPATIAL VIEW  =========
+
+- display mode : satellite path [v]  trajectory prediction [x]
+- following mode : [v]
+
+
+=========  GROUND TRACK  =========
+
+
+=======  PARAMETERS PLOT  ========
+
+- parameter to plot : Distance to referent body
+- satellites displayed : SAT1 SAT2
+- historic length : 10000
+
+
+=~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~=
