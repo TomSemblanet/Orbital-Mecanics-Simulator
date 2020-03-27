@@ -81,7 +81,7 @@ def display_parameters (bodies) :
 def load_satellites (satellites_data_dicts, celestial_bodies_list) : 
 
 	""" 
-	This function loads the real satellites objects given a list of dictionnaries containing the parameters needed to
+	Loads the real satellites objects given a list of dictionnaries containing the parameters needed to
 	instanciate the satellites which has to be simulated
 
 	Input : a list of dictionnaries containing the parameters needed to instanciate the satellites which has to be simulated
@@ -103,7 +103,7 @@ def load_satellites (satellites_data_dicts, celestial_bodies_list) :
 def load_celestial_bodies (celestial_bodies_to_compute) : 
 
 	""" 
-	This function loads the real celestial body objects given the list of the names of the celestial bodies which has 
+	Loads the real celestial body objects given the list of the names of the celestial bodies which has 
 	to be simulated
 
 	Input : a list containing the names of the celestial bodies which has to be simulated
@@ -130,11 +130,11 @@ def load_celestial_bodies (celestial_bodies_to_compute) :
 def load_manoeuvers (satellites_list, maneuvers_dicts) :
 
 	""" 
-	This function loads the real maneuver objects given a list of dictionnaries containing the parameters needed to
-	instanciate the maneuvers which has to assigned to given satellites
+	Loads the real maneuver objects given a list of dictionnaries containing the parameters needed to
+	instanciate the maneuvers which has to be assigned to the satellites
 
 	Input : a list of dictionnaries containing the parameters needed to instanciate the maneuvers which has to assigned 
-	to given satellites
+	to the satellites
 
 	Return : a list containing the instantiated maneuvers objects 
 

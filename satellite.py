@@ -10,35 +10,32 @@ import utility_functions as u_f
 import orbit as orb
 import maneuver
 
-
 class Satellite : 
-
-	#################################################
-	#
-	# DESCRIPTION : constructor of satellite objects, initialization of the parameters
-	#
-	#
-	# INPUTS : 
-	# 
-	# - r0 :				3x1 float-array [m] : initial position of the satellite in the referentiel of its initial referent body
-	# - v0 : 				3x1 float-array [m/s] : initial velocity of the satellite in the referentiel of its initial referent body
-	# - name :              string [-] : name of the satellite
-	# - corps_ref :         celestial_body_object [-] : celestial object around which the satellite initially orbits and around which it will orbit before the first exit of SOI (Sphere Of Influence)
-	# - color : 			string [-] : plot color of the satellite
-	#
-	#
-	# OUTPUTS : 
-	#
-	# - satellite :         satellite [object] : initialized satellite object
-	#
-	#################################################
 
 	def __init__ (self, r0, v0, name, corps_ref, color="m") :
 
-		self.name = name # name of the satellite
-		self.color = color # color of the plot
+		"""
+		Constructor of the class Satellite. Initializes the attributs of each objects at creation before calling
+		the loadParameters method that will compute other attributs (separate from the constructor because it's 
+		called more than once during the simulation)
 
-		self.corps_ref = corps_ref # body around which the satellite initially orbits
+		Input : 
+				- r0 : the initial position of the satellite in the referential of the body
+							around which it orbits initially
+				- v0 : the initial velocity of the satellite in the referential of the body
+							around which it orbits initially
+				- name : the name of the satellite
+				- corps_ref : the body around which the body orbits initially
+				- color : color of the satellite plot
+
+		Return : None
+
+		"""
+
+		self.name = name
+		self.color = color
+
+		self.corps_ref = corps_ref
 
 		self.r_cr = r0
 		self.r_cr_std = np.linalg.norm(r0)
@@ -76,16 +73,46 @@ class Satellite :
 		self.loadParameters(first_load=True)
 
 
-	#################################################
-	#
-	# DESCRIPTION : calculates all the parameters of the satellite after an acceleration, a modification of SOI or at construction of the satellite.
-	#				calculates rotations needed to go in the orbital plan from the referent body plan.
-	#
-	#################################################
+
+	def __str__ (self) : 
+
+		"""
+		String method of the satellite class
+
+		"""
+
+		return '> {}\n'.format(self.name) + \
+			   '- Semi-major axis (a) : {} km\n'.format(round(self.orbit.a/1000, 0)) + \
+			   '- Eccentricity (e) : {}\n'.format(round(self.orbit.e, 5)) + \
+			   '- True anomaly : {} °\n'.format(round(self.true_anomaly*180/math.pi, 4)) + \
+			   '- Longitude of perigee : {} °\n'.format(round(self.orbit.Lperi*180/math.pi, 2)) + \
+			   '- Longitude of ascendant node : {} °\n'.format(round(self.orbit.Lnode*180/math.pi, 2)) + \
+			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 2)) + \
+			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
+			   '- Distance : {} km\n'.format(round(self.r_cr_std/1000, 2)) + \
+			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
+			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
+
+
 
 	def loadParameters (self, first_load=False) :
 
-		# Position and state vector 
+		"""
+		Computes some additional attributes of the Satellite class and initializes the object orbit by calling
+		its constructor. 
+		This function has to be called each time the satellite orbital parameters change - to know :
+			-	after each maneuver or change of sphere of influence in a Keplerian simulation
+			-	at each time step in a non-Keplerian simulation
+
+		Input : 
+				- first_load : if True, the state vector in the absolute referential is computed from the state vector
+							in the referent body referential.
+							   if False, it's the opposite.
+
+		Ouput : None
+
+		"""
+
 		if(first_load==True) : 
 			for i in [0, 1, 2] : 
 				self.r_abs[i] = self.r_cr[i] + self.corps_ref.r_cr[i]
@@ -110,10 +137,8 @@ class Satellite :
 
 		self.orbit = orb.Orbit(self, self.r_cr, self.v_cr, self.corps_ref)
 
-		# Direction of the orbit
 		self.movement_prograde = np.cross(self.r_cr, self.v_cr)[2] > 0
 
-		# Angular momentum
 		self.h = np.cross(self.r_cr, self.v_cr)
 		self.h_std = np.linalg.norm(self.h)
 
@@ -124,47 +149,34 @@ class Satellite :
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
 
 
-
-	def __str__ (self) : 
-
-		return '> {}\n'.format(self.name) + \
-			   '- Semi-major axis (a) : {} km\n'.format(round(self.orbit.a/1000, 0)) + \
-			   '- Eccentricity (e) : {}\n'.format(round(self.orbit.e, 5)) + \
-			   '- True anomaly : {} °\n'.format(round(self.true_anomaly*180/math.pi, 4)) + \
-			   '- Longitude of perigee : {} °\n'.format(round(self.orbit.Lperi*180/math.pi, 2)) + \
-			   '- Longitude of ascendant node : {} °\n'.format(round(self.orbit.Lnode*180/math.pi, 2)) + \
-			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 2)) + \
-			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
-			   '- Distance : {} km\n'.format(round(self.r_cr_std/1000, 2)) + \
-			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
-			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
-
-
-	#################################################
-	#
-	# DESCRIPTION : initalizes the list of manoeuvers that the satellite will have to follow in its attribut [self.manoeuvers_list]
-	#
-	#
-	# INPUTS : 
-	#
-	# - manoeuvers_list :				nx1 array [-] : list of manoeuvers to load in the attribut [self.manoeuvers_list]
-	#
-	#################################################
-
 	def load_manoeuvers_list (self, manoeuvers_list) : 
+
+		"""
+		Loads the satellite list of dictionnaryr describing the maneuvers and calls the function LoadNextManeuver
+		to instanciate the objects Maneuver
+
+		Input : 
+				- list of maneuvers dictionnaries
+
+		Return : None
+
+		"""
 
 		self.manoeuvers_list = manoeuvers_list
 		self.LoadNextManeuver()
 
 
-	#################################################
-	#
-	# DESCRIPTION : load the next maneuver trigger following the wanted maneuver to be achieved
-	#				the programm will then check if this trigger is reached or not at each time step
-	#
-	#################################################
-
 	def LoadNextManeuver (self) : 
+
+		"""
+		Function called after each maneuver : loads the next maneuver to be triggered, instanciate the object and stores it
+		in the attribut 'current_maneuver'
+
+		Input : None
+
+		Ouput : None
+
+		"""
 
 		self.next_manoeuver += 1
 		if(self.next_manoeuver <= len(self.manoeuvers_list)-1) : 
@@ -174,34 +186,28 @@ class Satellite :
 												  self.manoeuvers_list[self.next_manoeuver]["trigger_type"],
 												  self.manoeuvers_list[self.next_manoeuver]["trigger_value"],
 												  self.manoeuvers_list[self.next_manoeuver]["direction"])
-			
-			# print("Next maneuver : {}".format(self.current_maneuver.data_loader.dV))
-			# input()
 
 		else : 
 			self.current_maneuver = None
 
 
-	#################################################
-	#
-	# DESCRIPTION : computes the acceleration of the satellite at each step following the Newton's laws and integrate the acceleration equation.
-	#				only the attraction of the body whose satellite is in the SOI it taken into account, the integration also takes into account any acceleration 
-	#				caused by a propulsion (to reache a given deltaV)
-	#
-	#
-	# INPUTS : 
-	#
-	# - Y :				6x1 float-array [m, m, m, m/s, m/s, m/s] : state vector of the satellite before the acceleration, gives the information about its position and velocity
-	# - t : 			time [sec] : time at the moment of acceleration
-	#
-	#
-	# OUTPUTS : 
-	#
-	# - velocity/acceleration vector :         6x1 float-array [m/s, m/s, m/s, m/s^2, m/s^2, m/s^2] : return the velocity and acceleration computed by Newton's laws
-	#
-	#################################################
-
 	def calculateAcceleration (self, Y, t, adapted_thrust=False) : 
+
+		"""
+		Computes the acceleration of the satellite at each step following the Newton's laws and integrate the acceleration equation.
+		Only the attraction of the body whose satellite is in the SOI it taken into account, the integration also takes into account any acceleration 
+		caused by a propulsion
+
+		Input : 
+				- Y : state vector of the satellite before the acceleration
+				- t : elapsed time
+				- adapted_thrust : if this parameter is set on True and the satellite is maneuvering, the propulsion will automatically adapted itself
+								to nullify the other forces and so enhance the accuracy of the maneuver
+
+		Return : 
+				- the velocity and acceleration computed by Newton's laws
+
+		"""
 
 		self.r_cr = np.array([ Y[0], Y[1], Y[2] ])
 		self.r_abs = np.array([ Y[0], Y[1], Y[2] ]) + self.corps_ref.r_cr
@@ -211,7 +217,7 @@ class Satellite :
 		self.r_cr_std = np.linalg.norm(self.r_cr)
 		self.r_abs_std = np.linalg.norm(self.r_abs)
 		self.v_cr_std = np.linalg.norm(self.v_cr)
-		self.v_abs_std = np.linalg.norm(self.v_abs) 
+		self.v_abs_std = np.linalg.norm(self.v_abs)
 
 		# computation of the true anomaly taking into account the cases where e=0 (case [1] :  circular orbit) or/and where i=0 (case [2] : equatorial orbit)
 
@@ -233,22 +239,10 @@ class Satellite :
 		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.parameters["time"]["elapsed time"]) % (2*math.pi) - math.pi
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
 
-		a =  (-self.corps_ref.mu)*(self.r_cr/(np.linalg.norm(self.r_cr)**3))
-
-
-
-		#############################################
-		#
-		# Lorsque nous voulons un dV précis (par exemple pour une manoeuvre issue de
-		# la résolution d'un problème de Lambert), il faut que le calcul du dV prenne
-		# en compte l'accélération dut aux autres forces (frottements, gravité etc ...).
-		# La prise en compte de ce dV peut se faire simplement en ajoutant à l'accélération
-		# des boosters l'accélération qu'aurait normalement subit le satellite.
-		#
-		#############################################
-
 		if(adapted_thrust) : 
-			a = 0 # on fait comme si on annulait les autres forces via adaption de la propulsion des boosters, à modifier plus tard, peut-être afficher l'info ...
+			a = 0 
+		else : 
+			a =  (-self.corps_ref.mu)*(self.r_cr/self.r_cr_std**3)
 
 		if (self.thrust_acc_std != 0) :
 			a += self.thrust_acc_vect*(self.thrust_acc_std)
@@ -258,6 +252,19 @@ class Satellite :
 
 	def acceleration_manager (self, next_acceleration_on=False) : 
 
+		"""
+		Manages maneuvers application : if the trigger of the pending maneuver is On, this function indicates to the calculateAcceleration
+		method that the pending acceleration has to be taken into account in the computation of the satellite general acceleration.
+		Also calls loadParameters method to recalculate the orbital parameters after the non-Keplerian acceleration and the loadNextManeuver
+		method.
+
+		Input : 
+				- next_acceleration_on : indicates if the pending maneuver is triggered or not
+
+		Output : None
+
+
+		"""
 
 		if(next_acceleration_on == True) :
 
@@ -268,7 +275,7 @@ class Satellite :
 			if(np.linalg.norm(self.thrust_acc_vect) == 0) :
 				self.thrust_acc_vect = self.v_cr/self.v_cr_std
 
-			self.state_vector = n_i.burlirsch_stoer_method(self, prm.parameters["time"]["elapsed time"], n_i.A, n_i.N, self.state_vector, n_i.m, adapted_thrust=True)
+			self.state_vector = n_i.burlirsch_stoer_method(self, self.state_vector, adapted_thrust=True)
 			self.thrust_acc_std = 0
 
 			self.loadParameters()
@@ -279,55 +286,46 @@ class Satellite :
 			prm.parameters["time"]["time step"] = 0
 
 		else : 
-			self.state_vector = n_i.burlirsch_stoer_method(self, prm.parameters["time"]["elapsed time"], n_i.A, n_i.N, self.state_vector, n_i.m)
+			self.state_vector = n_i.burlirsch_stoer_method(self, self.state_vector, adapted_thrust=False)
 
-	#################################################
-	#
-	# DESCRIPTION : updates the referent body of the satellite following the SOI approximation.
-	#				if the satellite goes out of the SOI of a celestial body, it enters the SOI of the main celestial body (usually the Sun)
-	#				at each modification of SOI (and so, of referent body) the parameters of the satellite and its trajectory are reloaded.
-	#
-	#
-	# INPUT : 
-	#
-	# - celestial_bodies_list :			nx1 celestial_body_object array [-] : list of all the object whose satellite could possibly be in the sphere
-	#
-	#################################################
 
 	def update_ref_body (self, celestial_bodies_list) :
 
-		modified_corps_ref = False
+		"""
+		Updates the referent body of the satellite following the SOI approximation.
+    	if the satellite goes out of the SOI of a celestial body, it enters the SOI of the main celestial body (usually the Sun)
+    	at each modification of SOI (and so of referent body) the parameters of the satellite and its trajectory are reloaded.
 
-		for body in celestial_bodies_list[1:] : 
-			distance = np.linalg.norm( self.r_abs - body.r_abs )
+    	Input : 
+    			- celestial_bodies_list : list of celestial bodiy objects
 
-			if(distance <= body.influence_sphere_radius and self.corps_ref != body) : 
-				self.corps_ref = body
-				modified_corps_ref = True
-				break
+    	Return : None
 
-		if(self.r_cr_std > self.corps_ref.influence_sphere_radius and self.corps_ref != celestial_bodies_list[0] and modified_corps_ref == False) : 
-			self.corps_ref = celestial_bodies_list[0]
-			modified_corps_ref = True
-
-		if(modified_corps_ref == True) : 
-			self.loadParameters()
-
-
-	# Bruslisch Stoer's method function : doesn't need a description
-	def pas_pointmilieu_modifie(self, H, t, Yn, m, adapted_thrust=False) :
-		h = H/m
-		u = Yn
-		v = u+h*self.calculateAcceleration(u,t, adapted_thrust)
-		for k in range(1,m):
-			w = u+2*h*self.calculateAcceleration(v,t+k*h, adapted_thrust)
-			u = v
-			v = w
-
-		return 0.5*(v+u+h*self.calculateAcceleration(v,t+H, adapted_thrust))
+		"""
 		
+		if (self.r_abs_std != self.r_cr_std) : # which means that the satellite is in the SOI of a planet
 
+			if(self.r_cr_std > self.corps_ref.influence_sphere_radius) : 
+				self.corps_ref = [body for body in celestial_bodies_list if body.name == self.corps_ref.corps_ref.name][0]
+				self.loadParameters()
 
+			else : 
+				for natural_satellite in [body for body in celestial_bodies_list if body.name in cst.Celestial_Bodies_Dict[self.corps_ref.name]["natural satellites names"]] :
+					distance = np.linalg.norm( self.r_abs - natural_satellite.r_abs )
+
+					if(distance <= natural_satellite.influence_sphere_radius) :
+						self.corps_ref = natural_satellite
+						self.loadParameters()
+						break
+
+		else : 
+			for body in celestial_bodies_list[1:] : 
+				distance = np.linalg.norm( self.r_abs - body.r_abs )
+
+				if(distance <= body.influence_sphere_radius) : 
+					self.corps_ref = body
+					self.loadParameters()
+					break
 
 
 

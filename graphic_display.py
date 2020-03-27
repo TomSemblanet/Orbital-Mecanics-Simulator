@@ -33,8 +33,11 @@ class MainDisplay :
 
 		self.display_mode = prm.parameters["spatial view"]["display mode"]
 		self.following_mode = prm.parameters["spatial view"]["following mode"]
-	
-		self.body_to_follow = [body for body in (satellite_list+celestial_bodies_list) if body.name == prm.parameters["spatial view"]["body to follow"]][0]
+		
+		try :
+			self.body_to_follow = [body for body in (satellite_list+celestial_bodies_list) if body.name == prm.parameters["spatial view"]["body to follow"]][0]
+		except : 
+			self.body_to_follow = None
 		
 		self.satellite_list = np.array([])
 		self.celestial_bodies_list = np.array([])

@@ -17,6 +17,7 @@ Celestial_Bodies_Dict = {
 			"mass"   : 3.3011e23,
 			"mu"     : 2.2032e13,
 			"radius" : 2439.7e3,
+			"natural satellites names" : [],
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
@@ -28,6 +29,7 @@ Celestial_Bodies_Dict = {
 			"mass"   : 4.8675e24,
 			"mu"     : 3.24859e14,
 			"radius" : 6051.8e3,
+			"natural satellites names" : [],
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
@@ -39,6 +41,7 @@ Celestial_Bodies_Dict = {
 			"mass"   : 5.97237e24,
 			"mu"     : 3.986004418e14,
 			"radius" : 6378.137e3,
+			"natural satellites names" : ["Moon"],
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
@@ -50,6 +53,7 @@ Celestial_Bodies_Dict = {
 			"mass"   : 6.4171e23,
 			"mu"     : 4.282837e13,
 			"radius" : 3389.5e3,
+			"natural satellites names" : [],
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
@@ -61,6 +65,7 @@ Celestial_Bodies_Dict = {
 			"mass"   : 1.8982e27,
 			"mu"     : 1.26686534e17,
 			"radius" : 69911e3,
+			"natural satellites names" : [],
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
@@ -72,6 +77,7 @@ Celestial_Bodies_Dict = {
 			"mass"   : 5.6834e26,
 			"mu"     : 3.7931187e16,
 			"radius" : 58232e3,
+			"natural satellites names" : [],
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
@@ -83,6 +89,7 @@ Celestial_Bodies_Dict = {
 			"mass"   : 8.6810e25,
 			"mu"     : 5.793939e15,
 			"radius" : 25362e3,
+			"natural satellites names" : [],
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
@@ -94,6 +101,7 @@ Celestial_Bodies_Dict = {
 			"mass"   : 1.02413e26,
 			"mu"     : 6.836529e15,
 			"radius" : 24622e3,
+			"natural satellites names" : [],
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
@@ -134,5 +142,4 @@ EphemeridesLoader()
 # rotationnal velocity data [rad/s]
 
 wTe = 7.292115e-5
-
 

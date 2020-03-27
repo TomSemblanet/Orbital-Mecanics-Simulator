@@ -13,11 +13,27 @@ m = 2*(np.arange(jmax+1)+1)
 atol = 1e-12
 rtol= 1e-5
 
-def burlirsch_stoer_method (satellite, time, A, N, Y, m, adapted_thrust=False) :
+def pas_pointmilieu_modifie (satellite, Yn, m, adapted_thrust=False) :
+
+		H = prm.parameters["time"]["time step"]
+		t = prm.parameters["time"]["elapsed time"]
+
+		h = H/m
+		u = Yn
+		v = u+h*satellite.calculateAcceleration(u,t, adapted_thrust)
+		for k in range(1,m):
+			w = u+2*h*satellite.calculateAcceleration(v,t+k*h, adapted_thrust)
+			u = v
+			v = w
+
+		return 0.5*(v+u+h*satellite.calculateAcceleration(v,t+H, adapted_thrust))
+
+
+def burlirsch_stoer_method (satellite, Y, adapted_thrust=False) :
 
 	for j in range (jmax+1) :
 
-		A[j][0] = satellite.pas_pointmilieu_modifie(prm.parameters["time"]["time step"], time, Y, m[j], adapted_thrust)
+		A[j][0] = pas_pointmilieu_modifie(satellite, Y, m[j], adapted_thrust)
 
 		for i in range (1,j+1) :
 			correction = (A[j][i-1]-A[j-1][i-1])/((m[j]*1.0/m[j-i])**2-1)
