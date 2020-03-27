@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
-import numpy as np 
+import numpy as np
+import random 
 import math
 
 import parameters as prm
@@ -34,18 +35,18 @@ class CelestialBody :
 	#
 	#################################################
 
-	def __init__ (self, name) : 
+	def __init__ (self, name, corps_ref=None) :
 
 		self.name = name
-		self.color = "w"
+		self.color = cst.Celestial_Bodies_Dict[self.name]["color"]
 
 		self.influence_sphere_radius = 0.
 		self.mass = cst.Celestial_Bodies_Dict[self.name]["mass"]
 		self.mu = cst.Celestial_Bodies_Dict[self.name]["mu"]
 		self.radius = cst.Celestial_Bodies_Dict[self.name]["radius"]
 
-		self.corps_ref_name = cst.Celestial_Bodies_Dict[self.name]["corps_ref"]
-		self.corps_ref = None
+		self.corps_ref_name = cst.Celestial_Bodies_Dict[self.name]["corps ref"]
+		self.corps_ref = corps_ref
 
 		self.r_abs = cst.Celestial_Bodies_Dict[self.name]['initial_position']
 		self.r_abs_std = np.linalg.norm(self.r_abs)
@@ -70,7 +71,8 @@ class CelestialBody :
 
 		self.moving_body = not(np.linalg.norm(self.r_abs) == 0)
 
-
+		if (np.linalg.norm(self.r_abs) != 0) : 
+			self.loadParameters()
 
 	#################################################
 	#
@@ -79,9 +81,7 @@ class CelestialBody :
 	#
 	#################################################
 
-	def loadParameters (self, corps_ref) :
-
-		self.corps_ref = corps_ref
+	def loadParameters (self) :
 
 		for i in [0, 1, 2] : 
 			self.r_cr[i] = self.r_abs[i] - self.corps_ref.r_cr[i]
@@ -102,6 +102,21 @@ class CelestialBody :
 
 		self.E = 2*math.atan( math.sqrt((1-self.orbit.e)/(1+self.orbit.e)) *  math.tan(self.true_anomaly/2))
 		self.M = self.E - self.orbit.e*math.sin(self.E)
+
+
+	def __str__ (self) : 
+
+		return '> {}\n'.format(self.name) + \
+			   '- Semi-major axis (a) : {} km\n'.format(round(self.orbit.a/1000, 0)) + \
+			   '- Eccentricity (e) : {}\n'.format(round(self.orbit.e, 5)) + \
+			   '- True anomaly : {} °\n'.format(round(self.true_anomaly*180/math.pi, 4)) + \
+			   '- Longitude of perigee : {} °\n'.format(round(self.orbit.Lperi*180/math.pi, 2)) + \
+			   '- Longitude of ascendant node : {} °\n'.format(round(self.orbit.Lnode*180/math.pi, 2)) + \
+			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 2)) + \
+			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
+			   '- Distance : {} km\n'.format(round(self.r_cr_std/1000, 2)) + \
+			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
+			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
 
 
 

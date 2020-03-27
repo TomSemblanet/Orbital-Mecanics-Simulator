@@ -124,6 +124,22 @@ class Satellite :
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
 
 
+
+	def __str__ (self) : 
+
+		return '> {}\n'.format(self.name) + \
+			   '- Semi-major axis (a) : {} km\n'.format(round(self.orbit.a/1000, 0)) + \
+			   '- Eccentricity (e) : {}\n'.format(round(self.orbit.e, 5)) + \
+			   '- True anomaly : {} °\n'.format(round(self.true_anomaly*180/math.pi, 4)) + \
+			   '- Longitude of perigee : {} °\n'.format(round(self.orbit.Lperi*180/math.pi, 2)) + \
+			   '- Longitude of ascendant node : {} °\n'.format(round(self.orbit.Lnode*180/math.pi, 2)) + \
+			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 2)) + \
+			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
+			   '- Distance : {} km\n'.format(round(self.r_cr_std/1000, 2)) + \
+			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
+			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
+
+
 	#################################################
 	#
 	# DESCRIPTION : initalizes the list of manoeuvers that the satellite will have to follow in its attribut [self.manoeuvers_list]

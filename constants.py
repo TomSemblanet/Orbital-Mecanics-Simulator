@@ -6,9 +6,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 1.9885e30,
 			"mu"     : 1.32712440018e20,
 			"radius" : 696342e3,
-			"corps_ref" : None,
+			"corps ref" : None,
 			"initial_position" : [0., 0., 0.],
-			"initial_velocity" : [0., 0., 0.]
+			"initial_velocity" : [0., 0., 0.],
+			"color" : 'gold'
 	 	  },
 
 	"Mercury" : {
@@ -16,9 +17,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 3.3011e23,
 			"mu"     : 2.2032e13,
 			"radius" : 2439.7e3,
-			"corps_ref" : "Sun",
+			"corps ref" : "Sun",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'brown'
 		  },
 
 	"Venus" : {
@@ -26,9 +28,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 4.8675e24,
 			"mu"     : 3.24859e14,
 			"radius" : 6051.8e3,
-			"corps_ref" : "Sun",
+			"corps ref" : "Sun",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'coral'
 		  },
 
 	"Earth" : {
@@ -36,9 +39,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 5.97237e24,
 			"mu"     : 3.986004418e14,
 			"radius" : 6378.137e3,
-			"corps_ref" : "Sun",
+			"corps ref" : "Sun",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'lightskyblue'
 		 },
 
 	"Mars" : {
@@ -46,9 +50,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 6.4171e23,
 			"mu"     : 4.282837e13,
 			"radius" : 3389.5e3,
-			"corps_ref" : "Sun",
+			"corps ref" : "Sun",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'firebrick'
 		 },
 
 	"Jupiter" : {
@@ -56,9 +61,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 1.8982e27,
 			"mu"     : 1.26686534e17,
 			"radius" : 69911e3,
-			"corps_ref" : "Sun",
+			"corps ref" : "Sun",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'orange'
 		 },
 
 	"Saturn" : {
@@ -66,9 +72,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 5.6834e26,
 			"mu"     : 3.7931187e16,
 			"radius" : 58232e3,
-			"corps_ref" : "Sun",
+			"corps ref" : "Sun",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'peachpuff'
 		 },
 
 	"Uranus" : {
@@ -76,9 +83,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 8.6810e25,
 			"mu"     : 5.793939e15,
 			"radius" : 25362e3,
-			"corps_ref" : "Sun",
+			"corps ref" : "Sun",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'mediumslateblue'
 		 },
 
 	"Neptune" : {
@@ -86,9 +94,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 1.02413e26,
 			"mu"     : 6.836529e15,
 			"radius" : 24622e3,
-			"corps_ref" : "Sun",
+			"corps ref" : "Sun",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'blue'
 		 },
 
 	"Moon" : {
@@ -96,9 +105,10 @@ Celestial_Bodies_Dict = {
 			"mass"   : 7.34767309e22,
 			"mu"     : 4.9048695e12,
 			"radius" : 1737.4e3,
-			"corps_ref" : "Earth",
+			"corps ref" : "Earth",
 			"initial_position" : [],
-			"initial_velocity" : []
+			"initial_velocity" : [],
+			"color" : 'lightgrey'
 		 }
 }
 

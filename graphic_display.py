@@ -28,11 +28,13 @@ class MainDisplay :
 		cur_axes.axes.get_xaxis().set_visible(False)
 		cur_axes.axes.get_yaxis().set_visible(False)
 
-		self.ax.set_xlim([-20e11, 20e11])
-		self.ax.set_ylim([-20e11, 20e11])
+		self.ax.set_xlim([-50e11, 50e11])
+		self.ax.set_ylim([-50e11, 50e11])
 
 		self.display_mode = prm.parameters["spatial view"]["display mode"]
 		self.following_mode = prm.parameters["spatial view"]["following mode"]
+	
+		self.body_to_follow = [body for body in (satellite_list+celestial_bodies_list) if body.name == prm.parameters["spatial view"]["body to follow"]][0]
 		
 		self.satellite_list = np.array([])
 		self.celestial_bodies_list = np.array([])
@@ -70,7 +72,7 @@ class MainDisplay :
 
 			point, = self.ax.plot([], [], ls="none", marker="o", color=body.color)
 			self.celestial_bodies_points = np.append(self.celestial_bodies_points, point)
-			traj, = self.ax.plot([],[],ls=":" ,color=body.color)
+			traj, = self.ax.plot([],[],ls="-" ,color=body.color)
 			self.celestial_bodies_traj = np.append(self.celestial_bodies_traj, traj)
 
 	def update (self, i) :
@@ -79,8 +81,8 @@ class MainDisplay :
 			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
 
 		if (self.following_mode) : 
-			self.ax.set_xlim([self.satellite_list[0].r_abs[0]-50000e3, self.satellite_list[0].r_abs[0]+50000e3])
-			self.ax.set_ylim([self.satellite_list[0].r_abs[1]-50000e3, self.satellite_list[0].r_abs[1]+50000e3])
+			self.ax.set_xlim([self.body_to_follow.r_abs[0]-prm.parameters["spatial view"]["window radius"], self.body_to_follow.r_abs[0]+prm.parameters["spatial view"]["window radius"]])
+			self.ax.set_ylim([self.body_to_follow.r_abs[1]-prm.parameters["spatial view"]["window radius"], self.body_to_follow.r_abs[1]+prm.parameters["spatial view"]["window radius"]])
 		if(self.display_mode != "trajectory prediction" and i>0) : 
 			self.x_matrix = np.append(self.x_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
 			self.y_matrix = np.append(self.y_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
@@ -117,8 +119,6 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 		self.app_name = "Ground Track"
 		if(self.app_name == prm.parameters["applications"]["leader application"]) : 
-			print(":)")
-			input()
 			self.leader = True
 		else : self.leader = False
 
@@ -168,18 +168,18 @@ class GraphDisplay :
 		else : self.leader = False
 
 		self.func_dictionnary = {
-								"Distance to referent body" : getattr(GraphDisplay, 'getDistanceToReferentBody'),
-								"Distance to central body" : getattr(GraphDisplay, 'getDistanceToCentralBody'),
-								"Distance to other body" : getattr(GraphDisplay, 'getDistanceToOtherBody'),
-								"Speed relative to referent body" : getattr(GraphDisplay, 'getSpeedRelativeToReferentBody'),
-								"Speed relative to central body" : getattr(GraphDisplay, 'getSpeedRelativeToCentralBody'),
-								"True anomaly" : getattr(GraphDisplay, 'getTrueAnomaly'),
-								"Longitude" : getattr(GraphDisplay, 'getLongitude'),
-								"Latitude" : getattr(GraphDisplay, 'getLatitude'),
-								"Semi major-axis" : getattr(GraphDisplay, 'getSemiMajorAxis'),
-								"Eccentricity" : getattr(GraphDisplay, 'getEccentricity'),
-								"Longitude of ascending node" : getattr(GraphDisplay, 'getLongitudeOfAscendingNode'),
-								"Longitude of perigee" : getattr(GraphDisplay, 'getLongitudeOfPerigee')
+								"Distance to referent body" : self.getDistanceToReferentBody,
+								"Distance to central body" : self.getDistanceToCentralBody,
+								"Distance to other body" : self.getDistanceToOtherBody,
+								"Speed relative to referent body" : self.getSpeedRelativeToReferentBody,
+								"Speed relative to central body" : self.getSpeedRelativeToCentralBody,
+								"True anomaly" : self.getTrueAnomaly,
+								"Longitude" : self.getLongitude,
+								"Latitude" : self.getLatitude,
+								"Semi major-axis" : self.getSemiMajorAxis,
+								"Eccentricity" : self.getEccentricity,
+								"Longitude of ascending node" : self.getLongitudeOfAscendingNode,
+								"Longitude of perigee" : self.getLongitudeOfPerigee
 								}
 		
 

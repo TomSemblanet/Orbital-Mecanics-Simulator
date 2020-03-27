@@ -9,6 +9,7 @@ import celestial_body as c_b
 import parameters as prm
 from datetime import datetime
 import numerical_integration as n_i
+import constants as cst
 
 
 #################################################
@@ -28,6 +29,18 @@ def update_date () :
 					+ (((int(prm.parameters["time"]["current date"][17:19])/60) \
 					+ int(prm.parameters["time"]["current date"][14:16]))/60+int(prm.parameters["time"]["current date"][11:13]))/24 - 2451545 \
 
+	# if(prm.parameters["time"]["elapsed time"] > 3000) : 
+	# 	prm.parameters["time"]["general time step"] = 200
+	# 	prm.parameters["time"]["time step"] = 200
+
+	# if(prm.parameters["time"]["elapsed time"] > 500e3) : 
+	# 	prm.parameters["time"]["general time step"] = 2000
+	# 	prm.parameters["time"]["time step"] = 2000
+
+	# if(prm.parameters["time"]["elapsed time"] > 22233005) : 
+	# 	prm.parameters["time"]["general time step"] = 100
+	# 	prm.parameters["time"]["time step"] = 100
+
 	if(prm.parameters["time"]["time step"] == 0) : 
 		prm.parameters["time"]["time step"] = prm.parameters["time"]["general time step"]
 		
@@ -36,7 +49,8 @@ def update_date () :
 def Computation (satellites_list, celestial_bodies_list) :
 
 	if(prm.parameters["applications"]["show bodies data"] == True) : 	
-		display_parameters(satellites_list)
+		display_parameters([sat for sat in satellites_list if sat.name in prm.parameters["applications"]["bodies data displayed"]]+\
+			[cel_body for cel_body in celestial_bodies_list if cel_body.name in prm.parameters["applications"]["bodies data displayed"]])
 
 	for i in range (prm.parameters["applications"]["calculation repeat"]) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
 		update_celestial_bodies_position(celestial_bodies_list)
@@ -61,38 +75,20 @@ def display_parameters (bodies) :
 	print("Elapsed time : {} sec\n".format(round(prm.parameters["time"]["elapsed time"])))
 
 	for body in bodies : 
-		print('> {}\n'.format(body.name))
-		print('- Semi-major axis (a) : {} km'.format(round(body.orbit.a/1000, 0)))
-		print('- Eccentricity (e) : {}'.format(round(body.orbit.e, 5)))
-		print('- True anomaly : {} °'.format(round(body.true_anomaly*180/math.pi, 4)))
-		print('- Longitude of perigee : {} °'.format(round(body.orbit.Lperi*180/math.pi, 2)))
-		print('- Longitude of ascendant node : {} °'.format(round(body.orbit.Lnode*180/math.pi, 2)))
-		print('- Inclinaison : {} °'.format(round(body.orbit.i*180/math.pi, 2)))
-		print('- Period : {} sec'.format(round(body.orbit.T, 2)))
-		print('- Distance : {} km'.format(round(body.r_cr_std/1000, 2)))
-		print('- Velocity : {} km/s'.format(round(body.v_cr_std/1000, 2)))
-		print('- Cartesian Coord : {}'.format(body.r_cr))
-		print('- Cartesian Velocity : {}'.format(body.v_cr))
-		print("\n")
+		print(body)
 
-
-#################################################
-#
-# DESCRIPTION : calls the constructors of each satellites 
-#
-#
-# INPUT : 
-#
-# - satellites_data_list : 				5x1 array [-] : arguments to pass to the constructor of each satellites (initial position, initial velocity, name, referent body and color)
-#
-#
-# OUTPUT : 
-#
-# - satellites_list : 				nx1 satellite_object array [-] : list of all constructed satellites returned by their own constructors
-#
-#################################################
 
 def load_satellites (satellites_data_dicts, celestial_bodies_list) : 
+
+	""" 
+	This function loads the real satellites objects given a list of dictionnaries containing the parameters needed to
+	instanciate the satellites which has to be simulated
+
+	Input : a list of dictionnaries containing the parameters needed to instanciate the satellites which has to be simulated
+
+	Return : a list containing the instantiated satellites objects 
+
+	"""	
 
 	satellites_list = []
 
@@ -106,36 +102,43 @@ def load_satellites (satellites_data_dicts, celestial_bodies_list) :
 
 def load_celestial_bodies (celestial_bodies_to_compute) : 
 
-	first_celestial_bodies_list = []
+	""" 
+	This function loads the real celestial body objects given the list of the names of the celestial bodies which has 
+	to be simulated
+
+	Input : a list containing the names of the celestial bodies which has to be simulated
+
+	Return : a list containing the instantiated celestial body objects 
+
+	"""	
+
+	celestial_bodies_list = []
 
 	for celestial_body_name in celestial_bodies_to_compute :
-		new_celestial_body = c_b.CelestialBody(celestial_body_name)
-		first_celestial_bodies_list.append(new_celestial_body)
+		try : 
+			new_celestial_body = c_b.CelestialBody(celestial_body_name, \
+												   [cel_body for cel_body in celestial_bodies_list if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
+		except : 
+			new_celestial_body = c_b.CelestialBody(celestial_body_name)
 
-	celestial_bodies_list = [] 
-
-	for celestial_body in first_celestial_bodies_list : 
-		if(celestial_body.moving_body == True) :
-			celestial_body.loadParameters([cel_body for cel_body in first_celestial_bodies_list if (cel_body.name == celestial_body.corps_ref_name)][0])
-		celestial_bodies_list.append(celestial_body)
+		celestial_bodies_list.append(new_celestial_body)
 
 	return celestial_bodies_list
 
 
-#################################################
-#
-# DESCRIPTION : calls the functions which allow the load of the manoeuvers for each satellites
-#
-#
-# INPUT : 
-#
-# - satellites_list : 				nx1 satellite_object array [-] : list containing all satellites 
-# - manoeuvers_lists : 				nx1 manoeuvers_list array [-] : list containing all the manoeuvers for each satellites
-#
-#
-#################################################
 
 def load_manoeuvers (satellites_list, maneuvers_dicts) :
+
+	""" 
+	This function loads the real maneuver objects given a list of dictionnaries containing the parameters needed to
+	instanciate the maneuvers which has to assigned to given satellites
+
+	Input : a list of dictionnaries containing the parameters needed to instanciate the maneuvers which has to assigned 
+	to given satellites
+
+	Return : a list containing the instantiated maneuvers objects 
+
+	"""	
 
 	satellites_dict = {}
 	for sat in satellites_list :
@@ -298,7 +301,7 @@ def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) :
 	v_init = (r_final - f*r_init)/g
 	v_final = (gdot * r_final - r_init)/g
 
-	return v_init
+	return v_init # retourne la vitesse absolue à avoir, pas la vitesse dans le référentiel lié au corps de référence
 
 def NewtonRaphsonLambertFunction (z, r_init_std, r_final_std, temp, flight_time, mu) : 
 
