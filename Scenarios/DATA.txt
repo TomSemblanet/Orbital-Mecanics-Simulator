@@ -9,12 +9,14 @@
 
 =========    SATELLITES    =========
 
-- --SAT1 --[0, 10000e3, 0] --[-6000, 0, 0] --Earth --m
+- --SAT1 --[42000e3, 0, 0] --[0, 2074, 0] --Earth --m
+- --SAT2 --[42000e3, 0, 0] --[0, 4074, 0] --Earth --c
 
 
 =========    MANEUVERS    =========
 
-- --SAT1 --custom acceleration --5880 --date --1973-11-01 00:46:44.000 --[0, 0, 0]
+- --SAT1 --custom acceleration --1000 --date --1973-10-31 03:00:00.000 --[0, 0, 0]
+- --SAT2 --custom acceleration ---1000 --date --1973-10-31 03:00:00.000 --[0, 0, 0]
 
 
 =========      TIME      =========
@@ -34,7 +36,7 @@
 =========  SPATIAL VIEW  =========
 
 - display mode : satellite path [x]  trajectory prediction [v]
-- following mode : [v] --SAT1 10000e3
+- following mode : [v] --SAT1 100000e3
 
 
 =========  GROUND TRACK  =========
@@ -43,8 +45,8 @@
 =======  PARAMETERS PLOT  ========
 
 - parameter to plot : Distance to referent body
-- satellites displayed : SAT1 SAT2
-- historic length : 10000
+- satellites displayed : Mercury Venus
+- historic length : 100000
 
 
 =~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~==~=~=~=

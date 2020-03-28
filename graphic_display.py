@@ -237,70 +237,70 @@ class GraphDisplay :
 		return self.curves
 
 
-	def getDistanceToReferentBody (*bodies) : 
+	def getDistanceToReferentBody (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.r_cr_std)
 		return list_
 
-	def getDistanceToCentralBody (*bodies) : 
+	def getDistanceToCentralBody (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.r_abs_std)
 		return list_
 
-	def getDistanceToOtherBody (*bodies) : 
+	def getDistanceToOtherBody (self, *bodies) : 
 		return [np.linalg.norm(bodies[0][0].r_abs-bodies[0][1].r_abs)]
 
-	def getSpeedRelativeToReferentBody (*bodies) : 
+	def getSpeedRelativeToReferentBody (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.v_cr_std)
 		return list_
 
-	def getSpeedRelativeToCentralBody (*bodies) : 
+	def getSpeedRelativeToCentralBody (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.v_abs_std)
 		return list_
 
-	def getTrueAnomaly (*bodies) : 
+	def getTrueAnomaly (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.true_anomaly*180/math.pi)
 		return list_
 
-	def getLongitude (*bodies) : 
+	def getLongitude (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.longitude*180/math.pi)
 		return list_
 
-	def getLatitude (*bodies) : 
+	def getLatitude (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.latitude*180/math.pi)
 		return list_
 
-	def getSemiMajorAxis (*bodies) : 
+	def getSemiMajorAxis (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.a)
 		return list_
 
-	def getEccentricity (*bodies) : 
+	def getEccentricity (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.e)
 		return list_
 
-	def getLongitudeOfAscendingNode (*bodies) : 
+	def getLongitudeOfAscendingNode (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.Lnode*180/math.pi)
 		return list_
 
-	def getLongitudeOfPerigee (*bodies) : 
+	def getLongitudeOfPerigee (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.Lperi*180/math.pi)
