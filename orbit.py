@@ -3,7 +3,6 @@ import numpy as np
 import math
 
 import celestial_body as c_b
-import numerical_integration as n_i
 import utility_functions as u_f
 
 class Orbit :

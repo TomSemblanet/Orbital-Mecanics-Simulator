@@ -215,6 +215,23 @@ class Satellite :
 
 
 	def calculateAcceleration (self, r, adapted_thrust=False) : 
+
+		"""
+		Computes the acceleration of the satellite at each step following the Newton's laws and integrate the acceleration equation.
+		Only the attraction of the body whose satellite is in the SOI it taken into account, the integration also takes into account any acceleration 
+		caused by a propulsion
+
+		Input : 
+				- Y : state vector of the satellite before the acceleration
+				- t : elapsed time
+				- adapted_thrust : if this parameter is set on True and the satellite is maneuvering, the propulsion will automatically adapted itself
+								to nullify the other forces and so enhance the accuracy of the maneuver
+
+		Return : 
+				- the velocity and acceleration computed by Newton's laws
+
+		"""
+
 		if(adapted_thrust) : 
 			acceleration = 0 
 		else : 
@@ -255,64 +272,6 @@ class Satellite :
 
 		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.parameters["time"]["elapsed time"]) % (2*math.pi) - math.pi
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
-
-	# def calculateAcceleration (self, Y, t, adapted_thrust=False) : 
-
-	# 	"""
-	# 	Computes the acceleration of the satellite at each step following the Newton's laws and integrate the acceleration equation.
-	# 	Only the attraction of the body whose satellite is in the SOI it taken into account, the integration also takes into account any acceleration 
-	# 	caused by a propulsion
-
-	# 	Input : 
-	# 			- Y : state vector of the satellite before the acceleration
-	# 			- t : elapsed time
-	# 			- adapted_thrust : if this parameter is set on True and the satellite is maneuvering, the propulsion will automatically adapted itself
-	# 							to nullify the other forces and so enhance the accuracy of the maneuver
-
-	# 	Return : 
-	# 			- the velocity and acceleration computed by Newton's laws
-
-	# 	"""
-
-	# 	self.r_cr = np.array([ Y[0], Y[1], Y[2] ])
-	# 	self.r_abs = np.array([ Y[0], Y[1], Y[2] ]) + self.corps_ref.r_cr
-	# 	self.v_cr = np.array([ Y[3], Y[4], Y[5] ]) 
-	# 	self.v_abs = np.array([ Y[3], Y[4], Y[5] ]) + self.corps_ref.v_cr
-
-	# 	self.r_cr_std = np.linalg.norm(self.r_cr)
-	# 	self.r_abs_std = np.linalg.norm(self.r_abs)
-	# 	self.v_cr_std = np.linalg.norm(self.v_cr)
-	# 	self.v_abs_std = np.linalg.norm(self.v_abs)
-
-	# 	# computation of the true anomaly taking into account the cases where e=0 (case [1] :  circular orbit) or/and where i=0 (case [2] : equatorial orbit)
-
-	# 	if(self.orbit.e>5e-5) : # case [1]
-	# 		self.true_anomaly = math.acos(np.dot(self.orbit.ecc_vect, self.r_cr)/(self.orbit.e*self.r_cr_std)) % (2*math.pi)
-	# 		if(np.dot(self.r_cr, self.v_cr) < 0) :
-	# 			self.true_anomaly = 2*math.pi - self.true_anomaly
-
-	# 	elif(self.orbit.e<5e-5 and self.orbit.n_std != 0) : # case [2]
-	# 			self.true_anomaly = math.acos(np.dot(self.orbit.n, self.r_cr)/(self.orbit.n_std*self.r_cr_std)) % (2*math.pi)
-	# 			if(self.r_cr[2] < 0) : 
-	# 				self.true_anomaly = 2*math.pi - self.true_anomaly
-
-	# 	else :  # case [1]&[2]
-	# 		self.true_anomaly = math.acos(self.r_cr[0]/self.r_cr_std) % (2*math.pi)
-	# 		if(self.v_cr[0] > 0) : 
-	# 			self.true_anomaly = 2*math.pi -  self.true_anomaly
-
-	# 	self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.parameters["time"]["elapsed time"]) % (2*math.pi) - math.pi
-	# 	self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
-
-	# 	if(adapted_thrust) : 
-	# 		a = 0 
-	# 	else : 
-	# 		a =  (-self.corps_ref.mu)*(self.r_cr/self.r_cr_std**3)
-
-	# 	if (self.thrust_acc_std != 0) :
-	# 		a += self.thrust_acc_vect*(self.thrust_acc_std)
-
-	# 	return (np.array([ Y[3], Y[4], Y[5], a[0], a[1], a[2] ]))
 
 
 	def acceleration_manager (self, next_acceleration_on=False) : 
@@ -355,7 +314,6 @@ class Satellite :
 		else : 
 			self.RK4(self.state_vector)
 			self.updateParameters()
-			# self.state_vector = n_i.burlirsch_stoer_method(self, self.state_vector, adapted_thrust=False)
 
 	def update_ref_body (self, celestial_bodies_list) :
 

@@ -8,7 +8,6 @@ import satellite as sat
 import celestial_body as c_b
 import parameters as prm
 from datetime import datetime
-import numerical_integration as n_i
 import constants as cst
 
 

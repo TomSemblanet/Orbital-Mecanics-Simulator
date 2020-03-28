@@ -4,7 +4,6 @@ import math
 
 import celestial_body as c_b
 import parameters as prm
-import numerical_integration as n_i
 import utility_functions as u_f
 
 class TriggerDetector : 
