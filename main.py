@@ -14,13 +14,7 @@ import graphic_display as g_d
 import maneuver 
 import matplotlib.animation as animation
 
-import time
-
-
-prm.parametersLoader()
-celestial_bodies_list = u_f.load_celestial_bodies(prm.celestialBodiesLoader())
-satellites_list = u_f.load_satellites(prm.satellitesLoader(), celestial_bodies_list)
-u_f.load_manoeuvers(satellites_list, prm.maneuverLoader())
+satellites_list, celestial_bodies_list = u_f.loadSimulation ()
 
 if('Spatial View' in prm.parameters["applications"]["applications on"]) :
 	space_displayer = g_d.MainDisplay(satellites_list, celestial_bodies_list)

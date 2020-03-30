@@ -11,11 +11,14 @@ from datetime import datetime
 import constants as cst
 
 
-#################################################
-#
-# DESCRIPTION : increments the timer after each iteration
-#
-#################################################
+def loadSimulation () : 
+
+	prm.parametersLoader()
+	celestial_bodies_list = load_celestial_bodies(prm.celestialBodiesLoader())
+	satellites_list = load_satellites(prm.satellitesLoader(), celestial_bodies_list)
+	load_manoeuvers(satellites_list, prm.maneuverLoader())
+
+	return satellites_list, celestial_bodies_list
 
 def update_date () : 
 

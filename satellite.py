@@ -8,7 +8,6 @@ import parameters as prm
 import utility_functions as u_f
 import orbit as orb
 import maneuver
-import numerical_integration as n_i
 
 class Satellite : 
 

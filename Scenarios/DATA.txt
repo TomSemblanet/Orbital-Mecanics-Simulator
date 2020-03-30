@@ -29,7 +29,7 @@
 
 - applications to run : Spatial View [v]  Ground Track [x]  Parameters Plot [x]
 - simulation speed : slow [v]  medium [x]  high [x]  very high [x]
-- show bodies data : [v]
+- show bodies data : [x]
 - bodies data displayed : SAT1
 
 
