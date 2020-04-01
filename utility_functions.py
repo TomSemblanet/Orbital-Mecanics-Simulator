@@ -29,17 +29,6 @@ def update_date () :
 					+ (((int(prm.parameters["time"]["current date"][17:19])/60) \
 					+ int(prm.parameters["time"]["current date"][14:16]))/60+int(prm.parameters["time"]["current date"][11:13]))/24 - 2451545 \
 
-	# if(prm.parameters["time"]["elapsed time"] > 3000) : 
-	# 	prm.parameters["time"]["general time step"] = 200
-	# 	prm.parameters["time"]["time step"] = 200
-
-	# if(prm.parameters["time"]["elapsed time"] > 500e3) : 
-	# 	prm.parameters["time"]["general time step"] = 2000
-	# 	prm.parameters["time"]["time step"] = 2000
-
-	# if(prm.parameters["time"]["elapsed time"] > 22233005) : 
-	# 	prm.parameters["time"]["general time step"] = 100
-	# 	prm.parameters["time"]["time step"] = 100
 
 	if(prm.parameters["time"]["time step"] == 0) : 
 		prm.parameters["time"]["time step"] = prm.parameters["time"]["general time step"]
@@ -57,6 +46,16 @@ def Computation (satellites_list, celestial_bodies_list) :
 		satellites_accelerations(satellites_list)
 		update_ref_body(satellites_list, celestial_bodies_list)
 		update_date() 
+
+
+def loadSimulation () : 
+
+	prm.parametersLoader()
+	celestial_bodies_list = load_celestial_bodies(prm.celestialBodiesLoader())
+	satellites_list = load_satellites(prm.satellitesLoader(), celestial_bodies_list)
+	load_manoeuvers(satellites_list, prm.maneuverLoader())
+
+	return satellites_list, celestial_bodies_list
 
 
 #################################################

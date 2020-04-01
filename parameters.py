@@ -49,6 +49,7 @@ def timeParametersLoader (lines) :
 	parameters["time"]["initial julian date"] = 367*int(parameters["time"]["starting date"][0:4]) - int((7*(int(parameters["time"]["starting date"][0:4])+int((int(parameters["time"]["starting date"][5:7])+9)/12)))/4) \
 					+ int(275*int(parameters["time"]["starting date"][5:7])/9) + int(parameters["time"]["starting date"][8:10]) + 1721013.5 + (((int(parameters["time"]["starting date"][17:19])/60) \
 					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
+	parameters["time"]["simulation time"] = float(lines[2].split('~')[1].lstrip()[:-1])
 	
 	parameters["time"]["elapsed time"] = 0
 
@@ -304,7 +305,7 @@ parameters = {
 		"current date" : str(),
 		"initial julian date" : int(), # [days]  ~ following J2000
 		"current julian date" : int(), # [days]
-
+		"simulation time" : float(),
 		"elapsed time" : int() # [sec]
 	},
 

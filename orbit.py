@@ -8,25 +8,10 @@ import utility_functions as u_f
 
 class Orbit :
 
-	def __init__ (self, satellite, r0, v0, corps_ref) : 
+	def __init__ (self, satellite, r0, v0, corps_ref, path_model=True) : 
 
 		(self.a, self.e, self.i, self.Lnode, self.Lperi, self.true_anomaly, self.ecc_vect, self.n, self.n_std) = u_f.CartesianToKeplerian(r0, v0, corps_ref.mu, all=True)
 		self.corps_ref = corps_ref
-		satellite.true_anomaly = self.true_anomaly
-
-		self.R1 = np.array([ [math.cos(self.Lperi), -math.sin(self.Lperi), 0.],
-			            	 [math.sin(self.Lperi),  math.cos(self.Lperi), 0],
-			             	 [                  0.,                    0., 1.] ])
-
-		self.R2 = np.array([ [1.,               0.,               0.],
-			             	[0.,  math.cos(self.i), -math.sin(self.i)],
-			             	[0.,  math.sin(self.i),  math.cos(self.i)] ])
-
-		self.R3 = np.array([ [math.cos(self.Lnode), -math.sin(self.Lnode),     0.],
-			             	[math.sin(self.Lnode),  math.cos(self.Lnode),     0.],
-			             	[                  0.,                    0.,     1.] ])
-
-		self.traj = np.array([ [], [], [] ])
 
 		if(self.e < 1) : 
 			self.T = 2*math.pi * math.sqrt( self.a*self.a*self.a/corps_ref.mu )
@@ -44,7 +29,23 @@ class Orbit :
 			self.perigee_velocity = math.sqrt(corps_ref.mu*(2/self.perigee_radius - 1/self.a))
 			self.apogee_velocity = 0.
 
-		self.PathModelCalculation()
+		if(path_model == True) : 
+
+			self.R1 = np.array([ [math.cos(self.Lperi), -math.sin(self.Lperi), 0.],
+			            	 [math.sin(self.Lperi),  math.cos(self.Lperi), 0],
+			             	 [                  0.,                    0., 1.] ])
+
+			self.R2 = np.array([ [1.,               0.,               0.],
+			             	[0.,  math.cos(self.i), -math.sin(self.i)],
+			             	[0.,  math.sin(self.i),  math.cos(self.i)] ])
+
+			self.R3 = np.array([ [math.cos(self.Lnode), -math.sin(self.Lnode),     0.],
+			             	[math.sin(self.Lnode),  math.cos(self.Lnode),     0.],
+			             	[                  0.,                    0.,     1.] ])
+
+			self.traj = np.array([ [], [], [] ])
+
+			self.PathModelCalculation()
 
 	def PathModelCalculation (self) : 
 

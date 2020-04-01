@@ -95,7 +95,7 @@ class Satellite :
 
 
 
-	def loadParameters (self, first_load=False) :
+	def loadParameters (self, update_orbital_prm = False, first_load=False, path_model=True) :
 
 		"""
 		Computes some additional attributes of the Satellite class and initializes the object orbit by calling
@@ -113,29 +113,32 @@ class Satellite :
 
 		"""
 
-		if(first_load==True) : 
-			for i in [0, 1, 2] : 
-				self.r_abs[i] = self.r_cr[i] + self.corps_ref.r_cr[i]
-				self.v_abs[i] = self.v_cr[i] + self.corps_ref.v_cr[i]
+		if(update_orbital_prm == False) :
 
-				self.state_vector[i] = self.r_cr[i]
-				self.state_vector[i+3] = self.v_cr[i]
+			if(first_load==True) : 
+				for i in [0, 1, 2] : 
+					self.r_abs[i] = self.r_cr[i] + self.corps_ref.r_cr[i]
+					self.v_abs[i] = self.v_cr[i] + self.corps_ref.v_cr[i]
 
-			self.r_abs_std = np.linalg.norm(self.r_abs)
-			self.v_abs_std = np.linalg.norm(self.v_abs)
+					self.state_vector[i] = self.r_cr[i]
+					self.state_vector[i+3] = self.v_cr[i]
 
-		else : 
-			for i in [0, 1, 2] : 
-				self.r_cr[i] = self.r_abs[i] - self.corps_ref.r_cr[i]
-				self.v_cr[i] = self.v_abs[i] - self.corps_ref.v_cr[i]
+				self.r_abs_std = np.linalg.norm(self.r_abs)
+				self.v_abs_std = np.linalg.norm(self.v_abs)
 
-				self.state_vector[i] = self.r_cr[i]
-				self.state_vector[i+3] = self.v_cr[i]
+			else : 
+				for i in [0, 1, 2] : 
+					self.r_cr[i] = self.r_abs[i] - self.corps_ref.r_cr[i]
+					self.v_cr[i] = self.v_abs[i] - self.corps_ref.v_cr[i]
 
-			self.r_cr_std = np.linalg.norm(self.r_cr)
-			self.v_cr_std = np.linalg.norm(self.v_cr)
+					self.state_vector[i] = self.r_cr[i]
+					self.state_vector[i+3] = self.v_cr[i]
+	
+				self.r_cr_std = np.linalg.norm(self.r_cr)
+				self.v_cr_std = np.linalg.norm(self.v_cr)
 
-		self.orbit = orb.Orbit(self, self.r_cr, self.v_cr, self.corps_ref)
+
+		self.orbit = orb.Orbit(self, self.r_cr, self.v_cr, self.corps_ref, path_model)
 
 		self.movement_prograde = np.cross(self.r_cr, self.v_cr)[2] > 0
 
@@ -143,6 +146,7 @@ class Satellite :
 		self.h_std = np.linalg.norm(self.h)
 
 		# True anomaly : setted in the orbitals parameters calculation (orbit constructor)
+		self.true_anomaly = self.orbit.true_anomaly
 		self.initial_true_anomaly = self.true_anomaly
 
 		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1))) % (2*math.pi) - math.pi
@@ -215,11 +219,23 @@ class Satellite :
 		self.v_abs = np.array([ Y[3], Y[4], Y[5] ]) + self.corps_ref.v_cr
 
 		self.r_cr_std = np.linalg.norm(self.r_cr)
-		self.r_abs_std = np.linalg.norm(self.r_abs)
+		self.r_abs_std = np.linalg.norm(self.r_abs) # no need to calculate it at each time step
 		self.v_cr_std = np.linalg.norm(self.v_cr)
-		self.v_abs_std = np.linalg.norm(self.v_abs)
+		self.v_abs_std = np.linalg.norm(self.v_abs) # no need to calculate it at each time step
 
-		# computation of the true anomaly taking into account the cases where e=0 (case [1] :  circular orbit) or/and where i=0 (case [2] : equatorial orbit)
+
+		a = 0
+
+		if(adapted_thrust == False) : 
+			a +=  (-self.corps_ref.mu)*(self.r_cr/self.r_cr_std**3)
+			a += (-0.5 * 1e-6 * 9 * 2.5/450e3 * self.v_cr_std) * (self.v_cr)
+
+		if (self.thrust_acc_std != 0) :
+			a += self.thrust_acc_vect*(self.thrust_acc_std)
+
+		return (np.array([ Y[3], Y[4], Y[5], a[0], a[1], a[2] ]))
+
+	def computeAdditionalParameters (self) : 
 
 		if(self.orbit.e>5e-5) : # case [1]
 			self.true_anomaly = math.acos(np.dot(self.orbit.ecc_vect, self.r_cr)/(self.orbit.e*self.r_cr_std)) % (2*math.pi)
@@ -238,16 +254,6 @@ class Satellite :
 
 		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.parameters["time"]["elapsed time"]) % (2*math.pi) - math.pi
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
-
-		if(adapted_thrust) : 
-			a = 0 
-		else : 
-			a =  (-self.corps_ref.mu)*(self.r_cr/self.r_cr_std**3)
-
-		if (self.thrust_acc_std != 0) :
-			a += self.thrust_acc_vect*(self.thrust_acc_std)
-
-		return (np.array([ Y[3], Y[4], Y[5], a[0], a[1], a[2] ]))
 
 
 	def acceleration_manager (self, next_acceleration_on=False) : 
@@ -287,6 +293,11 @@ class Satellite :
 
 		else : 
 			self.state_vector = n_i.burlirsch_stoer_method(self, self.state_vector, adapted_thrust=False)
+
+		# if(KeplerianMode == True) :
+			# self.computeAdditionalParameters()
+		# else :  
+		self.loadParameters(update_orbital_prm = True, path_model=False)
 
 
 	def update_ref_body (self, celestial_bodies_list) :

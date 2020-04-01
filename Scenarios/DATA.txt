@@ -9,32 +9,33 @@
 
 =========    SATELLITES    =========
 
-- --SAT1 --[0, 10000e3, 0] --[-6000, 0, 0] --Earth --m
+- --SAT1 --[7200e3, 0, 0] --[0, -8000, 0] --Earth --m
 
 
 =========    MANEUVERS    =========
 
-- --SAT1 --custom acceleration --5880 --date --1973-11-01 00:46:44.000 --[0, 0, 0]
+- --SAT1 --custom acceleration --1880 --date --1373-10-31 12:00:00.000 --[0, 0, 0]
 
 
 =========      TIME      =========
 
 - starting date ~ 1973-10-31 00:00:00.000
-- time step ~ 50
+- time step ~ 10
+- simulation time ~ 100e3
 
 
 =========  APPLICATIONS  =========
 
 - applications to run : Spatial View [v]  Ground Track [x]  Parameters Plot [x]
 - simulation speed : slow [v]  medium [x]  high [x]  very high [x]
-- show bodies data : [v]
+- show bodies data : [x]
 - bodies data displayed : SAT1
 
 
 =========  SPATIAL VIEW  =========
 
-- display mode : satellite path [x]  trajectory prediction [v]
-- following mode : [v] --SAT1 10000e3
+- display mode : satellite path [v]  trajectory prediction [x]
+- following mode : [x] --SAT1 10000e3
 
 
 =========  GROUND TRACK  =========
