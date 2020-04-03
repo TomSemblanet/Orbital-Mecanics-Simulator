@@ -77,8 +77,8 @@ class OrbitModificationManeuver :
 	def InclinaisonModificationLoader (self) : 
 
 		self.modification_value = self.modification_value*(math.pi/180)
-		dV = 2*self.satellite.v_cr_std*math.sin(abs(self.modification_value)/2)
-		direction = math.cos(abs(self.modification_value)/2)*(self.satellite.h/self.satellite.h_std) - math.sin(abs(self.modification_value)/2)*(self.satellite.v_cr/self.satellite.v_cr_std)
+		dV = 2*self.satellite.v_cr_norm*math.sin(abs(self.modification_value)/2)
+		direction = math.cos(abs(self.modification_value)/2)*(self.satellite.h/self.satellite.h_norm) - math.sin(abs(self.modification_value)/2)*(self.satellite.v_cr/self.satellite.v_cr_norm)
 
 		if(self.modification_value < 0) :
 			direction[2] = -direction[2]

@@ -240,13 +240,13 @@ class GraphDisplay :
 	def getDistanceToReferentBody (*bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
-			list_.append(body.r_cr_std)
+			list_.append(body.r_cr_norm)
 		return list_
 
 	def getDistanceToCentralBody (*bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
-			list_.append(body.r_abs_std)
+			list_.append(body.r_abs_norm)
 		return list_
 
 	def getDistanceToOtherBody (*bodies) : 
@@ -255,13 +255,13 @@ class GraphDisplay :
 	def getSpeedRelativeToReferentBody (*bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
-			list_.append(body.v_cr_std)
+			list_.append(body.v_cr_norm)
 		return list_
 
 	def getSpeedRelativeToCentralBody (*bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
-			list_.append(body.v_abs_std)
+			list_.append(body.v_abs_norm)
 		return list_
 
 	def getTrueAnomaly (*bodies) : 

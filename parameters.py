@@ -3,6 +3,8 @@
 
 import numpy as np
 
+import constants as cst
+
 DATA_FILE = "Scenarios/DATA.txt"
 
 def parametersLoader () : 
@@ -24,6 +26,13 @@ def parametersLoader () :
 					while(not('=' in lines[end_indice])) : end_indice += 1
 					end_indice -= 2
 					parameters[catgr]["loader func"](lines[begin_indice:end_indice])
+
+
+
+def generalParametersLoader (lines) : 
+	
+	parameters['general']['Keplerian simulation'] = (lines[0].split('[')[1][0] == 'v')
+
 
 
 def timeParametersLoader (lines) :  
@@ -164,7 +173,10 @@ def celestialBodiesLoader () :
 				begin_indice = indic+2
 		
 		for l in lines[begin_indice].replace('-', '').replace('\n', '').split(']')[:-1] : 
+
 			if(l[-1] == 'v') : 
+				if(len([body_name for body_name in celestial_bodies_to_load if (cst.Celestial_Bodies_Dict[body_name]['central'] == True)]) == 0) : 
+					cst.Celestial_Bodies_Dict[l.lstrip().replace(' [v', '')]['central'] = True
 				celestial_bodies_to_load.append(l.lstrip().replace(' [v', ''))
 
 	return celestial_bodies_to_load
@@ -296,6 +308,12 @@ def maneuverLoader () :
 
 
 parameters = {
+	"general" : 
+	{
+		"loader func" : generalParametersLoader,
+		"Keplerian simulation" : bool()
+	},
+
 	"time" : 
 	{
 		"loader func" : timeParametersLoader,
@@ -346,4 +364,5 @@ parameters = {
 		"historic length" : int()
 	},
 }
+
 

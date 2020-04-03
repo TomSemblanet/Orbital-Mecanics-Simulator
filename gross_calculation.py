@@ -50,5 +50,5 @@ def GeneralCalculation (satellites_list, celestial_bodies_list) :
 	plt.style.use('dark_background')
 	fig, ax = plt.subplots()
 	# ax.plot([x[0] for x in dictionnary['SAT1']['r_cr']], [x[1] for x in dictionnary['SAT1']['r_cr']])
-	ax.plot(dictionnary['time steps'], dictionnary['SAT1']['Lnode']*180/math.pi)
+	ax.plot(dictionnary['time steps'], dictionnary['SAT1']['a'])
 	plt.show()

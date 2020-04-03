@@ -39,29 +39,31 @@ class CelestialBody :
 
 		self.name = name
 		self.color = cst.Celestial_Bodies_Dict[self.name]["color"]
+		self.central = (cst.Celestial_Bodies_Dict[self.name]['central'] == True)
 
 		self.influence_sphere_radius = 0.
 		self.mass = cst.Celestial_Bodies_Dict[self.name]["mass"]
 		self.mu = cst.Celestial_Bodies_Dict[self.name]["mu"]
 		self.radius = cst.Celestial_Bodies_Dict[self.name]["radius"]
 
-		self.corps_ref_name = cst.Celestial_Bodies_Dict[self.name]["corps ref"]
 		self.corps_ref = corps_ref
 
 		self.r_abs = cst.Celestial_Bodies_Dict[self.name]['initial_position']
-		self.r_abs_std = np.linalg.norm(self.r_abs)
+		if (self.central) : self.r_abs = np.array([0., 0., 0.])
+		self.r_abs_norm = np.linalg.norm(self.r_abs)
 
 		self.r_cr = np.array([0., 0., 0.])
-		self.r_cr_std = 0.
+		self.r_cr_norm = 0.
 		
 		self.v_abs = cst.Celestial_Bodies_Dict[self.name]['initial_velocity']
-		self.v_abs_std = np.linalg.norm(self.v_abs)
+		if (self.central) : self.v_abs = np.array([0., 0., 0.])
+		self.v_abs_norm = np.linalg.norm(self.v_abs)
 
 		self.v_cr = np.array([0., 0., 0.])
-		self.v_cr_std = 0.
+		self.v_cr_norm = 0.
 
 		self.h_cr = np.array([0., 0., 0.])
-		self.h_cr_std = 0.
+		self.h_cr_norm = 0.
 
 		self.true_anomaly = 0.
 		self.initial_true_anomaly = 0.
@@ -71,7 +73,7 @@ class CelestialBody :
 
 		self.moving_body = not(np.linalg.norm(self.r_abs) == 0)
 
-		if (np.linalg.norm(self.r_abs) != 0) : 
+		if not (self.central) : 
 			self.loadParameters()
 
 	#################################################
@@ -83,15 +85,14 @@ class CelestialBody :
 
 	def loadParameters (self) :
 
-		for i in [0, 1, 2] : 
-			self.r_cr[i] = self.r_abs[i] - self.corps_ref.r_cr[i]
-			self.v_cr[i] = self.v_abs[i] - self.corps_ref.v_cr[i]
+		self.r_cr = self.r_abs - cst.Celestial_Bodies_Dict[self.corps_ref.name]['initial_position']
+		self.v_cr = self.v_abs - cst.Celestial_Bodies_Dict[self.corps_ref.name]['initial_velocity']
 
-		self.r_cr_std = np.linalg.norm(self.r_cr)
-		self.v_cr_std = np.linalg.norm(self.v_cr)
+		self.r_cr_norm = np.linalg.norm(self.r_cr)
+		self.v_cr_norm = np.linalg.norm(self.v_cr)
 
 		self.h_cr = np.cross(self.r_cr, self.v_cr)
-		self.h_cr_std = np.linalg.norm(self.h_cr)
+		self.h_cr_norm = np.linalg.norm(self.h_cr)
 
 		self.orbit = orb.Orbit(self, self.r_cr, self.v_cr, self.corps_ref)
 
@@ -106,17 +107,22 @@ class CelestialBody :
 
 	def __str__ (self) : 
 
-		return '> {}\n'.format(self.name) + \
+		try : 
+			return '> {}\n'.format(self.name) + \
 			   '- Semi-major axis (a) : {} km\n'.format(round(self.orbit.a/1000, 0)) + \
 			   '- Eccentricity (e) : {}\n'.format(round(self.orbit.e, 5)) + \
 			   '- True anomaly : {} °\n'.format(round(self.true_anomaly*180/math.pi, 4)) + \
 			   '- Longitude of perigee : {} °\n'.format(round(self.orbit.Lperi*180/math.pi, 2)) + \
 			   '- Longitude of ascendant node : {} °\n'.format(round(self.orbit.Lnode*180/math.pi, 2)) + \
-			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 2)) + \
+			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 20)) + \
 			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
-			   '- Distance : {} km\n'.format(round(self.r_cr_std/1000, 2)) + \
+			   '- Distance : {} km\n'.format(round(self.r_cr_norm/1000, 2)) + \
 			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
 			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
+
+		except : 
+			print("=_=_=_=  You try to display the parameters of the central body  =_=_=_=\n")
+			exit()
 
 
 
@@ -141,18 +147,18 @@ class CelestialBody :
 		self.true_anomaly = 2*math.atan( math.sqrt( (1+self.orbit.e)/(1-self.orbit.e) ) * math.tan(self.E/2))
 
 		self.r_cr = self.orbit.R3.dot(self.orbit.R2.dot(self.orbit.R1.dot(np.array([self.orbit.a * (math.cos(self.E)-self.orbit.e), self.orbit.a * math.sqrt(1-self.orbit.e*self.orbit.e)*math.sin(self.E), 0]))))
-		self.r_cr_std = np.linalg.norm(self.r_cr)
+		self.r_cr_norm = np.linalg.norm(self.r_cr)
 
 		self.v_cr = self.orbit.R3.dot(self.orbit.R2.dot(self.orbit.R1.dot(np.array([- math.sqrt( self.corps_ref.mu/(self.orbit.a*(1-self.orbit.e*self.orbit.e)) )*math.sin(self.true_anomaly), 
 																  math.sqrt( self.corps_ref.mu/(self.orbit.a*(1-self.orbit.e*self.orbit.e)) )*(self.orbit.e+math.cos(self.true_anomaly)),
 																  0.]))))
 
-		self.v_cr_std = np.linalg.norm(self.v_cr)
+		self.v_cr_norm = np.linalg.norm(self.v_cr)
 
 		self.r_abs = self.r_cr + self.corps_ref.r_cr
-		self.r_abs_std = np.linalg.norm(self.r_abs)
+		self.r_abs_norm = np.linalg.norm(self.r_abs)
 
 		self.v_abs = self.v_cr + self.corps_ref.v_cr
-		self.v_abs_std = np.linalg.norm(self.v_abs)
+		self.v_abs_norm = np.linalg.norm(self.v_abs)
 
 

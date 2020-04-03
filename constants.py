@@ -9,7 +9,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : None,
 			"initial_position" : [0., 0., 0.],
 			"initial_velocity" : [0., 0., 0.],
-			"color" : 'gold'
+			"color" : 'gold',
+
+			"central" : bool() 
 	 	  },
 
 	"Mercury" : {
@@ -21,7 +23,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'brown'
+			"color" : 'brown',
+
+			"central" : bool()
 		  },
 
 	"Venus" : {
@@ -33,7 +37,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'coral'
+			"color" : 'coral',
+
+			"central" : bool()
 		  },
 
 	"Earth" : {
@@ -45,7 +51,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'lightskyblue'
+			"color" : 'lightskyblue',
+
+			"central" : bool()
 		 },
 
 	"Mars" : {
@@ -57,7 +65,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'firebrick'
+			"color" : 'firebrick',
+
+			"central" : bool()
 		 },
 
 	"Jupiter" : {
@@ -69,7 +79,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'orange'
+			"color" : 'orange',
+
+			"central" : bool()
 		 },
 
 	"Saturn" : {
@@ -81,7 +93,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'peachpuff'
+			"color" : 'peachpuff',
+
+			"central" : bool()
 		 },
 
 	"Uranus" : {
@@ -93,7 +107,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'mediumslateblue'
+			"color" : 'mediumslateblue',
+
+			"central" : bool()
 		 },
 
 	"Neptune" : {
@@ -105,7 +121,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Sun",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'blue'
+			"color" : 'blue',
+
+			"central" : bool()
 		 },
 
 	"Moon" : {
@@ -116,7 +134,9 @@ Celestial_Bodies_Dict = {
 			"corps ref" : "Earth",
 			"initial_position" : [],
 			"initial_velocity" : [],
-			"color" : 'lightgrey'
+			"color" : 'lightgrey',
+
+			"central" : bool()
 		 }
 }
 
@@ -134,8 +154,8 @@ def EphemeridesLoader () :
 			del splited_line[1]
 			del splited_line[-1]
 
-			Celestial_Bodies_Dict[splited_line[0]]["initial_position"] = [1.496e11*float(elt) for elt in splited_line[1:4]]
-			Celestial_Bodies_Dict[splited_line[0]]["initial_velocity"] = [1.731e6*float(elt) for elt in splited_line[4:7]]
+			Celestial_Bodies_Dict[splited_line[0]]["initial_position"] = np.array([1.496e11*float(elt) for elt in splited_line[1:4]])
+			Celestial_Bodies_Dict[splited_line[0]]["initial_velocity"] = np.array([1.731e6*float(elt) for elt in splited_line[4:7]])
 
 EphemeridesLoader()
 

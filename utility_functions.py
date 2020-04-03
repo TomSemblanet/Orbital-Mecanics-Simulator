@@ -41,7 +41,7 @@ def Computation (satellites_list, celestial_bodies_list) :
 		display_parameters([sat for sat in satellites_list if sat.name in prm.parameters["applications"]["bodies data displayed"]]+\
 			[cel_body for cel_body in celestial_bodies_list if cel_body.name in prm.parameters["applications"]["bodies data displayed"]])
 
-	for i in range (prm.parameters["applications"]["calculation repeat"]) :  # repetition allow the programm to reduce the computational time by reducing the number of plot
+	for i in range (prm.parameters["applications"]["calculation repeat"]) :  # repetition allow the program to reduce the computational time by reducing the number of plot
 		update_celestial_bodies_position(celestial_bodies_list)
 		satellites_accelerations(satellites_list)
 		update_ref_body(satellites_list, celestial_bodies_list)
@@ -114,6 +114,7 @@ def load_celestial_bodies (celestial_bodies_to_compute) :
 	celestial_bodies_list = []
 
 	for celestial_body_name in celestial_bodies_to_compute :
+
 		try : 
 			new_celestial_body = c_b.CelestialBody(celestial_body_name, \
 												   [cel_body for cel_body in celestial_bodies_list if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
@@ -229,7 +230,7 @@ def satellites_accelerations (satellites_list) :
 #################################################
 
 def get_angle (body1, body2) : 
-	return np.sign(np.cross(body1.r_cr, body2.r_cr)[2]) * math.acos( np.dot(body1.r_cr, body2.r_cr)/(body1.r_cr_std*body2.r_cr_std) )
+	return np.sign(np.cross(body1.r_cr, body2.r_cr)[2]) * math.acos( np.dot(body1.r_cr, body2.r_cr)/(body1.r_cr_norm*body2.r_cr_norm) )
 
 
 #################################################
@@ -275,39 +276,39 @@ def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) :
 
 	# flight_time -= prm.dT # il faut enlever prm.dT au temps de vol car il se passe un tour de boucle le temps que le satellite adapte sa vitesse
 
-	r_init_std = np.linalg.norm(r_init)
-	r_final_std = np.linalg.norm(r_final)
+	r_init_norm = np.linalg.norm(r_init)
+	r_final_norm = np.linalg.norm(r_final)
 
-	dPhi = math.acos(np.dot(r_init, r_final)/(r_init_std*r_final_std))
+	dPhi = math.acos(np.dot(r_init, r_final)/(r_init_norm*r_final_norm))
 
 	if( ( np.dot(np.cross(r_init, r_final), [0, 0, 1]) < 0 and prograde ) or 
 		( np.dot(np.cross(r_init, r_final), [0, 0, 1]) >= 0 and not prograde )) : 
 		dPhi = 2*math.pi - dPhi
 
-	temp = math.sin(dPhi)*math.sqrt(r_init_std*r_final_std/(1-math.cos(dPhi)))
+	temp = math.sin(dPhi)*math.sqrt(r_init_norm*r_final_norm/(1-math.cos(dPhi)))
 
-	z = fsolve(NewtonRaphsonLambertFunction, args=(r_init_std, r_final_std, temp, flight_time, mu), x0=1)
+	z = fsolve(NewtonRaphsonLambertFunction, args=(r_init_norm, r_final_norm, temp, flight_time, mu), x0=1)
 
 	Cz = (1 - math.cos(math.sqrt(z)))/z
 	Sz = (math.sqrt(z)-math.sin(math.sqrt(z)))/(math.sqrt(z)**3)
 
-	Yz = r_init_std + r_final_std + temp*(z*Sz-1)/math.sqrt(Cz)
+	Yz = r_init_norm + r_final_norm + temp*(z*Sz-1)/math.sqrt(Cz)
 
-	f = 1 - Yz/r_init_std
+	f = 1 - Yz/r_init_norm
 	g = temp*math.sqrt(Yz/mu)
-	gdot = 1 - Yz/r_final_std
+	gdot = 1 - Yz/r_final_norm
 
 	v_init = (r_final - f*r_init)/g
 	v_final = (gdot * r_final - r_init)/g
 
 	return v_init # retourne la vitesse absolue à avoir, pas la vitesse dans le référentiel lié au corps de référence
 
-def NewtonRaphsonLambertFunction (z, r_init_std, r_final_std, temp, flight_time, mu) : 
+def NewtonRaphsonLambertFunction (z, r_init_norm, r_final_norm, temp, flight_time, mu) : 
 
 	Cz = (1 - math.cos(math.sqrt(z)))/z
 	Sz = (math.sqrt(z)-math.sin(math.sqrt(z)))/(math.sqrt(z)**3)
 
-	Yz = r_init_std + r_final_std + temp*(z*Sz-1)/math.sqrt(Cz)
+	Yz = r_init_norm + r_final_norm + temp*(z*Sz-1)/math.sqrt(Cz)
 
 	return ((Yz/Cz)**(1.5))*Sz + temp*math.sqrt(Yz)-math.sqrt(mu)*flight_time
 
@@ -443,5 +444,36 @@ def DateToSeconds (date1, date2) :
 	object_date2 = datetime.strptime(date2, "%Y-%m-%d %H:%M:%S.%f")
 
 	return (object_date2-object_date1).total_seconds()
+
+
+
+def EquatorialToEcliptic (vector) : 
+
+	"""
+	Rotate a vector from the Equatorial referential to the Ecliptic one
+
+	"""
+
+	ecliptic_obliquity = 0.4090928
+	R = np.array([ [1.,               0.,               0.],
+			        [0.,      math.cos(ecliptic_obliquity),     -math.sin(ecliptic_obliquity)],
+			        [0.,      math.sin(ecliptic_obliquity),      math.cos(ecliptic_obliquity)] ])
+
+	return R.dot(vector)
+
+
+def EclipticToEquatorial (vector) : 
+
+	"""
+	Rotate a vector from the Ecliptic referential to the Equatorial one
+	
+	"""
+
+	ecliptic_obliquity = 0.4090928
+	R = np.array([ [1.,               0.,               0.],
+			        [0.,      math.cos(-ecliptic_obliquity),     -math.sin(-ecliptic_obliquity)],
+			        [0.,      math.sin(-ecliptic_obliquity),      math.cos(-ecliptic_obliquity)] ])
+
+	return R.dot(vector)
 
 
