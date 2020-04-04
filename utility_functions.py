@@ -462,17 +462,21 @@ def EquatorialToEcliptic (vector) :
 	return R.dot(vector)
 
 
-def EclipticToEquatorial (vector) : 
+def Ecliptic_Equatorial (vector, ec2eq) : 
 
 	"""
 	Rotate a vector from the Ecliptic referential to the Equatorial one
 	
 	"""
 
+
+	if(ec2eq == True) : sign = -1
+	else : sign = 1
+
 	ecliptic_obliquity = 0.4090928
 	R = np.array([ [1.,               0.,               0.],
-			        [0.,      math.cos(-ecliptic_obliquity),     -math.sin(-ecliptic_obliquity)],
-			        [0.,      math.sin(-ecliptic_obliquity),      math.cos(-ecliptic_obliquity)] ])
+			        [0.,      math.cos(sign*ecliptic_obliquity),     -math.sin(sign*ecliptic_obliquity)],
+			        [0.,      math.sin(sign*ecliptic_obliquity),      math.cos(sign*ecliptic_obliquity)] ])
 
 	return R.dot(vector)
 

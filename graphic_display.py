@@ -28,8 +28,8 @@ class MainDisplay :
 		cur_axes.axes.get_xaxis().set_visible(False)
 		cur_axes.axes.get_yaxis().set_visible(False)
 
-		self.ax.set_xlim([-50e11, 50e11])
-		self.ax.set_ylim([-50e11, 50e11])
+		self.ax.set_xlim([-3e11, 3e11])
+		self.ax.set_ylim([-3e11, 3e11])
 
 		self.display_mode = prm.parameters["spatial view"]["display mode"]
 		self.following_mode = prm.parameters["spatial view"]["following mode"]
@@ -77,6 +77,7 @@ class MainDisplay :
 			self.celestial_bodies_points = np.append(self.celestial_bodies_points, point)
 			traj, = self.ax.plot([],[],ls="-" ,color=body.color)
 			self.celestial_bodies_traj = np.append(self.celestial_bodies_traj, traj)
+
 
 	def update (self, i) :
 
