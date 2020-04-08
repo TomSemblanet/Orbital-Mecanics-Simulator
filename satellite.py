@@ -12,6 +12,8 @@ import maneuver
 
 class Satellite : 
 
+	satellites = []
+
 	def __init__ (self, r0, v0, name, corps_ref, color="m") :
 
 		"""
@@ -90,7 +92,8 @@ class Satellite :
 			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 2)) + \
 			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
 			   '- Distance : {} km\n'.format(round(self.r_cr_norm/1000, 2)) + \
-			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
+			   '- Cartesian Coord (cr) : {}\n'.format(self.r_cr) + \
+			   '- Cartesian Coord (abs) : {}\n'.format(self.r_abs) + \
 			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
 
 
@@ -116,29 +119,31 @@ class Satellite :
 		if(update_orbital_prm == False) :
 
 			if(first_load==True) : 
-				for i in [0, 1, 2] : 
-					self.r_abs[i] = self.r_cr[i] + self.corps_ref.r_cr[i]
-					self.v_abs[i] = self.v_cr[i] + self.corps_ref.v_cr[i]
 
-					self.state_vector[i] = self.r_cr[i]
-					self.state_vector[i+3] = self.v_cr[i]
+				# self.r_abs = self.r_cr + self.corps_ref.r_abs
+				# self.v_abs = self.v_cr + self.corps_ref.v_abs
+				self.r_abs, self.v_abs = self.corps_ref.HelioPlaneto(self, h2p=False)
+
+				self.state_vector[:3] = self.r_cr
+				self.state_vector[3:] = self.v_cr
 
 				self.r_abs_norm = np.linalg.norm(self.r_abs)
 				self.v_abs_norm = np.linalg.norm(self.v_abs)
 
 			else : 
-				for i in [0, 1, 2] : 
-					self.r_cr[i] = self.r_abs[i] - self.corps_ref.r_cr[i]
-					self.v_cr[i] = self.v_abs[i] - self.corps_ref.v_cr[i]
+				# self.r_cr = self.r_abs - self.corps_ref.r_abs
+				# self.v_cr = self.v_abs - self.corps_ref.v_abs 
 
-					self.state_vector[i] = self.r_cr[i]
-					self.state_vector[i+3] = self.v_cr[i]
+				self.state_vector[:3] = self.r_cr
+				self.state_vector[3:] = self.v_cr
 	
 				self.r_cr_norm = np.linalg.norm(self.r_cr)
 				self.v_cr_norm = np.linalg.norm(self.v_cr)
 
 
-		self.orbit = orb.Orbit(self, self.r_cr, self.v_cr, self.corps_ref, path_model)
+		self.orbit = orb.Orbit(self.r_cr, self.v_cr, self.corps_ref, path_model)
+		if(path_model == True and self.corps_ref.name != 'Sun') :
+			self.orbit.traj = np.array([ [1.,  0., 0.], [0.,  math.cos(self.corps_ref.eps), -math.sin(self.corps_ref.eps)], [0.,  math.sin(self.corps_ref.eps),  math.cos(self.corps_ref.eps)] ]).dot(self.orbit.traj)
 
 		self.movement_prograde = np.cross(self.r_cr, self.v_cr)[2] > 0
 
@@ -214,15 +219,28 @@ class Satellite :
 		"""
 
 		self.r_cr = np.array([ Y[0], Y[1], Y[2] ])
-		self.r_abs = np.array([ Y[0], Y[1], Y[2] ]) + self.corps_ref.r_cr
-		self.v_cr = np.array([ Y[3], Y[4], Y[5] ]) 
-		self.v_abs = np.array([ Y[3], Y[4], Y[5] ]) + self.corps_ref.v_cr
-
 		self.r_cr_norm = np.linalg.norm(self.r_cr)
-		self.r_abs_norm = np.linalg.norm(self.r_abs) # no need to calculate it at each time step
-		self.v_cr_norm = np.linalg.norm(self.v_cr)
-		self.v_abs_norm = np.linalg.norm(self.v_abs) # no need to calculate it at each time step
 
+		self.v_cr = np.array([ Y[3], Y[4], Y[5] ]) 
+		self.v_cr_norm = np.linalg.norm(self.v_cr)
+
+		if(self.corps_ref.name != 'Sun') : 
+
+			"""
+			Si le satellite ne tourne pas autour du Soleil, ses cordonnées dans le référentiel héliocentrique doivent être recalculées
+			"""
+
+			self.r_abs, self.v_abs = self.corps_ref.HelioPlaneto(self, h2p=False)
+
+			# self.r_abs = np.array([ Y[0], Y[1], Y[2] ]) + self.corps_ref.r_cr
+			# self.v_abs = np.array([ Y[3], Y[4], Y[5] ]) + self.corps_ref.v_cr
+
+			self.r_abs_norm = np.linalg.norm(self.r_abs) # no need to calculate it at each time step
+			self.v_abs_norm = np.linalg.norm(self.v_abs) # no need to calculate it at each time step
+
+		else : 
+			self.r_abs, self.r_abs_norm = self.r_cr, self.r_cr_norm
+			self.v_abs, self.v_abs_norm = self.v_cr, self.v_cr_norm
 
 		a = 0
 
@@ -320,6 +338,7 @@ class Satellite :
 		if (self.r_abs_norm != self.r_cr_norm) : # which means that the satellite is in the SOI of a planet
 
 			if(self.r_cr_norm > self.corps_ref.influence_sphere_radius) : 
+				self.r_cr, self.v_cr = self.corps_ref.HelioPlaneto(self, h2p=False)
 				self.corps_ref = [body for body in celestial_bodies_list if body.name == self.corps_ref.corps_ref.name][0]
 				self.loadParameters()
 
@@ -340,6 +359,7 @@ class Satellite :
 					self.corps_ref = body
 					self.loadParameters()
 					break
+
 
 
 

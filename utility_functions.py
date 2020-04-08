@@ -35,27 +35,25 @@ def update_date () :
 		
 
 
-def Computation (satellites_list, celestial_bodies_list) :
+def Computation () :
 
 	if(prm.parameters["applications"]["show bodies data"] == True) : 	
-		display_parameters([sat for sat in satellites_list if sat.name in prm.parameters["applications"]["bodies data displayed"]]+\
-			[cel_body for cel_body in celestial_bodies_list if cel_body.name in prm.parameters["applications"]["bodies data displayed"]])
+		display_parameters([sat for sat in sat.Satellite.satellites if sat.name in prm.parameters["applications"]["bodies data displayed"]]+\
+			[cel_body for cel_body in c_b.CelestialBody.celestial_bodies if cel_body.name in prm.parameters["applications"]["bodies data displayed"]])
 
 	for i in range (prm.parameters["applications"]["calculation repeat"]) :  # repetition allow the program to reduce the computational time by reducing the number of plot
-		update_celestial_bodies_position(celestial_bodies_list)
-		satellites_accelerations(satellites_list)
-		update_ref_body(satellites_list, celestial_bodies_list)
+		update_celestial_bodies_position()
+		satellites_accelerations()
+		update_ref_body()
 		update_date() 
 
 
 def loadSimulation () : 
 
 	prm.parametersLoader()
-	celestial_bodies_list = load_celestial_bodies(prm.celestialBodiesLoader())
-	satellites_list = load_satellites(prm.satellitesLoader(), celestial_bodies_list)
-	load_manoeuvers(satellites_list, prm.maneuverLoader())
-
-	return satellites_list, celestial_bodies_list
+	load_celestial_bodies(prm.celestialBodiesLoader())
+	load_satellites(prm.satellitesLoader())
+	load_manoeuvers(prm.maneuverLoader())
 
 
 #################################################
@@ -77,7 +75,7 @@ def display_parameters (bodies) :
 		print(body)
 
 
-def load_satellites (satellites_data_dicts, celestial_bodies_list) : 
+def load_satellites (satellites_data_dicts) : 
 
 	""" 
 	Loads the real satellites objects given a list of dictionnaries containing the parameters needed to
@@ -85,18 +83,14 @@ def load_satellites (satellites_data_dicts, celestial_bodies_list) :
 
 	Input : a list of dictionnaries containing the parameters needed to instanciate the satellites which has to be simulated
 
-	Return : a list containing the instantiated satellites objects 
-
 	"""	
 
 	satellites_list = []
 
 	for satellite_dict in satellites_data_dicts :
-		satellite_dict["corps_ref"] = [body for body in celestial_bodies_list if body.name==satellite_dict["corps_ref"]][0]
+		satellite_dict["corps_ref"] = [body for body in c_b.CelestialBody.celestial_bodies if body.name==satellite_dict["corps_ref"]][0]
 		new_satellite = sat.Satellite(**satellite_dict)
-		satellites_list.append(new_satellite)
-	
-	return satellites_list
+		sat.Satellite.satellites.append(new_satellite)
 
 
 def load_celestial_bodies (celestial_bodies_to_compute) : 
@@ -107,27 +101,21 @@ def load_celestial_bodies (celestial_bodies_to_compute) :
 
 	Input : a list containing the names of the celestial bodies which has to be simulated
 
-	Return : a list containing the instantiated celestial body objects 
-
 	"""	
-
-	celestial_bodies_list = []
 
 	for celestial_body_name in celestial_bodies_to_compute :
 
 		try : 
 			new_celestial_body = c_b.CelestialBody(celestial_body_name, \
-												   [cel_body for cel_body in celestial_bodies_list if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
+												   [cel_body for cel_body in c_b.CelestialBody.celestial_bodies if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
 		except : 
 			new_celestial_body = c_b.CelestialBody(celestial_body_name)
 
-		celestial_bodies_list.append(new_celestial_body)
-
-	return celestial_bodies_list
+		c_b.CelestialBody.celestial_bodies.append(new_celestial_body)
 
 
 
-def load_manoeuvers (satellites_list, maneuvers_dicts) :
+def load_manoeuvers (maneuvers_dicts) :
 
 	""" 
 	Loads the real maneuver objects given a list of dictionnaries containing the parameters needed to
@@ -141,8 +129,8 @@ def load_manoeuvers (satellites_list, maneuvers_dicts) :
 	"""	
 
 	satellites_dict = {}
-	for sat in satellites_list :
-		sat.load_manoeuvers_list([man for man in maneuvers_dicts if man["sat_name"]==sat.name]) 
+	for sat_ in sat.Satellite.satellites :
+		sat_.load_manoeuvers_list([man for man in maneuvers_dicts if man["sat_name"]==sat_.name]) 
 
 
 #################################################
@@ -156,9 +144,9 @@ def load_manoeuvers (satellites_list, maneuvers_dicts) :
 #
 #################################################
 
-def update_celestial_bodies_position (celestial_bodies_list) : 
+def update_celestial_bodies_position () : 
 
-	for celestial_body in celestial_bodies_list[1:] : 
+	for celestial_body in c_b.CelestialBody.celestial_bodies[1:] : 
 		celestial_body.set_position()
 
 
@@ -174,10 +162,10 @@ def update_celestial_bodies_position (celestial_bodies_list) :
 #
 #################################################
 
-def update_ref_body (satellites_list, celestial_bodies_list) : 
+def update_ref_body () : 
 
-	for satellite in satellites_list : 
-		satellite.update_ref_body(celestial_bodies_list)
+	for satellite in sat.Satellite.satellites : 
+		satellite.update_ref_body(c_b.CelestialBody.celestial_bodies)
 
 
 #################################################
@@ -199,9 +187,9 @@ def update_ref_body (satellites_list, celestial_bodies_list) :
 # 		if(fire_on == True) : satellite.compute_maneuver_parameters()
 # 		satellite.acceleration_manager(fire_on)
 
-def satellites_accelerations (satellites_list) :
+def satellites_accelerations () :
 
-	for satellite in satellites_list : 
+	for satellite in sat.Satellite.satellites : 
 		fire_on = False 
 		if(satellite.current_maneuver is not None) : 
 			fire_on = satellite.current_maneuver.trigger_detector.TriggerTimeSupervisor()
@@ -479,5 +467,6 @@ def Ecliptic_Equatorial (vector, ec2eq) :
 			        [0.,      math.sin(sign*ecliptic_obliquity),      math.cos(sign*ecliptic_obliquity)] ])
 
 	return R.dot(vector)
+
 
 

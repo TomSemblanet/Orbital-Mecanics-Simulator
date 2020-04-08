@@ -5,28 +5,27 @@
 ============== GENERAL =============
 
 - Keplerian simulation [v]
-- 
 
 
 ========= CELESTIAL BODIES =========
 
-- Sun [v] Mercury [v] Venus [v] Earth [v] Mars [v] Jupiter [x] Saturn [x] Uranus [x] Neptune [x] Moon [x]
+- Sun [v] Mercury [x] Venus [x] Earth [v] Mars [x] Jupiter [x] Saturn [x] Uranus [x] Neptune [x] Moon [x]
 
 
 =========    SATELLITES    =========
 
-- --SAT1 --[70000e3, 0, 0] --[0, 8000, 0] --Earth --m
+- --SAT1 --[42162140, 0, 0] --[0, 3074, 0] --Earth --m
 
 
 =========    MANEUVERS    =========
 
-- --SAT1 --custom acceleration --1880 --date --2200-01-02 12:00:00.000 --[0, 0, 0]
+- --SAT1 --custom acceleration --6880 --date --2200-01-01 13:00:00.000 --[0, 0, 0]
 
 
 =========      TIME      =========
 
 - starting date ~ 2000-01-01 12:00:00.000
-- time step ~ 100
+- time step ~ 200
 - simulation time ~ 100e3
 
 
@@ -34,14 +33,14 @@
 
 - applications to run : Spatial View [v]  Ground Track [x]  Parameters Plot [x]
 - simulation speed : slow [v]  medium [x]  high [x]  very high [x]
-- show bodies data : [x]
-- bodies data displayed : Moon
+- show bodies data : [v]
+- bodies data displayed : SAT1
 
 
 =========  SPATIAL VIEW  =========
 
 - display mode : satellite path [x]  trajectory prediction [v]
-- following mode : [x] --SAT1 10000e3
+- following mode : [v] --Earth 100000e3
 
 
 =========  GROUND TRACK  =========

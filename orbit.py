@@ -2,13 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import math
 
-import celestial_body as c_b
 import numerical_integration as n_i
 import utility_functions as u_f
 
 class Orbit :
 
-	def __init__ (self, satellite, r0, v0, corps_ref, path_model=True) : 
+	def __init__ (self, r0, v0, corps_ref, path_model=True) : 
 
 		(self.a, self.e, self.i, self.Lnode, self.Lperi, self.true_anomaly, self.ecc_vect, self.n, self.n_norm) = u_f.CartesianToKeplerian(r0, v0, corps_ref.mu, all=True)
 		self.corps_ref = corps_ref
@@ -65,3 +64,7 @@ class Orbit :
 			coordinates = np.append(coordinates, np.array([ [x], [y], [0] ]), axis=1)
 
 		self.traj = self.R3.dot(self.R2.dot(self.R1.dot(coordinates)))
+
+
+	
+

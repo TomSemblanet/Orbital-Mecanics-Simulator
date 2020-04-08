@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import math
 
+import satellite as sat
 import celestial_body as c_b
 import constants as cst
 import parameters as prm
@@ -12,7 +13,7 @@ import matplotlib.animation as animation
 
 class MainDisplay : 
 
-	def __init__ (self, satellite_list, celestial_bodies_list) : 
+	def __init__ (self) : 
 
 
 		self.app_name = "Spatial View"
@@ -35,7 +36,7 @@ class MainDisplay :
 		self.following_mode = prm.parameters["spatial view"]["following mode"]
 		
 		try :
-			self.body_to_follow = [body for body in (satellite_list+celestial_bodies_list) if body.name == prm.parameters["spatial view"]["body to follow"]][0]
+			self.body_to_follow = [body for body in (sat.Satellite.satellites+c_b.CelestialBody.celestial_bodies) if body.name == prm.parameters["spatial view"]["body to follow"]][0]
 		except : 
 			self.body_to_follow = None
 		
@@ -52,11 +53,11 @@ class MainDisplay :
 
 		else : 
 			self.satellite_path = np.array([])
-			self.x_matrix = np.zeros((len(satellite_list), 1))
-			self.y_matrix = np.zeros((len(satellite_list), 1))
+			self.x_matrix = np.zeros((len(sat.Satellite.satellites), 1))
+			self.y_matrix = np.zeros((len(sat.Satellite.satellites), 1))
 
 
-		for satellite in satellite_list : 
+		for satellite in sat.Satellite.satellites : 
 			self.satellite_list = np.append(self.satellite_list, satellite)
 
 			point, = self.ax.plot([], [], ls="none", marker="o", color=satellite.color)
@@ -70,7 +71,7 @@ class MainDisplay :
 				path, = self.ax.plot([],[], ls="-", color=satellite.color)
 				self.satellite_path = np.append(self.satellite_path, path)
 
-		for body in celestial_bodies_list :
+		for body in c_b.CelestialBody.celestial_bodies :
 			self.celestial_bodies_list = np.append(self.celestial_bodies_list, body)
 
 			point, = self.ax.plot([], [], ls="none", marker="o", color=body.color)
@@ -82,7 +83,7 @@ class MainDisplay :
 	def update (self, i) :
 
 		if(self.leader == True) :
-			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
+			u_f.Computation()
 
 		if (self.following_mode) : 
 			self.ax.set_xlim([self.body_to_follow.r_abs[0]-prm.parameters["spatial view"]["window radius"], self.body_to_follow.r_abs[0]+prm.parameters["spatial view"]["window radius"]])
@@ -118,7 +119,7 @@ class MainDisplay :
 
 class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN DISPLAYING A GROUND TRACK /!\
 
-	def __init__ (self, satellite_list, celestial_bodies_list) :
+	def __init__ (self) :
 
 
 		self.app_name = "Ground Track"
@@ -133,21 +134,21 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 		self.figure, self.ax = plt.subplots()
 		self.ax.imshow(img, extent=[0, 2048, 0, 1024])
 
-		self.satellite_list = satellite_list
-		self.celestial_bodies_list = celestial_bodies_list
+		self.satellite_list = sat.Satellite.satellites
+		self.celestial_bodies_list = c_b.CelestialBody.celestial_bodies
 
 		self.ground_tracks = np.array([])
-		self.x_matrix = np.zeros((len(satellite_list), 1))
-		self.y_matrix = np.zeros((len(satellite_list), 1))
+		self.x_matrix = np.zeros((len(self.satellite_list), 1))
+		self.y_matrix = np.zeros((len(self.satellite_list), 1))
 
-		for sat in satellite_list : 
-			ground_track, = self.ax.plot([],[], linestyle = 'none', marker = 'o', c = sat.color, markersize = 1)
+		for sat_ in self.satellite_list : 
+			ground_track, = self.ax.plot([],[], linestyle = 'none', marker = 'o', c = sat_.color, markersize = 1)
 			self.ground_tracks = np.append(self.ground_tracks, ground_track)
 
 	def update (self, i) : 
 
 		if(self.leader == True) :
-			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
+			u_f.Computation()
 
 		self.x_matrix = np.append(self.x_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
 		self.y_matrix = np.append(self.y_matrix, np.zeros((len(self.satellite_list), 1)), axis=1)
@@ -163,7 +164,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 class GraphDisplay : 
 
-	def __init__ (self, satellite_list, celestial_bodies_list) : 
+	def __init__ (self) : 
 
 
 		self.app_name = "Parameters Plot"
@@ -196,8 +197,8 @@ class GraphDisplay :
 		self.max = -1e10
 		self.min =  1e10
 
-		self.satellite_list = satellite_list
-		self.celestial_bodies_list = celestial_bodies_list
+		self.satellite_list = sat.Satellite.satellites
+		self.celestial_bodies_list = c_b.CelestialBody.celestial_bodies
 
 		requested_func = prm.parameters["parameters plot"]["parameter to plot"]
 		args = prm.parameters["parameters plot"]["satellites displayed"]
@@ -220,7 +221,7 @@ class GraphDisplay :
 		self.ax.set_ylim([self.min-0.1*self.min, self.max+0.1*self.max])
 
 		if(self.leader == True) :
-			u_f.Computation(self.satellite_list, self.celestial_bodies_list)
+			u_f.Computation()
 
 		new_data = self.func_to_call(self.body_list)
 		self.recorded_data = np.append(self.recorded_data, np.zeros((len(self.body_list), 1)), axis=1)
@@ -238,70 +239,70 @@ class GraphDisplay :
 		return self.curves
 
 
-	def getDistanceToReferentBody (*bodies) : 
+	def getDistanceToReferentBody (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.r_cr_norm)
 		return list_
 
-	def getDistanceToCentralBody (*bodies) : 
+	def getDistanceToCentralBody (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.r_abs_norm)
 		return list_
 
-	def getDistanceToOtherBody (*bodies) : 
+	def getDistanceToOtherBody (self, *bodies) : 
 		return [np.linalg.norm(bodies[0][0].r_abs-bodies[0][1].r_abs)]
 
-	def getSpeedRelativeToReferentBody (*bodies) : 
+	def getSpeedRelativeToReferentBody (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.v_cr_norm)
 		return list_
 
-	def getSpeedRelativeToCentralBody (*bodies) : 
+	def getSpeedRelativeToCentralBody (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.v_abs_norm)
 		return list_
 
-	def getTrueAnomaly (*bodies) : 
+	def getTrueAnomaly (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.true_anomaly*180/math.pi)
 		return list_
 
-	def getLongitude (*bodies) : 
+	def getLongitude (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.longitude*180/math.pi)
 		return list_
 
-	def getLatitude (*bodies) : 
+	def getLatitude (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.latitude*180/math.pi)
 		return list_
 
-	def getSemiMajorAxis (*bodies) : 
+	def getSemiMajorAxis (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.a)
 		return list_
 
-	def getEccentricity (*bodies) : 
+	def getEccentricity (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.e)
 		return list_
 
-	def getLongitudeOfAscendingNode (*bodies) : 
+	def getLongitudeOfAscendingNode (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.Lnode*180/math.pi)
 		return list_
 
-	def getLongitudeOfPerigee (*bodies) : 
+	def getLongitudeOfPerigee (self, *bodies) : 
 		list_ = list()
 		for body in bodies[0] : 
 			list_.append(body.Lperi*180/math.pi)

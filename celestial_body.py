@@ -11,29 +11,7 @@ import orbit as orb
 
 class CelestialBody : 
 
-
-	#################################################
-	#
-	# DESCRIPTION : constructor of celestial body objects, initialization of the parameters
-	#
-	#
-	# INPUTS : 
-	#
-	# - r0 :				3x1 float-array [m] : initial position of the body in the referentiel of its initial referent body
-	# - v0 : 				3x1 float-array [m/s] : initial velocity of the body in the referentiel of its initial referent body
-	# - mass : 				float [kg] : mass of the body
-	# - mu : 				float [m^3/s^2] : standard gravitational parameter of the body
-	# - radius : 			float [m] : radius of the body
-	# - moving_body : 		boolean [-] : true if body is moving 
-	# - name :              string [-] : name of the satellite
-	# - corps_ref :         celestial_body_object [-] : celestial object around which the body initially orbits 
-	#
-	#
-	# OUTPUTS : 
-	#
-	# - body :         celestial_body_object [-] : initialized celestial_body object
-	#
-	#################################################
+	celestial_bodies = []
 
 	def __init__ (self, name, corps_ref=None) :
 
@@ -71,9 +49,22 @@ class CelestialBody :
 		self.E = 0.
 		self.M = 0.
 
+		# self.eps = cst.Celestial_Bodies_Dict[self.name]['eps']
+		# self.a0 = cst.Celestial_Bodies_Dict[self.name]['alpha0']
+		# self.d0 = cst.Celestial_Bodies_Dict[self.name]['delta0']
+
+		self.eps = 0.4090928
+		self.a0 = 0
+		self.d0 = 0
+
+		self.R1R3 = np.array([[ math.cos(math.pi/2+self.a0)                             ,  math.sin(math.pi/2+self.a0)                             ,                          0.],
+			             	  [-math.sin(math.pi/2+self.a0)*math.cos(math.pi/2-self.d0) ,  math.cos(math.pi/2-self.d0)*math.cos(math.pi/2+self.a0) , math.sin(math.pi/2-self.d0)],
+			             	  [ math.sin(math.pi/2-self.d0)*math.sin(math.pi/2+self.a0) ,  -math.sin(math.pi/2-self.d0)*math.cos(math.pi/2+self.a0), math.cos(math.pi/2-self.d0)]])
+		self.invR1R3 = np.linalg.inv(self.R1R3) 
+
 		self.moving_body = not(np.linalg.norm(self.r_abs) == 0)
 
-		if not (self.central) : 
+		if (self.central == False) : 
 			self.loadParameters()
 
 	#################################################
@@ -94,7 +85,7 @@ class CelestialBody :
 		self.h_cr = np.cross(self.r_cr, self.v_cr)
 		self.h_cr_norm = np.linalg.norm(self.h_cr)
 
-		self.orbit = orb.Orbit(self, self.r_cr, self.v_cr, self.corps_ref)
+		self.orbit = orb.Orbit(self.r_cr, self.v_cr, self.corps_ref)
 
 		self.influence_sphere_radius = self.orbit.a * (self.mass/self.corps_ref.mass)**(2/5)
 		
@@ -124,15 +115,14 @@ class CelestialBody :
 			print("=_=_=_=  You try to display the parameters of the central body  =_=_=_=\n")
 			exit()
 
-
-
-	#################################################
-	#
-	# DESCRIPTION : computes the new position of the celestial body following Kepler's laws and by solving the Kepler's equation (Newton's method)
-	#
-	#################################################	
+	
 
 	def set_position (self) : 
+
+		"""
+		Computes the new position of the celestial body following Kepler's laws and by solving the Kepler's equation (Newton's method)
+
+		"""
 
 		self.M = self.M + (2*math.pi/self.orbit.T)*prm.parameters["time"]["time step"]
 		self.E = self.M
@@ -152,13 +142,59 @@ class CelestialBody :
 		self.v_cr = self.orbit.R3.dot(self.orbit.R2.dot(self.orbit.R1.dot(np.array([- math.sqrt( self.corps_ref.mu/(self.orbit.a*(1-self.orbit.e*self.orbit.e)) )*math.sin(self.true_anomaly), 
 																  math.sqrt( self.corps_ref.mu/(self.orbit.a*(1-self.orbit.e*self.orbit.e)) )*(self.orbit.e+math.cos(self.true_anomaly)),
 																  0.]))))
-
 		self.v_cr_norm = np.linalg.norm(self.v_cr)
 
-		self.r_abs = self.r_cr + self.corps_ref.r_cr
-		self.r_abs_norm = np.linalg.norm(self.r_abs)
+		if(self.corps_ref.name != 'Sun') : 
+			self.r_abs = self.r_cr + self.corps_ref.r_cr
+			self.r_abs_norm = np.linalg.norm(self.r_abs)
 
-		self.v_abs = self.v_cr + self.corps_ref.v_cr
-		self.v_abs_norm = np.linalg.norm(self.v_abs)
+			self.v_abs = self.v_cr + self.corps_ref.v_cr
+			self.v_abs_norm = np.linalg.norm(self.v_abs)
+
+		else : 
+			self.r_abs = self.r_cr
+			self.r_abs_norm = self.r_cr_norm
+
+			self.v_abs = self.v_cr 
+			self.v_abs_norm = self.v_cr_norm
 
 
+	def HelioPlaneto (self, body, h2p=True) : 
+
+		if(h2p == True) : 
+
+			obliquity_matrix = np.array([ [1.,               0.,               0.        ],
+			             				  [0.,  math.cos(-self.eps), -math.sin(-self.eps)],
+			             				  [0.,  math.sin(-self.eps),  math.cos(-self.eps)] ])
+
+			new_r = obliquity_matrix.dot(self.r_abs - body.r_cr)
+			new_v = obliquity_matrix.dot(self.v_abs - body.v_cr)
+
+		else : 
+			obliquity_matrix = np.array([ [1.,               0.,               0.        ],
+			             				  [0.,  math.cos(self.eps), -math.sin(self.eps)],
+			             				  [0.,  math.sin(self.eps),  math.cos(self.eps)] ])
+
+			new_r = self.r_abs + obliquity_matrix.dot(body.r_cr)
+			new_v = self.v_abs + obliquity_matrix.dot(body.v_cr)
+
+
+		return new_r, new_v
+
+	def getObliquityMatrix (self, h2p=True) : 
+
+		if(h2p == True) : 
+			return np.array([ [1.,               0.,               0.        ],
+			             	  [0.,  math.cos(-self.eps), -math.sin(-self.eps)],
+			             	  [0.,  math.sin(-self.eps),  math.cos(-self.eps)] ])
+		else : 
+			return np.array([ [1.,               0.,               0.        ],
+			             	  [0.,  math.cos(self.eps), -math.sin(self.eps)],
+			             	  [0.,  math.sin(self.eps),  math.cos(self.eps)] ])
+
+
+	def Helio2Planeto (self, body) : 
+		pass
+
+	def Planeto2Helio (self, body) : 
+		pass
