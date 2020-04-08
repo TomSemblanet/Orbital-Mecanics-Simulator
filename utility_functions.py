@@ -109,6 +109,7 @@ def load_celestial_bodies (celestial_bodies_to_compute) :
 			new_celestial_body = c_b.CelestialBody(celestial_body_name, \
 												   [cel_body for cel_body in c_b.CelestialBody.celestial_bodies if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
 		except : 
+
 			new_celestial_body = c_b.CelestialBody(celestial_body_name)
 
 		c_b.CelestialBody.celestial_bodies.append(new_celestial_body)

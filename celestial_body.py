@@ -30,15 +30,15 @@ class CelestialBody :
 		if (self.central) : self.r_abs = np.array([0., 0., 0.])
 		self.r_abs_norm = np.linalg.norm(self.r_abs)
 
-		self.r_cr = np.array([0., 0., 0.])
-		self.r_cr_norm = 0.
+		self.r_cr = self.r_abs
+		self.r_cr_norm = np.linalg.norm(self.r_cr)
 		
 		self.v_abs = cst.Celestial_Bodies_Dict[self.name]['initial_velocity']
 		if (self.central) : self.v_abs = np.array([0., 0., 0.])
 		self.v_abs_norm = np.linalg.norm(self.v_abs)
 
-		self.v_cr = np.array([0., 0., 0.])
-		self.v_cr_norm = 0.
+		self.v_cr = self.v_abs
+		self.v_cr_norm = np.linalg.norm(self.v_abs)
 
 		self.h_cr = np.array([0., 0., 0.])
 		self.h_cr_norm = 0.
@@ -48,10 +48,6 @@ class CelestialBody :
 
 		self.E = 0.
 		self.M = 0.
-
-		# self.eps = cst.Celestial_Bodies_Dict[self.name]['eps']
-		# self.a0 = cst.Celestial_Bodies_Dict[self.name]['alpha0']
-		# self.d0 = cst.Celestial_Bodies_Dict[self.name]['delta0']
 
 		self.eps = 0.4090928
 		self.a0 = 0
@@ -76,8 +72,8 @@ class CelestialBody :
 
 	def loadParameters (self) :
 
-		self.r_cr = self.r_abs - cst.Celestial_Bodies_Dict[self.corps_ref.name]['initial_position']
-		self.v_cr = self.v_abs - cst.Celestial_Bodies_Dict[self.corps_ref.name]['initial_velocity']
+		if(self.corps_ref.name != 'Sun') : # to know, in the case of a natural satellite
+			self.r_cr, self.v_cr = self.corps_ref.Helio2Planeto(self)
 
 		self.r_cr_norm = np.linalg.norm(self.r_cr)
 		self.v_cr_norm = np.linalg.norm(self.v_cr)
@@ -163,38 +159,74 @@ class CelestialBody :
 
 		if(h2p == True) : 
 
-			obliquity_matrix = np.array([ [1.,               0.,               0.        ],
+			obliquity_matrix = np.array([ [1.,                   0.,                   0.],
 			             				  [0.,  math.cos(-self.eps), -math.sin(-self.eps)],
 			             				  [0.,  math.sin(-self.eps),  math.cos(-self.eps)] ])
 
 			new_r = obliquity_matrix.dot(self.r_abs - body.r_cr)
 			new_v = obliquity_matrix.dot(self.v_abs - body.v_cr)
 
+
+
 		else : 
-			obliquity_matrix = np.array([ [1.,               0.,               0.        ],
+			obliquity_matrix = np.array([ [1.,                  0.,                  0.],
 			             				  [0.,  math.cos(self.eps), -math.sin(self.eps)],
 			             				  [0.,  math.sin(self.eps),  math.cos(self.eps)] ])
 
 			new_r = self.r_abs + obliquity_matrix.dot(body.r_cr)
 			new_v = self.v_abs + obliquity_matrix.dot(body.v_cr)
 
-
 		return new_r, new_v
 
 	def getObliquityMatrix (self, h2p=True) : 
 
 		if(h2p == True) : 
-			return np.array([ [1.,               0.,               0.        ],
+			return np.array([ [1.,                   0.,                   0.],
 			             	  [0.,  math.cos(-self.eps), -math.sin(-self.eps)],
-			             	  [0.,  math.sin(-self.eps),  math.cos(-self.eps)] ])
+			             	  [0.,  math.sin(-self.eps),  math.cos(-self.eps)]])
 		else : 
-			return np.array([ [1.,               0.,               0.        ],
-			             	  [0.,  math.cos(self.eps), -math.sin(self.eps)],
-			             	  [0.,  math.sin(self.eps),  math.cos(self.eps)] ])
+			return np.array([ [1.,               0.,                       0.],
+			             	  [0.,  math.cos(self.eps),   -math.sin(self.eps)],
+			             	  [0.,  math.sin(self.eps),    math.cos(self.eps)]])
 
 
 	def Helio2Planeto (self, body) : 
-		pass
+		
+		obliquity_matrix = self.getObliquityMatrix(h2p=True)
+
+		new_r = obliquity_matrix.dot(body.r_cr - self.r_abs)
+		new_v = obliquity_matrix.dot(body.v_cr - self.v_abs)
+
+		if(self.name != 'Earth') : 
+			new_r = self.R1R3.dot(new_r)
+			new_v = self.R1R3.dot(new_v)
+
+		return new_r, new_v
 
 	def Planeto2Helio (self, body) : 
-		pass
+		
+		obliquity_matrix = self.getObliquityMatrix(h2p=False)
+
+		if(self.name != 'Earth') : 
+			new_r = self.r_abs + obliquity_matrix.dot(self.invR1R3.dot(body.r_cr))
+			new_v = self.v_abs + obliquity_matrix.dot(self.invR1R3.dot(body.v_cr))
+		else : 
+			new_r = self.r_abs + obliquity_matrix.dot(body.r_cr)
+			new_v = self.v_abs + obliquity_matrix.dot(body.v_cr)
+
+		return new_r, new_v
+
+	def Planeto2NatSat (self, body) : 
+
+		new_r = body.r_cr - self.r_cr
+		new_v = body.v_cr - self.v_cr 
+
+		return new_r, new_v 
+
+	def NatSat2Planeto (self, body) : 
+
+		new_r = body.r_cr + self.r_cr
+		new_v = body.v_cr + self.v_cr
+
+		return new_r, new_v
+

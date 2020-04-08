@@ -230,7 +230,8 @@ class Satellite :
 			Si le satellite ne tourne pas autour du Soleil, ses cordonnées dans le référentiel héliocentrique doivent être recalculées
 			"""
 
-			self.r_abs, self.v_abs = self.corps_ref.HelioPlaneto(self, h2p=False)
+			self.r_abs, self.v_abs = self.corps_ref.Planeto2Helio(self)
+			# self.r_abs, self.v_abs = self.corps_ref.HelioPlaneto(self, h2p=False)
 
 			# self.r_abs = np.array([ Y[0], Y[1], Y[2] ]) + self.corps_ref.r_cr
 			# self.v_abs = np.array([ Y[3], Y[4], Y[5] ]) + self.corps_ref.v_cr
@@ -338,16 +339,31 @@ class Satellite :
 		if (self.r_abs_norm != self.r_cr_norm) : # which means that the satellite is in the SOI of a planet
 
 			if(self.r_cr_norm > self.corps_ref.influence_sphere_radius) : 
-				self.r_cr, self.v_cr = self.corps_ref.HelioPlaneto(self, h2p=False)
-				self.corps_ref = [body for body in celestial_bodies_list if body.name == self.corps_ref.corps_ref.name][0]
+				# self.r_cr, self.v_cr = self.corps_ref.Planeto2Helio(self)
+				# self.corps_ref = [body for body in celestial_bodies_list if body.name == self.corps_ref.corps_ref.name][0]
+
+				new_corps_ref = [body for body in celestial_bodies_list if body.name == self.corps_ref.corps_ref.name][0]
+
+				if(new_corps_ref.name == 'Sun') : 
+					self.r_cr, self.v_cr = self.corps_ref.Planeto2Helio(self)
+				else : 
+					self.r_cr, self.v_cr = self.corps_ref.SatNat2Planeto(self)
+
+				self.corps_ref = new_corps_ref
+
+
 				self.loadParameters()
 
 			else : 
+
 				for natural_satellite in [body for body in celestial_bodies_list if body.name in cst.Celestial_Bodies_Dict[self.corps_ref.name]["natural satellites names"]] :
 					distance = np.linalg.norm( self.r_abs - natural_satellite.r_abs )
 
 					if(distance <= natural_satellite.influence_sphere_radius) :
+						print("WOOOOOOOOAH")
+						input()
 						self.corps_ref = natural_satellite
+						self.r_cr, self.v_cr = self.corps_ref.Planeto2NatSat(self)
 						self.loadParameters()
 						break
 
@@ -357,6 +373,7 @@ class Satellite :
 
 				if(distance <= body.influence_sphere_radius) : 
 					self.corps_ref = body
+					self.r_cr, self.v_cr = self.corps_ref.Helio2Planeto(self)
 					self.loadParameters()
 					break
 
