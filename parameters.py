@@ -281,6 +281,7 @@ def maneuverLoader () :
 			if(line_dict['man_name'] == "orbital rendez-vous") : 
 				line_dict["value"] = dict()
 				split = splited_line[3][:-1].replace("[", "").replace("]", "").replace(",", "").split(" ")
+
 				line_dict["value"]["position_to_reach"] = np.array([float(split[0]), float(split[1]), float(split[2])])
 				line_dict["value"]["date"] = split[3]+" "+split[4]
 			else : 

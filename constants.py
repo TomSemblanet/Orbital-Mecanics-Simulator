@@ -151,6 +151,7 @@ Celestial_Bodies_Dict = {
 			"initial_position" : [],
 			"initial_velocity" : [],
 			"color" : 'lightgrey',
+			"natural satellites names" : [],
 
 			"central" : bool()
 		 }

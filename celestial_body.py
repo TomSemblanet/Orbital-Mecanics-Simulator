@@ -82,6 +82,8 @@ class CelestialBody :
 		self.h_cr_norm = np.linalg.norm(self.h_cr)
 
 		self.orbit = orb.Orbit(self.r_cr, self.v_cr, self.corps_ref)
+		if(self.corps_ref.name != 'Sun') :
+			self.orbit.traj = np.array([ [1.,  0., 0.], [0.,  math.cos(self.corps_ref.eps), -math.sin(self.corps_ref.eps)], [0.,  math.sin(self.corps_ref.eps),  math.cos(self.corps_ref.eps)] ]).dot(self.orbit.traj)
 
 		self.influence_sphere_radius = self.orbit.a * (self.mass/self.corps_ref.mass)**(2/5)
 		
@@ -141,11 +143,14 @@ class CelestialBody :
 		self.v_cr_norm = np.linalg.norm(self.v_cr)
 
 		if(self.corps_ref.name != 'Sun') : 
-			self.r_abs = self.r_cr + self.corps_ref.r_cr
-			self.r_abs_norm = np.linalg.norm(self.r_abs)
 
-			self.v_abs = self.v_cr + self.corps_ref.v_cr
-			self.v_abs_norm = np.linalg.norm(self.v_abs)
+			self.r_abs, self.v_abs = self.corps_ref.Planeto2Helio(self)
+
+			# self.r_abs = self.r_cr + self.corps_ref.r_cr
+			# self.r_abs_norm = np.linalg.norm(self.r_abs)
+
+			# self.v_abs = self.v_cr + self.corps_ref.v_cr
+			# self.v_abs_norm = np.linalg.norm(self.v_abs)
 
 		else : 
 			self.r_abs = self.r_cr
@@ -197,7 +202,7 @@ class CelestialBody :
 		new_r = obliquity_matrix.dot(body.r_cr - self.r_abs)
 		new_v = obliquity_matrix.dot(body.v_cr - self.v_abs)
 
-		if(self.name != 'Earth') : 
+		if(self.name not in ['Earth', 'Moon']) : 
 			new_r = self.R1R3.dot(new_r)
 			new_v = self.R1R3.dot(new_v)
 
@@ -207,7 +212,7 @@ class CelestialBody :
 		
 		obliquity_matrix = self.getObliquityMatrix(h2p=False)
 
-		if(self.name != 'Earth') : 
+		if(self.name not in ['Earth', 'Moon']) : 
 			new_r = self.r_abs + obliquity_matrix.dot(self.invR1R3.dot(body.r_cr))
 			new_v = self.v_abs + obliquity_matrix.dot(self.invR1R3.dot(body.v_cr))
 		else : 
@@ -219,7 +224,7 @@ class CelestialBody :
 	def Planeto2NatSat (self, body) : 
 
 		new_r = body.r_cr - self.r_cr
-		new_v = body.v_cr - self.v_cr 
+		new_v = body.v_cr - self.v_cr
 
 		return new_r, new_v 
 

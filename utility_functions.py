@@ -264,7 +264,6 @@ def UAdtoMs (v) :
 def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) : 
 
 	# flight_time -= prm.dT # il faut enlever prm.dT au temps de vol car il se passe un tour de boucle le temps que le satellite adapte sa vitesse
-
 	r_init_norm = np.linalg.norm(r_init)
 	r_final_norm = np.linalg.norm(r_final)
 
@@ -276,7 +275,11 @@ def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) :
 
 	temp = math.sin(dPhi)*math.sqrt(r_init_norm*r_final_norm/(1-math.cos(dPhi)))
 
-	z = fsolve(NewtonRaphsonLambertFunction, args=(r_init_norm, r_final_norm, temp, flight_time, mu), x0=1)
+	try :
+		z = fsolve(NewtonRaphsonLambertFunction, args=(r_init_norm, r_final_norm, temp, flight_time, mu), x0=1)
+	except : 
+		print("> Unsolvable Lambert's Problem.")
+		exit()
 
 	Cz = (1 - math.cos(math.sqrt(z)))/z
 	Sz = (math.sqrt(z)-math.sin(math.sqrt(z)))/(math.sqrt(z)**3)
@@ -290,7 +293,8 @@ def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) :
 	v_init = (r_final - f*r_init)/g
 	v_final = (gdot * r_final - r_init)/g
 
-	return v_init # retourne la vitesse absolue à avoir, pas la vitesse dans le référentiel lié au corps de référence
+
+	return v_init 
 
 def NewtonRaphsonLambertFunction (z, r_init_norm, r_final_norm, temp, flight_time, mu) : 
 

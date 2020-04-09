@@ -108,7 +108,7 @@ class OrbitalRendezVous :
 
 		travel_time = self.arrival_time - prm.parameters["time"]["elapsed time"]
 
-		dV_vector = u_f.LambertProblem(self.satellite.r_abs, self.position_to_reach, travel_time, self.satellite.corps_ref.mu) - self.satellite.v_abs 
+		dV_vector = u_f.LambertProblem(self.satellite.r_cr, self.position_to_reach, travel_time, self.satellite.corps_ref.mu) - self.satellite.v_cr
 		dV = np.linalg.norm(dV_vector)
 		direction = dV_vector/dV
 
@@ -150,6 +150,7 @@ class Maneuver :
 	def ComputeOrbitalRendezVous (self) :
 		self.value["date"] = u_f.DateToSeconds(prm.parameters["time"]["starting date"], self.value["date"])
 		self.maneuver_data = OrbitalRendezVous(self.satellite, self.value["position_to_reach"], self.value["date"])
+
 
 
 

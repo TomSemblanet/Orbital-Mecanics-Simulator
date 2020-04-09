@@ -92,8 +92,8 @@ class Satellite :
 			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 2)) + \
 			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
 			   '- Distance : {} km\n'.format(round(self.r_cr_norm/1000, 2)) + \
-			   '- Cartesian Coord (cr) : {}\n'.format(self.r_cr) + \
 			   '- Cartesian Coord (abs) : {}\n'.format(self.r_abs) + \
+			   '- Cartesian Coord (cr) : {}\n'.format(self.r_cr) + \
 			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
 
 
@@ -185,7 +185,7 @@ class Satellite :
 
 		Ouput : None
 
-		"""
+		"""	
 
 		self.next_manoeuver += 1
 		if(self.next_manoeuver <= len(self.manoeuvers_list)-1) : 
@@ -347,11 +347,9 @@ class Satellite :
 				if(new_corps_ref.name == 'Sun') : 
 					self.r_cr, self.v_cr = self.corps_ref.Planeto2Helio(self)
 				else : 
-					self.r_cr, self.v_cr = self.corps_ref.SatNat2Planeto(self)
+					self.r_cr, self.v_cr = self.corps_ref.NatSat2Planeto(self)
 
 				self.corps_ref = new_corps_ref
-
-
 				self.loadParameters()
 
 			else : 
@@ -360,8 +358,6 @@ class Satellite :
 					distance = np.linalg.norm( self.r_abs - natural_satellite.r_abs )
 
 					if(distance <= natural_satellite.influence_sphere_radius) :
-						print("WOOOOOOOOAH")
-						input()
 						self.corps_ref = natural_satellite
 						self.r_cr, self.v_cr = self.corps_ref.Planeto2NatSat(self)
 						self.loadParameters()
