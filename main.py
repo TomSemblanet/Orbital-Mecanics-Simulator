@@ -12,7 +12,7 @@ import celestial_body as c_b
 
 u_f.loadSimulation()
 
-# g_c.GeneralCalculation(satellites_list, celestial_bodies_list)
+# g_c.GeneralCalculation()
 
 
 if('Spatial View' in prm.parameters["applications"]["applications on"]) :

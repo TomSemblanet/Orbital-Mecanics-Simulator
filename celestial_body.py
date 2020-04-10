@@ -49,14 +49,32 @@ class CelestialBody :
 		self.E = 0.
 		self.M = 0.
 
-		self.eps = 0.4090928
-		self.a0 = 0
-		self.d0 = 0
+		try :
+			self.eps = cst.Celestial_Bodies_Dict[self.name]['eps']
+			self.a0 = cst.Celestial_Bodies_Dict[self.name]['a0']
+			self.d0 = cst.Celestial_Bodies_Dict[self.name]['d0']
+		except : 
+			self.eps = 0
+			self.a0 = 0
+			self.d0 = 0
 
-		self.R1R3 = np.array([[ math.cos(math.pi/2+self.a0)                             ,  math.sin(math.pi/2+self.a0)                             ,                          0.],
-			             	  [-math.sin(math.pi/2+self.a0)*math.cos(math.pi/2-self.d0) ,  math.cos(math.pi/2-self.d0)*math.cos(math.pi/2+self.a0) , math.sin(math.pi/2-self.d0)],
-			             	  [ math.sin(math.pi/2-self.d0)*math.sin(math.pi/2+self.a0) ,  -math.sin(math.pi/2-self.d0)*math.cos(math.pi/2+self.a0), math.cos(math.pi/2-self.d0)]])
-		self.invR1R3 = np.linalg.inv(self.R1R3) 
+
+		self.R_e = np.array([  [1.                      ,                    0.,                   0.],
+			                   [0.                      ,   math.cos(-self.eps),  math.sin(-self.eps)],
+			                   [0.                      ,  -math.sin(-self.eps),  math.cos(-self.eps)] ])
+
+		self.R_a0 = np.array([ [ math.cos(math.pi/2 + self.a0),    math.sin(math.pi/2 + self.a0),                            0.],
+			                   [-math.sin(math.pi/2 + self.a0),    math.cos(math.pi/2 + self.a0),                            0.],
+			                   [0.                            ,                               0.,                             1] ])
+
+		self.R_d0 = np.array([ [1.                ,                             0.,                               0.],
+			                   [0.                ,  math.cos(math.pi/2 - self.d0),    math.sin(math.pi/2 - self.d0)],
+			                   [0.                , -math.sin(math.pi/2 - self.d0),    math.cos(math.pi/2 - self.d0)] ])
+
+		# Étrange place du signe '-', normalement sur le sinus "en haut à droite" ...
+
+		self.rotation_matrix = self.R_d0.dot(self.R_a0.dot(np.linalg.inv(self.R_e)))
+		self.inv_rotation_matrix = np.linalg.inv(self.rotation_matrix)
 
 		self.moving_body = not(np.linalg.norm(self.r_abs) == 0)
 
@@ -75,19 +93,18 @@ class CelestialBody :
 		if(self.corps_ref.name != 'Sun') : # to know, in the case of a natural satellite
 			self.r_cr, self.v_cr = self.corps_ref.Helio2Planeto(self)
 
-		self.r_cr_norm = np.linalg.norm(self.r_cr)
-		self.v_cr_norm = np.linalg.norm(self.v_cr)
+		self.r_cr_norm, self.v_cr_norm  = np.linalg.norm(self.r_cr), np.linalg.norm(self.v_cr)
 
 		self.h_cr = np.cross(self.r_cr, self.v_cr)
 		self.h_cr_norm = np.linalg.norm(self.h_cr)
 
 		self.orbit = orb.Orbit(self.r_cr, self.v_cr, self.corps_ref)
 		if(self.corps_ref.name != 'Sun') :
-			self.orbit.traj = np.array([ [1.,  0., 0.], [0.,  math.cos(self.corps_ref.eps), -math.sin(self.corps_ref.eps)], [0.,  math.sin(self.corps_ref.eps),  math.cos(self.corps_ref.eps)] ]).dot(self.orbit.traj)
+			self.orbit.traj = self.corps_ref.inv_rotation_matrix.dot(self.orbit.traj)
 
 		self.influence_sphere_radius = self.orbit.a * (self.mass/self.corps_ref.mass)**(2/5)
-		
-		# True anomaly : setted in the orbitals parameters calculation (orbit constructor)
+
+		self.true_anomaly = self.orbit.true_anomaly
 		self.initial_true_anomaly = self.true_anomaly
 
 		self.E = 2*math.atan( math.sqrt((1-self.orbit.e)/(1+self.orbit.e)) *  math.tan(self.true_anomaly/2))
@@ -103,7 +120,7 @@ class CelestialBody :
 			   '- True anomaly : {} °\n'.format(round(self.true_anomaly*180/math.pi, 4)) + \
 			   '- Longitude of perigee : {} °\n'.format(round(self.orbit.Lperi*180/math.pi, 2)) + \
 			   '- Longitude of ascendant node : {} °\n'.format(round(self.orbit.Lnode*180/math.pi, 2)) + \
-			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 20)) + \
+			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 5)) + \
 			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
 			   '- Distance : {} km\n'.format(round(self.r_cr_norm/1000, 2)) + \
 			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
@@ -145,79 +162,24 @@ class CelestialBody :
 		if(self.corps_ref.name != 'Sun') : 
 
 			self.r_abs, self.v_abs = self.corps_ref.Planeto2Helio(self)
-
-			# self.r_abs = self.r_cr + self.corps_ref.r_cr
-			# self.r_abs_norm = np.linalg.norm(self.r_abs)
-
-			# self.v_abs = self.v_cr + self.corps_ref.v_cr
-			# self.v_abs_norm = np.linalg.norm(self.v_abs)
+			self.r_abs_norm, self.v_abs_norm = np.linalg.norm(self.r_abs), np.linalg.norm(self.v_abs)
 
 		else : 
-			self.r_abs = self.r_cr
-			self.r_abs_norm = self.r_cr_norm
-
-			self.v_abs = self.v_cr 
-			self.v_abs_norm = self.v_cr_norm
-
-
-	def HelioPlaneto (self, body, h2p=True) : 
-
-		if(h2p == True) : 
-
-			obliquity_matrix = np.array([ [1.,                   0.,                   0.],
-			             				  [0.,  math.cos(-self.eps), -math.sin(-self.eps)],
-			             				  [0.,  math.sin(-self.eps),  math.cos(-self.eps)] ])
-
-			new_r = obliquity_matrix.dot(self.r_abs - body.r_cr)
-			new_v = obliquity_matrix.dot(self.v_abs - body.v_cr)
-
-
-
-		else : 
-			obliquity_matrix = np.array([ [1.,                  0.,                  0.],
-			             				  [0.,  math.cos(self.eps), -math.sin(self.eps)],
-			             				  [0.,  math.sin(self.eps),  math.cos(self.eps)] ])
-
-			new_r = self.r_abs + obliquity_matrix.dot(body.r_cr)
-			new_v = self.v_abs + obliquity_matrix.dot(body.v_cr)
-
-		return new_r, new_v
-
-	def getObliquityMatrix (self, h2p=True) : 
-
-		if(h2p == True) : 
-			return np.array([ [1.,                   0.,                   0.],
-			             	  [0.,  math.cos(-self.eps), -math.sin(-self.eps)],
-			             	  [0.,  math.sin(-self.eps),  math.cos(-self.eps)]])
-		else : 
-			return np.array([ [1.,               0.,                       0.],
-			             	  [0.,  math.cos(self.eps),   -math.sin(self.eps)],
-			             	  [0.,  math.sin(self.eps),    math.cos(self.eps)]])
+			self.r_abs, self.v_abs = self.r_cr, self.v_cr 
+			self.r_abs_norm, self.v_abs_norm = self.r_cr_norm, self.v_cr_norm
 
 
 	def Helio2Planeto (self, body) : 
-		
-		obliquity_matrix = self.getObliquityMatrix(h2p=True)
 
-		new_r = obliquity_matrix.dot(body.r_cr - self.r_abs)
-		new_v = obliquity_matrix.dot(body.v_cr - self.v_abs)
-
-		if(self.name not in ['Earth', 'Moon']) : 
-			new_r = self.R1R3.dot(new_r)
-			new_v = self.R1R3.dot(new_v)
+		new_r = self.rotation_matrix.dot(body.r_cr - self.r_abs)
+		new_v = self.rotation_matrix.dot(body.v_cr - self.v_abs)
 
 		return new_r, new_v
 
 	def Planeto2Helio (self, body) : 
-		
-		obliquity_matrix = self.getObliquityMatrix(h2p=False)
 
-		if(self.name not in ['Earth', 'Moon']) : 
-			new_r = self.r_abs + obliquity_matrix.dot(self.invR1R3.dot(body.r_cr))
-			new_v = self.v_abs + obliquity_matrix.dot(self.invR1R3.dot(body.v_cr))
-		else : 
-			new_r = self.r_abs + obliquity_matrix.dot(body.r_cr)
-			new_v = self.v_abs + obliquity_matrix.dot(body.v_cr)
+		new_r = self.inv_rotation_matrix.dot(body.r_cr) + self.r_abs
+		new_v = self.inv_rotation_matrix.dot(body.v_cr) + self.v_abs
 
 		return new_r, new_v
 
@@ -235,3 +197,25 @@ class CelestialBody :
 
 		return new_r, new_v
 
+# eps = 0.4090928
+# a0 = -1.5708
+# d0 = 1.5708
+
+# R_e = np.array([  [1.               ,                   0.,                   0.],
+# 			              [0.               ,  math.cos(-eps), -math.sin(-eps)],
+# 			              [0.,  math.sin(-eps),  math.cos(-eps)] ])
+
+# R_a0 = np.array([ [ math.cos(a0),   math.sin(a0),                   0.],
+# 			              [-math.sin(a0), math.cos(-a0),                   0.],
+# 			              [0.                ,                  0.,                    1] ])
+
+# R_d0 = np.array([ [1.                ,                  0.,                   0.],
+# 			              [0.                ,   math.cos(d0),   -math.sin(d0)],
+# 			              [0.                ,   math.sin(d0),    math.cos(d0)] ])
+
+# t = np.array([1e3, 2e2, 3e6])
+# print("-----")
+# print(np.linalg.norm(t))
+# t = np.linalg.inv(R_e).dot(R_a0.dot(R_d0.dot(t)))
+# print(np.linalg.norm(t))
+# print("-----")

@@ -8,7 +8,10 @@ import utility_functions as u_f
 import parameters as prm
 
 
-def GeneralCalculation (satellites_list, celestial_bodies_list) :
+def GeneralCalculation () :
+
+	satellites_list = sat.Satellite.satellites
+	celestial_bodies_list = c_b.CelestialBody.celestial_bodies
 
 	requested_bodies_names = ['SAT1']
 	requested_bodies = [body for body in np.concatenate((satellites_list, celestial_bodies_list)) if body.name in requested_bodies_names]
@@ -35,7 +38,7 @@ def GeneralCalculation (satellites_list, celestial_bodies_list) :
 		n_tour += 1
 
 		dictionnary['time steps'].append(prm.parameters['time']['elapsed time'])
-		u_f.Computation(satellites_list, celestial_bodies_list)
+		u_f.Computation()
 
 		for body in requested_bodies : 
 
@@ -50,5 +53,5 @@ def GeneralCalculation (satellites_list, celestial_bodies_list) :
 	plt.style.use('dark_background')
 	fig, ax = plt.subplots()
 	# ax.plot([x[0] for x in dictionnary['SAT1']['r_cr']], [x[1] for x in dictionnary['SAT1']['r_cr']])
-	ax.plot(dictionnary['time steps'], dictionnary['SAT1']['a'])
+	ax.plot(dictionnary['time steps'], [np.linalg.norm(r_abs) for r_abs in dictionnary['SAT1']['r_abs']])
 	plt.show()

@@ -19,7 +19,7 @@
 
 =========    MANEUVERS    =========
 
-- --SAT1 --orbital rendez-vous --[-3.37558196e+08 1.38014389e+08 -4.39124311e+07] 2000-01-06 23:13:20.000 --date --2000-01-02 12:35:00.000 --[0, 0, 0]
+- --SAT1 --orbital rendez-vous --[1.69840316e+08 -3.35653161e+08 1.51281252e+08] 2000-01-07 12:43:20.000 --date --2000-01-01 20:00:00.000 --[0, 0, 0]
 
 
 =========      TIME      =========
@@ -34,13 +34,13 @@
 - applications to run : Spatial View [v]  Ground Track [x]  Parameters Plot [x]
 - simulation speed : slow [v]  medium [x]  high [x]  very high [x]
 - show bodies data : [x]
-- bodies data displayed : SAT1
+- bodies data displayed : Moon SAT1
 
 
 =========  SPATIAL VIEW  =========
 
 - display mode : satellite path [x]  trajectory prediction [v]
-- following mode : [x] --Moon 75000e3
+- following mode : [v] --SAT1 300000e3
 
 
 =========  GROUND TRACK  =========

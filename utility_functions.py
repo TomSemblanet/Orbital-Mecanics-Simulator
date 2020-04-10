@@ -105,12 +105,20 @@ def load_celestial_bodies (celestial_bodies_to_compute) :
 
 	for celestial_body_name in celestial_bodies_to_compute :
 
-		try : 
+		if(celestial_body_name =='Sun') : 
+			new_celestial_body = c_b.CelestialBody(celestial_body_name)
+		else : 
+			print('------ {}'.format(celestial_body_name))
 			new_celestial_body = c_b.CelestialBody(celestial_body_name, \
 												   [cel_body for cel_body in c_b.CelestialBody.celestial_bodies if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
-		except : 
+		
 
-			new_celestial_body = c_b.CelestialBody(celestial_body_name)
+
+		# try : 
+		# 	new_celestial_body = c_b.CelestialBody(celestial_body_name, \
+		# 										   [cel_body for cel_body in c_b.CelestialBody.celestial_bodies if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
+		# except : 
+		# 	new_celestial_body = c_b.CelestialBody(celestial_body_name)
 
 		c_b.CelestialBody.celestial_bodies.append(new_celestial_body)
 
@@ -432,7 +440,7 @@ def CoordinatesPredictor (body, time) :
 
 
 def DateToSeconds (date1, date2) : 
-
+	
 	object_date1 = datetime.strptime(date1, "%Y-%m-%d %H:%M:%S.%f")
 	object_date2 = datetime.strptime(date2, "%Y-%m-%d %H:%M:%S.%f")
 

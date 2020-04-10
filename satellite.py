@@ -92,9 +92,8 @@ class Satellite :
 			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 2)) + \
 			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
 			   '- Distance : {} km\n'.format(round(self.r_cr_norm/1000, 2)) + \
-			   '- Cartesian Coord (abs) : {}\n'.format(self.r_abs) + \
-			   '- Cartesian Coord (cr) : {}\n'.format(self.r_cr) + \
-			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
+			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
+			   '- Cartesian Velocity : {}\n'.format(self.v_cr)  
 
 
 
@@ -120,19 +119,13 @@ class Satellite :
 
 			if(first_load==True) : 
 
-				# self.r_abs = self.r_cr + self.corps_ref.r_abs
-				# self.v_abs = self.v_cr + self.corps_ref.v_abs
-				self.r_abs, self.v_abs = self.corps_ref.HelioPlaneto(self, h2p=False)
+				self.r_abs, self.v_abs = self.corps_ref.Planeto2Helio(self)
+				self.r_abs_norm, self.v_abs_norm = np.linalg.norm(self.r_abs), np.linalg.norm(self.v_abs)
 
 				self.state_vector[:3] = self.r_cr
 				self.state_vector[3:] = self.v_cr
 
-				self.r_abs_norm = np.linalg.norm(self.r_abs)
-				self.v_abs_norm = np.linalg.norm(self.v_abs)
-
 			else : 
-				# self.r_cr = self.r_abs - self.corps_ref.r_abs
-				# self.v_cr = self.v_abs - self.corps_ref.v_abs 
 
 				self.state_vector[:3] = self.r_cr
 				self.state_vector[3:] = self.v_cr
@@ -143,7 +136,7 @@ class Satellite :
 
 		self.orbit = orb.Orbit(self.r_cr, self.v_cr, self.corps_ref, path_model)
 		if(path_model == True and self.corps_ref.name != 'Sun') :
-			self.orbit.traj = np.array([ [1.,  0., 0.], [0.,  math.cos(self.corps_ref.eps), -math.sin(self.corps_ref.eps)], [0.,  math.sin(self.corps_ref.eps),  math.cos(self.corps_ref.eps)] ]).dot(self.orbit.traj)
+			self.orbit.traj = self.corps_ref.inv_rotation_matrix.dot(self.orbit.traj)
 
 		self.movement_prograde = np.cross(self.r_cr, self.v_cr)[2] > 0
 
@@ -335,14 +328,12 @@ class Satellite :
     	Return : None
 
 		"""
-		
+
 		if (self.r_abs_norm != self.r_cr_norm) : # which means that the satellite is in the SOI of a planet
 
 			if(self.r_cr_norm > self.corps_ref.influence_sphere_radius) : 
-				# self.r_cr, self.v_cr = self.corps_ref.Planeto2Helio(self)
-				# self.corps_ref = [body for body in celestial_bodies_list if body.name == self.corps_ref.corps_ref.name][0]
 
-				new_corps_ref = [body for body in celestial_bodies_list if body.name == self.corps_ref.corps_ref.name][0]
+				new_corps_ref = c_b.CelestialBody.celestial_bodies[0]
 
 				if(new_corps_ref.name == 'Sun') : 
 					self.r_cr, self.v_cr = self.corps_ref.Planeto2Helio(self)
@@ -355,18 +346,22 @@ class Satellite :
 			else : 
 
 				for natural_satellite in [body for body in celestial_bodies_list if body.name in cst.Celestial_Bodies_Dict[self.corps_ref.name]["natural satellites names"]] :
+					
 					distance = np.linalg.norm( self.r_abs - natural_satellite.r_abs )
 
 					if(distance <= natural_satellite.influence_sphere_radius) :
+						print(natural_satellite.name)
 						self.corps_ref = natural_satellite
 						self.r_cr, self.v_cr = self.corps_ref.Planeto2NatSat(self)
+						print(self.r_cr)
+						print(self.v_cr)
+						input()
 						self.loadParameters()
 						break
 
 		else : 
 			for body in celestial_bodies_list[1:] : 
 				distance = np.linalg.norm( self.r_abs - body.r_abs )
-
 				if(distance <= body.influence_sphere_radius) : 
 					self.corps_ref = body
 					self.r_cr, self.v_cr = self.corps_ref.Helio2Planeto(self)
