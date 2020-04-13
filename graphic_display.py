@@ -96,6 +96,7 @@ class MainDisplay :
 			self.satellite_points[j].set_data(self.satellite_list[j].r_abs[0], self.satellite_list[j].r_abs[1])
 
 			if(self.display_mode == "trajectory prediction") :
+				
 				self.satellite_traj[j].set_data(self.satellite_list[j].orbit.traj[0]+self.satellite_list[j].corps_ref.r_abs[0], 
 												self.satellite_list[j].orbit.traj[1]+self.satellite_list[j].corps_ref.r_abs[1])
 			else :
@@ -157,7 +158,7 @@ class GroundTrackDisplay : # /!\ ALWAYS PUT THE PARAMETER "BLIT" ON "TRUE" WHEN 
 
 			self.x_matrix[j][i] = self.satellite_list[j].longitude*180/math.pi*5.688+1024
 			self.y_matrix[j][i] = self.satellite_list[j].latitude*180/math.pi*5.688+512
-			self.ground_tracks[j].set_data(self.x_matrix[j][max(0, i-250):i+1], self.y_matrix[j][max(0, i-250):i+1])
+			self.ground_tracks[j].set_data(self.x_matrix[j][max(0, i-2050):i+1], self.y_matrix[j][max(0, i-2050):i+1])
 
 		return self.ground_tracks
 

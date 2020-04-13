@@ -12,6 +12,7 @@ class Orbit :
 		 
 
 		(self.a, self.e, self.i, self.Lnode, self.Lperi, self.true_anomaly, self.ecc_vect, self.n, self.n_norm) = u_f.CartesianToKeplerian(r0, v0, corps_ref.mu, all=True)
+
 		self.corps_ref = corps_ref
 
 		if(self.e < 1) : 

@@ -225,9 +225,11 @@ def satellitesLoader () :
 			string_tab = splited_line[3][1:-2]
 			line_dict['v0'] = np.array([float(string_tab.split(',')[0].lstrip()), float(string_tab.split(',')[1].lstrip()), float(string_tab.split(',')[2].lstrip())])
 			
-			line_dict['corps_ref'] = splited_line[4].replace(" ", "")
+			line_dict['mass'] = float(splited_line[4].replace(" ", ""))
 
-			line_dict['color'] = splited_line[5][:-1]
+			line_dict['corps_ref'] = splited_line[5].replace(" ", "")
+
+			line_dict['color'] = splited_line[6].replace("\n", "")
 
 			dicts_to_send.append(line_dict)
 

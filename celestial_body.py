@@ -71,7 +71,6 @@ class CelestialBody :
 			                   [0.                ,  math.cos(math.pi/2 - self.d0),    math.sin(math.pi/2 - self.d0)],
 			                   [0.                , -math.sin(math.pi/2 - self.d0),    math.cos(math.pi/2 - self.d0)] ])
 
-		# Étrange place du signe '-', normalement sur le sinus "en haut à droite" ...
 
 		self.rotation_matrix = self.R_d0.dot(self.R_a0.dot(np.linalg.inv(self.R_e)))
 		self.inv_rotation_matrix = np.linalg.inv(self.rotation_matrix)
@@ -115,14 +114,14 @@ class CelestialBody :
 
 		try : 
 			return '> {}\n'.format(self.name) + \
-			   '- Semi-major axis (a) : {} km\n'.format(round(self.orbit.a/1000, 0)) + \
-			   '- Eccentricity (e) : {}\n'.format(round(self.orbit.e, 5)) + \
-			   '- True anomaly : {} °\n'.format(round(self.true_anomaly*180/math.pi, 4)) + \
-			   '- Longitude of perigee : {} °\n'.format(round(self.orbit.Lperi*180/math.pi, 2)) + \
-			   '- Longitude of ascendant node : {} °\n'.format(round(self.orbit.Lnode*180/math.pi, 2)) + \
-			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 5)) + \
-			   '- Period : {} sec\n'.format(round(self.orbit.T, 2)) + \
-			   '- Distance : {} km\n'.format(round(self.r_cr_norm/1000, 2)) + \
+			   '- Semi-major axis (a) : {} km\n'.format(round(self.orbit.a/1000, 10)) + \
+			   '- Eccentricity (e) : {}\n'.format(round(self.orbit.e, 10)) + \
+			   '- True anomaly : {} °\n'.format(round(self.true_anomaly*180/math.pi, 10)) + \
+			   '- Longitude of perigee : {} °\n'.format(round(self.orbit.Lperi*180/math.pi, 10)) + \
+			   '- Longitude of ascendant node : {} °\n'.format(round(self.orbit.Lnode*180/math.pi, 10)) + \
+			   '- Inclinaison : {} °\n'.format(round(self.orbit.i*180/math.pi, 10)) + \
+			   '- Period : {} sec\n'.format(round(self.orbit.T, 10)) + \
+			   '- Distance : {} km\n'.format(round(self.r_cr_norm/1000, 10)) + \
 			   '- Cartesian Coord : {}\n'.format(self.r_cr) + \
 			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
 
@@ -196,26 +195,3 @@ class CelestialBody :
 		new_v = body.v_cr + self.v_cr
 
 		return new_r, new_v
-
-# eps = 0.4090928
-# a0 = -1.5708
-# d0 = 1.5708
-
-# R_e = np.array([  [1.               ,                   0.,                   0.],
-# 			              [0.               ,  math.cos(-eps), -math.sin(-eps)],
-# 			              [0.,  math.sin(-eps),  math.cos(-eps)] ])
-
-# R_a0 = np.array([ [ math.cos(a0),   math.sin(a0),                   0.],
-# 			              [-math.sin(a0), math.cos(-a0),                   0.],
-# 			              [0.                ,                  0.,                    1] ])
-
-# R_d0 = np.array([ [1.                ,                  0.,                   0.],
-# 			              [0.                ,   math.cos(d0),   -math.sin(d0)],
-# 			              [0.                ,   math.sin(d0),    math.cos(d0)] ])
-
-# t = np.array([1e3, 2e2, 3e6])
-# print("-----")
-# print(np.linalg.norm(t))
-# t = np.linalg.inv(R_e).dot(R_a0.dot(R_d0.dot(t)))
-# print(np.linalg.norm(t))
-# print("-----")

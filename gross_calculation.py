@@ -16,7 +16,7 @@ def GeneralCalculation () :
 	requested_bodies_names = ['SAT1']
 	requested_bodies = [body for body in np.concatenate((satellites_list, celestial_bodies_list)) if body.name in requested_bodies_names]
 
-	requested_attributes_names = ['a', 'e', 'i', 'Lnode']
+	requested_attributes_names = ['a', 'e', 'i', 'Lnode', 'Lperi']
 
 	dictionnary = dict()
 
@@ -52,6 +52,5 @@ def GeneralCalculation () :
 
 	plt.style.use('dark_background')
 	fig, ax = plt.subplots()
-	# ax.plot([x[0] for x in dictionnary['SAT1']['r_cr']], [x[1] for x in dictionnary['SAT1']['r_cr']])
-	ax.plot(dictionnary['time steps'], [np.linalg.norm(r_abs) for r_abs in dictionnary['SAT1']['r_abs']])
+	ax.plot(dictionnary['time steps'], dictionnary['SAT1']['Lperi']*180/math.pi)
 	plt.show()

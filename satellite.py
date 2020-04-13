@@ -14,7 +14,7 @@ class Satellite :
 
 	satellites = []
 
-	def __init__ (self, r0, v0, name, corps_ref, color="m") :
+	def __init__ (self, r0, v0, mass, name, corps_ref, color="m") :
 
 		"""
 		Constructor of the class Satellite. Initializes the attributs of each objects at creation before calling
@@ -36,6 +36,8 @@ class Satellite :
 
 		self.name = name
 		self.color = color
+
+		self.mass = mass
 
 		self.corps_ref = corps_ref
 
@@ -217,20 +219,9 @@ class Satellite :
 		self.v_cr = np.array([ Y[3], Y[4], Y[5] ]) 
 		self.v_cr_norm = np.linalg.norm(self.v_cr)
 
-		if(self.corps_ref.name != 'Sun') : 
-
-			"""
-			Si le satellite ne tourne pas autour du Soleil, ses cordonnées dans le référentiel héliocentrique doivent être recalculées
-			"""
-
+		if(self.corps_ref.name != 'Sun') :
 			self.r_abs, self.v_abs = self.corps_ref.Planeto2Helio(self)
-			# self.r_abs, self.v_abs = self.corps_ref.HelioPlaneto(self, h2p=False)
-
-			# self.r_abs = np.array([ Y[0], Y[1], Y[2] ]) + self.corps_ref.r_cr
-			# self.v_abs = np.array([ Y[3], Y[4], Y[5] ]) + self.corps_ref.v_cr
-
-			self.r_abs_norm = np.linalg.norm(self.r_abs) # no need to calculate it at each time step
-			self.v_abs_norm = np.linalg.norm(self.v_abs) # no need to calculate it at each time step
+			self.r_abs_norm, self.v_abs_norm = np.linalg.norm(self.r_abs), np.linalg.norm(self.v_abs) 
 
 		else : 
 			self.r_abs, self.r_abs_norm = self.r_cr, self.r_cr_norm
@@ -239,10 +230,50 @@ class Satellite :
 		a = 0
 
 		if(adapted_thrust == False) : 
-			a +=  (-self.corps_ref.mu)*(self.r_cr/self.r_cr_norm**3)
+			central_attraction = (-self.corps_ref.mu)*(self.r_cr/(self.r_cr_norm**3))
+			a += central_attraction
 
 			if(prm.parameters['general']['Keplerian simulation'] == False) : 
-				a += (-0.5 * 1e-6 * 9 * 2.5/450e3 * self.v_cr_norm) * (self.v_cr)
+
+				sun_r_cr, sun_v_cr = self.corps_ref.Helio2Planeto(c_b.CelestialBody.celestial_bodies[0])
+				sun_r_cr_norm = np.linalg.norm(sun_r_cr)
+
+				J2_effect = 3/2 * cst.Celestial_Bodies_Dict[self.corps_ref.name]['J2'] * self.corps_ref.mu \
+							* (self.corps_ref.radius**2 / self.r_cr_norm**4) \
+							* np.array([ self.r_cr[0]/(self.r_cr_norm) * (5*((self.r_cr[2]/self.r_cr_norm)**2) - 1) ,
+									     self.r_cr[1]/(self.r_cr_norm) * (5*((self.r_cr[2]/self.r_cr_norm)**2) - 1) ,
+									     self.r_cr[2]/(self.r_cr_norm) * (5*((self.r_cr[2]/self.r_cr_norm)**2) - 3)]) 
+
+				# En supposant que le dernier corps celeste chargé soit la Lune, à adapter
+				vect_sat_moon = c_b.CelestialBody.celestial_bodies[-1].r_cr - self.r_cr
+				vect_sat_moon_norm = np.linalg.norm(vect_sat_moon)
+
+				lunar_attraction = c_b.CelestialBody.celestial_bodies[-1].mu/(vect_sat_moon_norm**3)*vect_sat_moon \
+								 - c_b.CelestialBody.celestial_bodies[-1].mu/(c_b.CelestialBody.celestial_bodies[-1].r_cr_norm**3)*c_b.CelestialBody.celestial_bodies[-1].r_cr
+
+				# En supposant que le premier corps celeste chargé soit le Soleil, à adapter
+				vect_sat_sun = sun_r_cr - self.r_cr
+				vect_sat_sun_norm = np.linalg.norm(vect_sat_sun)
+
+				solar_attraction = c_b.CelestialBody.celestial_bodies[0].mu/(vect_sat_sun_norm**3)*vect_sat_sun \
+								 - c_b.CelestialBody.celestial_bodies[0].mu/(sun_r_cr_norm**3)*sun_r_cr
+
+				if(np.dot(self.r_cr, sun_r_cr)/(self.r_cr_norm*sun_r_cr_norm) < 0):
+					illumination = 0
+					solar_radiation_pressure = 0
+				else : 
+					illumination = 1
+					Cr = 1 # Reflectivity coefficient [-]
+					Pr = 4.56e-6 # Solar radiation pressure [N/m]
+					As = (math.pi * 4**2) # Satellite's surface area facing the Sun [km^2]
+
+					solar_radiation_pressure = illumination * (self.corps_ref.radius**2/self.corps_ref.mu) * Cr * Pr * As / self.mass \
+											   * (self.r_cr - sun_r_cr) / np.linalg.norm(self.r_cr - sun_r_cr)		   
+
+				a += J2_effect
+				a += lunar_attraction
+				a += solar_attraction
+				a += solar_radiation_pressure
 
 		if (self.thrust_acc_norm != 0) :
 			a += self.thrust_acc_vect*(self.thrust_acc_norm)
@@ -350,12 +381,9 @@ class Satellite :
 					distance = np.linalg.norm( self.r_abs - natural_satellite.r_abs )
 
 					if(distance <= natural_satellite.influence_sphere_radius) :
-						print(natural_satellite.name)
+
 						self.corps_ref = natural_satellite
 						self.r_cr, self.v_cr = self.corps_ref.Planeto2NatSat(self)
-						print(self.r_cr)
-						print(self.v_cr)
-						input()
 						self.loadParameters()
 						break
 

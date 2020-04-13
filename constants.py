@@ -58,7 +58,7 @@ Celestial_Bodies_Dict = {
 			"mu"     : 3.986004418e14,
 			"radius" : 6378.137e3,
 			"oblateness" : 0.003353,
-			"J2" : 1.1e-3,
+			"J2" : 1.08262668e-3,
 			"eps" : 0.40910518,
 			"a0" : -1.57079632679, 
 			"d0" : 1.57079632679,
@@ -196,10 +196,10 @@ def EphemeridesLoader () :
 		for line in lines :
 			splited_line = line.split(',')
 			del splited_line[1]
-			del splited_line[-1]
-
-			Celestial_Bodies_Dict[splited_line[0]]["initial_position"] = np.array([1.496e11*float(elt) for elt in splited_line[1:4]])
-			Celestial_Bodies_Dict[splited_line[0]]["initial_velocity"] = np.array([1.731e6*float(elt) for elt in splited_line[4:7]])
+			splited_line[-1] = splited_line[-1].replace('\n', '')
+			
+			Celestial_Bodies_Dict[splited_line[0]]["initial_position"] = np.array([149597870700*float(elt) for elt in splited_line[1:4]])
+			Celestial_Bodies_Dict[splited_line[0]]["initial_velocity"] = np.array([1731456.8368*float(elt) for elt in splited_line[4:7]])
 
 EphemeridesLoader()
 
