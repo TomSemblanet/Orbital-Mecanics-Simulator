@@ -1,0 +1,24 @@
+{
+  "name": "flyby",
+  "version": "1.0.0",
+  "description": "FlyBy project",
+  "main": "main.js",
+  "dependencies": {
+    "electron": "^8.2.4",
+    "python-shell": "^1.0.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomSemblanet/Orbital-Mecanics-Simulator.git"
+  },
+  "author": "SEMBLANET Tom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TomSemblanet/Orbital-Mecanics-Simulator/issues"
+  },
+  "homepage": "https://github.com/TomSemblanet/Orbital-Mecanics-Simulator#readme"
+}
