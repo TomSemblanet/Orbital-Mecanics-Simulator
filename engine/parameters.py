@@ -5,7 +5,7 @@ import numpy as np
 
 import constants as cst
 
-DATA_FILE = "../Scenarios/DATA.txt"
+DATA_FILE = "../scenarios/DATA.txt"
 
 def parametersLoader () : 
 	
