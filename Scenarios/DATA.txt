@@ -14,7 +14,7 @@
 
 =========    SATELLITES    =========
 
-- --SAT1 --[9500e3, 0, 0] --[0, 5000, 3000] --721.9 --Earth --m
+- --SAT1 --[9500e3, 0, 0] --[0, 5600, 3200] --721.9 --Earth --m
 
 
 =========    MANEUVERS    =========
@@ -26,7 +26,7 @@
 =========      TIME      =========
 
 - starting date ~ 2000-01-01 12:00:00.000
-- time step ~ 10
+- time step ~ 1
 - simulation time ~ 86400
 
 
@@ -34,7 +34,7 @@
 
 - applications to run : Spatial View [v]  Ground Track [x]  Parameters Plot [x]
 - simulation speed : slow [x]  medium [x]  high [x]  very high [v]
-- show bodies data : [v]
+- show bodies data : [x]
 - bodies data displayed : SAT1
 
 
