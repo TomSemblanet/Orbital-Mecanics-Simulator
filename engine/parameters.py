@@ -5,7 +5,7 @@ import numpy as np
 
 import constants as cst
 
-DATA_FILE = "../scenarios/DATA.txt"
+DATA_FILE = "./scenarios/DATA.txt"
 
 def parametersLoader () : 
 	
@@ -29,38 +29,55 @@ def parametersLoader () :
 
 
 
-def generalParametersLoader (lines) : 
+# def generalParametersLoader (lines) : 
 	
-	parameters['general']['Keplerian simulation'] = (lines[0].split('[')[1][0] == 'v')
+# 	parameters['general']['Keplerian simulation'] = (lines[0].split('[')[1][0] == 'v')
 
 
+def generalParametersLoader (generals_prm) : 
 
-def timeParametersLoader (lines) :  
+	parameters['general']["perturbations"] = generals_prm["perturbations"]
 
-	""" 
-	Loads the parameters related to the passage of time to know : 
-				- The general time step : the time step at which the simulation must return after an adaption 
-					of the real-time time step (adaption due to a maneuver - for example)
-				- The time step : the real-time time step of the simulation, which can be modified to reach 
-					a particular epoch 
-				- Starting date : the starting date of the simulation under the form YEAR-MONTH-DAY HOUR:MINUTE:SECOND.MILLISECOND
-				- Initial Julian date : the starting Julian date 
+def timeParametersLoader (time_prm) :
 
-		Input : interesting lines for loading parameters
-
-		Return : None 
-	"""
-
-	parameters["time"]["general time step"] = int(lines[1].split('~')[1])
+	parameters["time"]["general time step"] = time_prm["time step"]
 	parameters["time"]["time step"] = parameters["time"]["general time step"]
 
-	parameters["time"]["starting date"] = lines[0].split('~')[1].lstrip()[:-1]
+	parameters["time"]["starting date"] = time_prm["starting date"]
 	parameters["time"]["initial julian date"] = 367*int(parameters["time"]["starting date"][0:4]) - int((7*(int(parameters["time"]["starting date"][0:4])+int((int(parameters["time"]["starting date"][5:7])+9)/12)))/4) \
 					+ int(275*int(parameters["time"]["starting date"][5:7])/9) + int(parameters["time"]["starting date"][8:10]) + 1721013.5 + (((int(parameters["time"]["starting date"][17:19])/60) \
 					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
-	parameters["time"]["simulation time"] = float(lines[2].split('~')[1].lstrip()[:-1])
-	
+
+
+	parameters["time"]["simulation time"] = time_prm["simulation time"]
 	parameters["time"]["elapsed time"] = 0
+
+# def timeParametersLoader (lines) :  
+
+# 	""" 
+# 	Loads the parameters related to the passage of time to know : 
+# 				- The general time step : the time step at which the simulation must return after an adaption 
+# 					of the real-time time step (adaption due to a maneuver - for example)
+# 				- The time step : the real-time time step of the simulation, which can be modified to reach 
+# 					a particular epoch 
+# 				- Starting date : the starting date of the simulation under the form YEAR-MONTH-DAY HOUR:MINUTE:SECOND.MILLISECOND
+# 				- Initial Julian date : the starting Julian date 
+
+# 		Input : interesting lines for loading parameters
+
+# 		Return : None 
+# 	"""
+
+# 	parameters["time"]["general time step"] = int(lines[1].split('~')[1])
+# 	parameters["time"]["time step"] = parameters["time"]["general time step"]
+
+# 	parameters["time"]["starting date"] = lines[0].split('~')[1].lstrip()[:-1]
+# 	parameters["time"]["initial julian date"] = 367*int(parameters["time"]["starting date"][0:4]) - int((7*(int(parameters["time"]["starting date"][0:4])+int((int(parameters["time"]["starting date"][5:7])+9)/12)))/4) \
+# 					+ int(275*int(parameters["time"]["starting date"][5:7])/9) + int(parameters["time"]["starting date"][8:10]) + 1721013.5 + (((int(parameters["time"]["starting date"][17:19])/60) \
+# 					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
+# 	parameters["time"]["simulation time"] = float(lines[2].split('~')[1].lstrip()[:-1])
+	
+# 	parameters["time"]["elapsed time"] = 0
 
 
 def applicationsParametersLoader (lines) : 
@@ -311,61 +328,21 @@ def maneuverLoader () :
 
 
 parameters = {
-	"general" : 
-	{
-		"loader func" : generalParametersLoader,
-		"Keplerian simulation" : bool()
+	"general" : {
+		"perturbations" : list()
 	},
 
 	"time" : 
 	{
-		"loader func" : timeParametersLoader,
 		"general time step" : int(),
 		"time step" : int(),
 		"starting date" : str(),
 		"current date" : str(),
-		"initial julian date" : int(), # [days]  ~ following J2000
-		"current julian date" : int(), # [days]
+		"initial julian date" : float(), # [days]  ~ following J2000
+		"current julian date" : float(), # [days]
 		"simulation time" : float(),
-		"elapsed time" : int() # [sec]
-	},
-
-	"applications" : 
-	{
-		"loader func" : applicationsParametersLoader,
-		"simulation speed dict" : {"slow" : 1, 
-								   "medium" : 2,
-								   "high" : 3,
-								   "very high" : 4},
-		"simulation speed" : str(),
-		"calculation repeat" : int(),
-		"applications on" : list(),
-		"leader application" : int(),
-		"show bodies data" : bool(),
-		"bodies data displayed" : list()
-	},
-
-	"spatial view" : 
-	{
-		"loader func" : spatialViewParametersLoader,
-		"display mode" : str(),
-		"following mode" : bool(),
-		"body to follow" : str(),
-		"window radius" : float()
-	},
-
-	"ground track" : 
-	{
-		"loader func" : groundTrackParametersLoader,
-	},
-
-	"parameters plot" : 
-	{
-		"loader func" : parametersPlotParametersLoader,
-		"parameter to plot" : str(),
-		"satellites displayed" : list(),
-		"historic length" : int()
-	},
+		"elapsed time" : float() # [sec]
+	}
 }
 
 

@@ -233,11 +233,11 @@ class Satellite :
 			central_attraction = (-self.corps_ref.mu)*(self.r_cr/(self.r_cr_norm**3))
 			a += central_attraction
 
-			if(prm.parameters['general']['Keplerian simulation'] == False) : 
+			if(len(prm.parameters['general']['perturbations']) != 0) : 
 
 				sun_r_cr, sun_v_cr = self.corps_ref.Helio2Planeto(c_b.CelestialBody.celestial_bodies[0])
 				sun_r_cr_norm = np.linalg.norm(sun_r_cr)
-
+				open('h.txt', 'a').write(str(self.orbit.e)+'\n')
 				J2_effect = 3/2 * cst.Celestial_Bodies_Dict[self.corps_ref.name]['J2'] * self.corps_ref.mu \
 							* (self.corps_ref.radius**2 / self.r_cr_norm**4) \
 							* np.array([ self.r_cr[0]/(self.r_cr_norm) * (5*((self.r_cr[2]/self.r_cr_norm)**2) - 1) ,
@@ -270,7 +270,7 @@ class Satellite :
 					solar_radiation_pressure = illumination * (self.corps_ref.radius**2/self.corps_ref.mu) * Cr * Pr * As / self.mass \
 											   * (self.r_cr - sun_r_cr) / np.linalg.norm(self.r_cr - sun_r_cr)		   
 
-				a += J2_effect
+				# a += J2_effect
 				# a += lunar_attraction
 				# a += solar_attraction
 				# a += solar_radiation_pressure
@@ -343,7 +343,7 @@ class Satellite :
 		else : 
 			self.state_vector = n_i.burlirsch_stoer_method(self, self.state_vector, adapted_thrust=False)
 
-		if(prm.parameters['general']['Keplerian simulation'] == True) :
+		if(len(prm.parameters['general']['perturbations']) == 0) :
 			self.computeAdditionalParameters()
 		else :  
 			self.loadParameters(update_orbital_prm=True, path_model=False)

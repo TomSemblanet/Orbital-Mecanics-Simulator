@@ -1,0 +1,34 @@
+{
+
+"general" : {
+	"perturbations" : ["LS", "D", "SPR", "J2"]
+},
+
+
+"time" : {	
+	"time step": 10,
+	"starting date": "2000-01-01 12:00:00.000",
+	"simulation time": 86400
+},
+
+"satellites": {
+	"r0" : [42000, 0, 0],
+	"v0" : [0, 3078, 0],
+	"mass" : 792,
+	"corps ref": "Earth"
+},
+
+"maneuvers": {
+	"sat name": "SAT1",
+	"man name": "custom acceleration",
+	"value": 1000,
+	"trigger type": "date",
+	"trigger value": "2000-01-01 20:00:00.000",
+	"direction": [0, 0, 0]
+},
+
+"celestial bodies": {
+	"to load": ["Sun", "Mercury", "Venus", "Earth", "Mars"]
+}
+
+}

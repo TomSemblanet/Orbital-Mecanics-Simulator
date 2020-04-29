@@ -11,6 +11,8 @@ from datetime import datetime
 import numerical_integration as n_i
 import constants as cst
 
+import sys, json
+
 
 #################################################
 #
@@ -23,11 +25,12 @@ def update_date () :
 	prm.parameters["time"]["elapsed time"] += prm.parameters["time"]["time step"]
 
 	prm.parameters["time"]["current date"] = str(datetime.fromtimestamp(946724400+prm.parameters["time"]["initial julian date"]*86400+prm.parameters["time"]["elapsed time"]))[:23]
-	prm.current_julian_date = 367*int(prm.parameters["time"]["current date"][0:4]) - int((7*(int(prm.parameters["time"]["current date"][0:4])
-					+ int((int(prm.parameters["time"]["current date"][5:7])+9)/12)))/4) \
-					+ int(275*int(prm.parameters["time"]["current date"][5:7])/9) + int(prm.parameters["time"]["current date"][8:10]) + 1721013.5 \
-					+ (((int(prm.parameters["time"]["current date"][17:19])/60) \
-					+ int(prm.parameters["time"]["current date"][14:16]))/60+int(prm.parameters["time"]["current date"][11:13]))/24 - 2451545 \
+	open('file.txt', 'w').write(str(int(prm.parameters["time"]["current date"][11:13])))
+	# prm["time"]["current_julian_date"] = 367*int(prm.parameters["time"]["current date"][0:4]) - int((7*(int(prm.parameters["time"]["current date"][0:4]) \
+	# 				+ int((int(prm.parameters["time"]["current date"][5:7])+9)/12)))/4) \
+	# 				+ int(275*int(prm.parameters["time"]["current date"][5:7])/9) + int(prm.parameters["time"]["current date"][8:10]) + 1721013.5 \
+	# 				+ (((int(prm.parameters["time"]["current date"][17:19])/60) \
+	# 				+ int(prm.parameters["time"]["current date"][14:16]))/60+int(prm.parameters["time"]["current date"][11:13]))/24 - 2451545 \
 
 
 	if(prm.parameters["time"]["time step"] == 0) : 
@@ -37,23 +40,50 @@ def update_date () :
 
 def Computation () :
 
-	if(prm.parameters["applications"]["show bodies data"] == True) : 	
-		display_parameters([sat for sat in sat.Satellite.satellites if sat.name in prm.parameters["applications"]["bodies data displayed"]]+\
-			[cel_body for cel_body in c_b.CelestialBody.celestial_bodies if cel_body.name in prm.parameters["applications"]["bodies data displayed"]])
+	# if(prm.parameters["applications"]["show bodies data"] == True) : 	
+	# 	display_parameters([sat for sat in sat.Satellite.satellites if sat.name in prm.parameters["applications"]["bodies data displayed"]]+\
+	# 		[cel_body for cel_body in c_b.CelestialBody.celestial_bodies if cel_body.name in prm.parameters["applications"]["bodies data displayed"]])
 
-	for i in range (prm.parameters["applications"]["calculation repeat"]) :  # repetition allow the program to reduce the computational time by reducing the number of plot
-		update_celestial_bodies_position()
-		satellites_accelerations()
-		update_ref_body()
-		update_date() 
+	# for i in range (prm.parameters["applications"]["calculation repeat"]) :  # repetition allow the program to reduce the computational time by reducing the number of plot
+	update_celestial_bodies_position()
+	satellites_accelerations()
+	update_ref_body()
+	update_date() 
 
 
-def loadSimulation () : 
+def loadSimulation (parameters_dict) : 
 
-	prm.parametersLoader()
-	load_celestial_bodies(prm.celestialBodiesLoader())
-	load_satellites(prm.satellitesLoader())
-	load_manoeuvers(prm.maneuverLoader())
+
+	generals_prm = parameters_dict["general"]
+	time_prm = parameters_dict["time"]
+
+	satellites_prm = parameters_dict["satellites"]
+	celestial_bodies_prm = parameters_dict["celestial bodies"]
+	maneuvers_prm = parameters_dict["maneuvers"]
+
+	# with open('file.txt', 'w') as file : 
+	# 	file.write(json.dumps(generals_prm))
+	# 	file.write('\n')
+	# 	file.write(json.dumps(time_prm))
+	# 	file.write('\n')
+	# 	file.write(json.dumps(satellites_prm))
+	# 	file.write('\n')
+	# 	file.write(json.dumps(celestial_bodies_prm))
+	# 	file.write('\n')
+	# 	file.write(json.dumps(maneuvers_prm))
+	# 	file.write('\n')
+
+
+	# prm.parametersLoader()
+	# load_celestial_bodies(prm.celestialBodiesLoader())
+	# load_satellites(prm.satellitesLoader())
+	# load_manoeuvers(prm.maneuverLoader())
+
+	prm.generalParametersLoader(generals_prm)
+	prm.timeParametersLoader(time_prm)
+	load_celestial_bodies(celestial_bodies_prm)
+	load_satellites(satellites_prm)
+	load_manoeuvers(maneuvers_prm)
 
 
 #################################################
@@ -88,6 +118,11 @@ def load_satellites (satellites_data_dicts) :
 	satellites_list = []
 
 	for satellite_dict in satellites_data_dicts :
+
+		for key, val in satellite_dict.items() : 
+			if(str(type(val))=="<class 'list'>") :
+				satellite_dict[key]=np.array(val)
+
 		satellite_dict["corps_ref"] = [body for body in c_b.CelestialBody.celestial_bodies if body.name==satellite_dict["corps_ref"]][0]
 		new_satellite = sat.Satellite(**satellite_dict)
 		sat.Satellite.satellites.append(new_satellite)
@@ -103,9 +138,11 @@ def load_celestial_bodies (celestial_bodies_to_compute) :
 
 	"""	
 
-	for celestial_body_name in celestial_bodies_to_compute :
+	cst.Celestial_Bodies_Dict[celestial_bodies_to_compute["to load"][0]]['central'] = True
 
-		if(celestial_body_name == 'Sun') : 
+	for celestial_body_name in celestial_bodies_to_compute["to load"] :
+
+		if(celestial_body_name == 'Sun') :
 			new_celestial_body = c_b.CelestialBody(celestial_body_name)
 		else : 
 			new_celestial_body = c_b.CelestialBody(celestial_body_name, \
@@ -315,6 +352,11 @@ def NewtonRaphsonLambertFunction (z, r_init_norm, r_final_norm, temp, flight_tim
 
 def CartesianToKeplerian (r, v, mu, all=False) : 
 
+	# file = open('file.txt', 'w')
+	# file.write(str(type(r)))
+	# file.write(str(type(v)))
+	# file.write(str(type(mu)))
+
 	r_norm = np.linalg.norm(r)
 	v_norm = np.linalg.norm(v)
 	w_norm = np.dot(r, v)/r_norm
@@ -334,7 +376,7 @@ def CartesianToKeplerian (r, v, mu, all=False) :
 	else : 
 		Lnode = 0
 
-	e = 1/mu*((v_norm*v_norm - mu/r_norm)*r - r_norm*w_norm*v)
+	e = 1/mu*(float((v_norm*v_norm - mu/r_norm))*r - float(r_norm*w_norm)*v)
 	e_norm = np.linalg.norm(e)
 
 	if(n_norm != 0) : 

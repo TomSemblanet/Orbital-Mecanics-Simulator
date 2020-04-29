@@ -8,6 +8,10 @@ import utility_functions as u_f
 import parameters as prm
 
 
+import time
+
+
+
 def GeneralCalculation () :
 
 	satellites_list = sat.Satellite.satellites
@@ -33,9 +37,9 @@ def GeneralCalculation () :
 
 	n_tour = 0
 
-	while(prm.parameters['time']['elapsed time'] < prm.parameters['time']['simulation time']) : 
+	start = time.time()
 
-		print(":)")
+	while(prm.parameters['time']['elapsed time'] < prm.parameters['time']['simulation time']) : 
 
 		n_tour += 1
 
@@ -51,8 +55,12 @@ def GeneralCalculation () :
 			for attr_name in requested_attributes_names : 
 				dictionnary[body.name][attr_name] = np.append(dictionnary[body.name][attr_name], getattr(body.orbit, attr_name))
 
+	end = time.time()
+	file_ = open('file.txt', 'w')
+	file_.write(str(end-start))
+		
 
-	plt.style.use('dark_background')
-	fig, ax = plt.subplots()
-	ax.plot(dictionnary['time steps'], dictionnary['SAT1']['Lperi']*180/math.pi)
-	plt.show()
+	# plt.style.use('dark_background')
+	# fig, ax = plt.subplots()
+	# ax.plot(dictionnary['time steps'], dictionnary['SAT1']['Lperi']*180/math.pi)
+	# plt.show()

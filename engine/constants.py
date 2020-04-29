@@ -189,7 +189,7 @@ Celestial_Bodies_Dict = {
 def EphemeridesLoader () : 
 	global Celestial_Bodies_Dict
 
-	with open("ephemerides.txt", 'r') as ephemerides_file : 
+	with open("./engine/ephemerides.txt", 'r') as ephemerides_file : 
 
 		lines = ephemerides_file.readlines()
 

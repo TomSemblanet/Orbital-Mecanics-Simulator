@@ -2,6 +2,7 @@
 
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
+import sys, json
 
 import parameters as prm
 import utility_functions as u_f
@@ -10,7 +11,7 @@ import gross_calculation as g_c
 import celestial_body as c_b
 
 
-u_f.loadSimulation()
+u_f.loadSimulation(json.loads(sys.argv[1]))
 
 g_c.GeneralCalculation()
 
