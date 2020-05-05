@@ -126,7 +126,6 @@ class CelestialBody :
 			   '- Cartesian Velocity : {}\n'.format(self.v_cr)
 
 		except : 
-			print("=_=_=_=  You try to display the parameters of the central body  =_=_=_=\n")
 			exit()
 
 	

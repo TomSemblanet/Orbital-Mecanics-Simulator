@@ -1,0 +1,62 @@
+const {PythonShell} = require('python-shell')
+
+var json_template = JSON.stringify({
+			"general" : {
+					"perturbations" : [],
+					"time step": 100,
+					"starting date": "2200-01-01 12:00:00.000",
+					"simulation time": 10000
+						},
+
+			"satellites": [{
+					"r0" : [42162140, 0, 0],
+					"v0" : [0, 3000, 0],
+					"mass" : 792,
+					"name": "SAT1",
+					"corps_ref": "Earth",
+					"color": "m",
+					"maneuvers": [{
+					"man_name": "custom acceleration",
+					"value": 1000,
+					"trigger_type": "date",
+					"trigger_value": "2200-01-01 20:00:00.000",
+					"direction": [0, 0, 0]}]
+						},
+						{
+					"r0" : [42162140, 0, 0],
+					"v0" : [0, -3000, 0],
+					"mass" : 792,
+					"name": "SAT2",
+					"corps_ref": "Earth",
+					"color": "c",
+					"maneuvers": [{
+					"man_name": "custom acceleration",
+					"value": 1000,
+					"trigger_type": "date",
+					"trigger_value": "2000-01-01 20:00:00.000",
+					"direction": [0, 0, 0]}]
+						}],
+
+				"celestial bodies": {
+					"to load": ["Sun", "Mercury", "Venus", "Earth", "Mars"]
+						}
+					})
+
+var options = {
+	mode: 'json',
+	encoding: 'utf8',
+	scriptPath: './engine/',
+	args: [json_template]
+}
+
+PythonShell.run('main.py', options, (err, results) => {
+	if(err) {
+		console.log('err')
+		console.log(err)
+	}
+
+	else {
+		console.log('results')
+		console.log(results)
+	}
+})

@@ -1,0 +1,114 @@
+{
+
+	"historic" : [
+	
+	{	
+		"creation_date": "2020-05-05 14:00:00",
+
+		"general" : {
+			"mission name": "Voyager 1",
+			"dpt date": "05 SEP 1977 11:58:00.000",
+			"end date": "04 MAI 2020 19:00:00.000",
+			"dt": 10,
+			"perturbations" : ["LS", "D", "SPR", "J2"]
+		},
+
+		"celestial bodies": {
+			"to load": ["Sun", "Mercury", "Venus", "Earth", "Mars"]
+		},
+
+		"satellites": {
+			"r0" : [42000, 0, 0],
+			"v0" : [0, 3078, 0],
+			"mass" : 792,
+			"name": "SAT",
+			"corps ref": "Earth",
+			"color": "m",
+			"maneuvers": [{
+			"sat name": "SAT1",
+			"man name": "custom acceleration",
+			"value": 1000,
+			"trigger type": "date",
+			"trigger value": "2000-01-01 20:00:00.000",
+			"direction": [0, 0, 0]
+		}]
+		},
+
+		"renderer_prm": {
+			"spatial view": {
+				"on": false
+			},
+
+			"ground track": {
+				"on": true,
+				"sat_names": ["SAT"]
+			},
+
+			"graphics": {
+				"on": true,
+				"values": [{
+					"i": ["SAT"],
+					"a": ["SAT"],
+					"Lnode": ["SAT"]
+				}]
+			}
+		}
+	},
+
+	{	
+		"creation_date": "2020-05-05 16:00:00",
+
+		"general" : {
+			"mission name": "Voyager 2",
+			"dpt date": "05 SEP 1977 11:58:00.000",
+			"end date": "04 MAI 2020 19:00:00.000",
+			"dt": 10,
+			"perturbations" : ["LS", "D", "SPR", "J2"]
+		},
+
+		"celestial bodies": {
+			"to load": ["Sun", "Mercury", "Venus", "Earth", "Mars"]
+		},
+
+		"satellites": {
+			"r0" : [42000, 0, 0],
+			"v0" : [0, 3078, 0],
+			"mass" : 792,
+			"name": "SAT",
+			"corps ref": "Earth",
+			"color": "m",
+			"maneuvers": [{
+			"sat name": "SAT1",
+			"man name": "custom acceleration",
+			"value": 1000,
+			"trigger type": "date",
+			"trigger value": "2000-01-01 20:00:00.000",
+			"direction": [0, 0, 0]
+		}]
+		},
+
+		"renderer_prm": {
+			"spatial view": {
+				"on": false
+			},
+
+			"ground track": {
+				"on": true,
+				"sat_names": ["SAT"]
+			},
+
+			"graphics": {
+				"on": true,
+				"values": [{
+					"i": ["SAT"],
+					"a": ["SAT"],
+					"Lnode": ["SAT"]
+				}]
+			}
+		}
+	}
+
+
+	]
+
+}

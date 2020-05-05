@@ -38,19 +38,31 @@ def generalParametersLoader (generals_prm) :
 
 	parameters['general']["perturbations"] = generals_prm["perturbations"]
 
-def timeParametersLoader (time_prm) :
-
-	parameters["time"]["general time step"] = time_prm["time step"]
+	parameters["time"]["general time step"] = generals_prm["time step"]
 	parameters["time"]["time step"] = parameters["time"]["general time step"]
 
-	parameters["time"]["starting date"] = time_prm["starting date"]
+	parameters["time"]["starting date"] = generals_prm["starting date"]
 	parameters["time"]["initial julian date"] = 367*int(parameters["time"]["starting date"][0:4]) - int((7*(int(parameters["time"]["starting date"][0:4])+int((int(parameters["time"]["starting date"][5:7])+9)/12)))/4) \
 					+ int(275*int(parameters["time"]["starting date"][5:7])/9) + int(parameters["time"]["starting date"][8:10]) + 1721013.5 + (((int(parameters["time"]["starting date"][17:19])/60) \
 					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
 
 
-	parameters["time"]["simulation time"] = time_prm["simulation time"]
+	parameters["time"]["simulation time"] = generals_prm["simulation time"]
 	parameters["time"]["elapsed time"] = 0
+
+# def timeParametersLoader (time_prm) :
+
+# 	parameters["time"]["general time step"] = time_prm["time step"]
+# 	parameters["time"]["time step"] = parameters["time"]["general time step"]
+
+# 	parameters["time"]["starting date"] = time_prm["starting date"]
+# 	parameters["time"]["initial julian date"] = 367*int(parameters["time"]["starting date"][0:4]) - int((7*(int(parameters["time"]["starting date"][0:4])+int((int(parameters["time"]["starting date"][5:7])+9)/12)))/4) \
+# 					+ int(275*int(parameters["time"]["starting date"][5:7])/9) + int(parameters["time"]["starting date"][8:10]) + 1721013.5 + (((int(parameters["time"]["starting date"][17:19])/60) \
+# 					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
+
+
+# 	parameters["time"]["simulation time"] = time_prm["simulation time"]
+# 	parameters["time"]["elapsed time"] = 0
 
 # def timeParametersLoader (lines) :  
 

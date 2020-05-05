@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="./index.css" />
+	<title>FlyBy</title>
+</head>
+<body>
+
+	<div>
+		<!-- Header -->
+		<span class="currentUTC"></span>
+		<span id="menu_title">MENU</span>
+		<span id="prc_title">PRINCIPAL</span>
+	</div>
+
+	<div class="main_panel">
+		<!-- Main page -->
+		<span class="logo">FlyBy</span>
+		<img src="../../img/orbit.png" class="orbit">
+
+		<img src="../../img/circles/blue_circle.png" class="circles" id="b">
+		<img src="../../img/circles/green_circle.png" class="circles" id="g">
+		<img src="../../img/circles/yellow_circle.png" class="circles" id="y">
+		<img src="../../img/circles/red_circle.png" class="circles" id="r">
+		
+
+		<div class="prg_launch">Programmer un nouveau lancement</div>
+	</div>
+
+	<div class="annex_panel">
+		<!-- Annex panel -->
+
+		<div class="selector_zone">
+			<form method="post" action="traitement.php">
+			   	<p>
+			       <select name="annex" id="annex">
+			           <option value="historic">Historique des missions</option>
+			           <option value="known">Grandes missions</option>
+			       </select>
+			   </p>
+			</form>	
+		</div>
+
+		<div class="annex_displayer">
+			<span></span>
+		</div>
+
+	</div>
+
+	<div class="bottom_panel">
+		<!-- Bottom panel -->
+
+	</div>
+
+	<div class="version">
+		FlyBy v1.0
+	</div>
+
+
+
+
+
+
+
+
+	<script type="text/javascript">
+		require("./index.js")
+	</script>
+
+</body>
+</html>

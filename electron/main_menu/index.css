@@ -1,0 +1,180 @@
+@font-face
+{
+	font-family: "CMU Serif";
+	src : url("../../fonts/cmunrm.ttf");
+}
+
+@font-face
+{
+	font-family: "Earth Orbiter Punch";
+	src : url("../../fonts/EarthOrbiterPunch-gzL3.otf");
+}
+
+body {
+	background-color: #1A1C2A;
+}
+
+.currentUTC {
+	position: absolute;
+	font-size: 1.3em;
+	font-family: "CMU Serif";
+	color: #FFFFFF;
+}
+
+#menu_title {
+	font-family: "CMU Serif";
+	position: absolute;
+	left: 38%;
+	top: 2px;
+	font-size: 1.4em;
+	color: #FFFFFF;
+}
+
+#prc_title {
+	font-family: "CMU Serif";
+	position: absolute;
+	left: 40%;
+	top: 24px;
+	font-size: 1.1em;
+	color: #FFFFFF;
+}
+
+
+
+
+.main_panel {
+	position: absolute;
+	/*background-color: lightblue;*/
+	top: 6%;
+	border : 1px #97DFEC solid;
+	border-radius: 10px;
+	width: 80%;
+	height: 85%;
+}
+
+.logo {
+	position: relative;
+	font-size: 6em;
+	font-family: "Earth Orbiter Punch";
+	color: white;
+	top: 33%;
+	left: 38%;
+	z-index: 10;
+}
+
+.orbit {
+	position: absolute;
+	top: 50%;
+	left: 72%;
+	opacity: 0.2;
+}
+
+.prg_launch {
+	font-family: "CMU Serif";
+	position: absolute;
+	color: white;
+	border: 1px white solid;
+	border-radius: 10px;
+	top: 52%;
+	left: 36%;
+	font-size: 1.3em;
+	padding: 10px;
+
+	opacity: 0.6;
+	transition: all 0.3s ease;
+}
+
+.prg_launch:hover {
+
+	color: #2B2D3B;
+	background-color: white;
+}
+
+@-webkit-keyframes rotating {
+    from{
+        -webkit-transform: rotate(0deg);
+    }
+    to{
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.circles {
+	position: absolute;
+	top: 3%;
+	left: 24%;
+	z-index: 0;
+	opacity: 0.99;
+	transform-origin: 50% 50%;
+}
+
+#b {
+	-webkit-animation: rotating 90s linear infinite;
+	}
+
+#g {
+	-webkit-animation: rotating 80s linear infinite;
+	}
+
+#y {
+	-webkit-animation: rotating 75s linear infinite;
+	}
+
+#r {
+	-webkit-animation: rotating 70s linear infinite;
+	}
+
+
+
+.annex_panel {
+	position: absolute;
+	/*background-color: lightgreen;*/
+	border : 1px #97DFEC solid;
+	border-radius: 10px;
+	width: 18%;
+	height: 85%;
+
+	top: 6%;
+	left: 81%;
+}
+
+
+.selector_zone {
+	/*position: absolute;*/
+	border-bottom: 1px #97DFEC solid;
+	height: 4%;
+	width: 100%;
+	border-radius: 10px 10px 0px 0px;
+}
+
+#annex {
+	position: absolute;
+	top: 9px;
+	left: 10px;	
+	font-size: 1.3em;
+	background: rgba(0,0,0,0);
+	color: #FFFFFF;
+	border: none;
+}
+
+
+
+
+.bottom_panel {
+	position: absolute;
+	color: lightyellow;
+	border : 1px #97DFEC solid;
+	border-radius: 10px;
+	width: 80%;
+	height: 7%;
+
+	top: 92%;
+}
+
+.version {
+	color: #97DFEC;
+
+	position: absolute;
+	top: 97%;
+	left: 94%;
+}

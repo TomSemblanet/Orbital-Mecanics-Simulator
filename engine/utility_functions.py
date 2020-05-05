@@ -25,7 +25,7 @@ def update_date () :
 	prm.parameters["time"]["elapsed time"] += prm.parameters["time"]["time step"]
 
 	prm.parameters["time"]["current date"] = str(datetime.fromtimestamp(946724400+prm.parameters["time"]["initial julian date"]*86400+prm.parameters["time"]["elapsed time"]))[:23]
-	open('file.txt', 'w').write(str(int(prm.parameters["time"]["current date"][11:13])))
+	# open('file.txt', 'w').write(str(int(prm.parameters["time"]["current date"][11:13])))
 	# prm["time"]["current_julian_date"] = 367*int(prm.parameters["time"]["current date"][0:4]) - int((7*(int(prm.parameters["time"]["current date"][0:4]) \
 	# 				+ int((int(prm.parameters["time"]["current date"][5:7])+9)/12)))/4) \
 	# 				+ int(275*int(prm.parameters["time"]["current date"][5:7])/9) + int(prm.parameters["time"]["current date"][8:10]) + 1721013.5 \
@@ -55,35 +55,13 @@ def loadSimulation (parameters_dict) :
 
 
 	generals_prm = parameters_dict["general"]
-	time_prm = parameters_dict["time"]
 
 	satellites_prm = parameters_dict["satellites"]
 	celestial_bodies_prm = parameters_dict["celestial bodies"]
-	maneuvers_prm = parameters_dict["maneuvers"]
-
-	# with open('file.txt', 'w') as file : 
-	# 	file.write(json.dumps(generals_prm))
-	# 	file.write('\n')
-	# 	file.write(json.dumps(time_prm))
-	# 	file.write('\n')
-	# 	file.write(json.dumps(satellites_prm))
-	# 	file.write('\n')
-	# 	file.write(json.dumps(celestial_bodies_prm))
-	# 	file.write('\n')
-	# 	file.write(json.dumps(maneuvers_prm))
-	# 	file.write('\n')
-
-
-	# prm.parametersLoader()
-	# load_celestial_bodies(prm.celestialBodiesLoader())
-	# load_satellites(prm.satellitesLoader())
-	# load_manoeuvers(prm.maneuverLoader())
 
 	prm.generalParametersLoader(generals_prm)
-	prm.timeParametersLoader(time_prm)
 	load_celestial_bodies(celestial_bodies_prm)
 	load_satellites(satellites_prm)
-	load_manoeuvers(maneuvers_prm)
 
 
 #################################################
@@ -124,6 +102,8 @@ def load_satellites (satellites_data_dicts) :
 				satellite_dict[key]=np.array(val)
 
 		satellite_dict["corps_ref"] = [body for body in c_b.CelestialBody.celestial_bodies if body.name==satellite_dict["corps_ref"]][0]
+		for key, val in satellite_dict.items() : 
+			open('x.txt', 'a').write(str(key)+'\n')
 		new_satellite = sat.Satellite(**satellite_dict)
 		sat.Satellite.satellites.append(new_satellite)
 
@@ -158,24 +138,6 @@ def load_celestial_bodies (celestial_bodies_to_compute) :
 
 		c_b.CelestialBody.celestial_bodies.append(new_celestial_body)
 
-
-
-def load_manoeuvers (maneuvers_dicts) :
-
-	""" 
-	Loads the real maneuver objects given a list of dictionnaries containing the parameters needed to
-	instanciate the maneuvers which has to be assigned to the satellites
-
-	Input : a list of dictionnaries containing the parameters needed to instanciate the maneuvers which has to assigned 
-	to the satellites
-
-	Return : a list containing the instantiated maneuvers objects 
-
-	"""	
-
-	satellites_dict = {}
-	for sat_ in sat.Satellite.satellites :
-		sat_.load_manoeuvers_list([man for man in maneuvers_dicts if man["sat_name"]==sat_.name]) 
 
 
 #################################################
@@ -322,7 +284,6 @@ def LambertProblem (r_init, r_final, flight_time, mu, prograde=True) :
 	try :
 		z = fsolve(NewtonRaphsonLambertFunction, args=(r_init_norm, r_final_norm, temp, flight_time, mu), x0=1)
 	except : 
-		print("> Unsolvable Lambert's Problem.")
 		exit()
 
 	Cz = (1 - math.cos(math.sqrt(z)))/z
@@ -351,11 +312,6 @@ def NewtonRaphsonLambertFunction (z, r_init_norm, r_final_norm, temp, flight_tim
 
 
 def CartesianToKeplerian (r, v, mu, all=False) : 
-
-	# file = open('file.txt', 'w')
-	# file.write(str(type(r)))
-	# file.write(str(type(v)))
-	# file.write(str(type(mu)))
 
 	r_norm = np.linalg.norm(r)
 	v_norm = np.linalg.norm(v)

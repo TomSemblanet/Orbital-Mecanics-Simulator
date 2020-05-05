@@ -4,16 +4,22 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import sys, json
 
-import parameters as prm
 import utility_functions as u_f
-import graphic_display as g_d
 import gross_calculation as g_c
-import celestial_body as c_b
 
 
+# Instanciation des objets de la simulation & chargement des paramètres
 u_f.loadSimulation(json.loads(sys.argv[1]))
 
-g_c.GeneralCalculation()
+# Boucles principale de calcul
+dict_ = g_c.GeneralCalculation()
+
+# Envoie des données à l'UI
+print(json.dumps(dict_))
+
+
+
+
 
 
 # if('Spatial View' in prm.parameters["applications"]["applications on"]) :

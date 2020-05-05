@@ -4,8 +4,8 @@ const BrowserWindow = electron.BrowserWindow
 
 function createWindow () {
 
-	let window_ = new BrowserWindow({width: 800,height: 600, webPreferences: {nodeIntegration: true}})
-	window_.loadFile('./electron/index.html')
+	let window_ = new BrowserWindow({width: 1440,height: 900, webPreferences: {nodeIntegration: true}})
+	window_.loadFile('./electron/main_menu/index.html')
 	window_.webContents.openDevTools()
 }
 
