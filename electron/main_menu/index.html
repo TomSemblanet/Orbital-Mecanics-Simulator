@@ -7,15 +7,15 @@
 </head>
 <body>
 
-	<div>
-		<!-- Header -->
+	<!-- <div>
+
 		<span class="currentUTC"></span>
 		<span id="menu_title">MENU</span>
 		<span id="prc_title">PRINCIPAL</span>
 	</div>
 
 	<div class="main_panel">
-		<!-- Main page -->
+
 		<span class="logo">FlyBy</span>
 		<img src="../../img/orbit.png" class="orbit">
 
@@ -29,13 +29,12 @@
 	</div>
 
 	<div class="annex_panel">
-		<!-- Annex panel -->
 
 		<div class="selector_zone">
-			<form method="post" action="traitement.php">
+			<form>
 			   	<p>
 			       <select name="annex" id="annex">
-			           <option value="historic">Historique des missions</option>
+			           <option value="historic" selected>Historique des missions</option>
 			           <option value="known">Grandes missions</option>
 			       </select>
 			   </p>
@@ -49,19 +48,63 @@
 	</div>
 
 	<div class="bottom_panel">
-		<!-- Bottom panel -->
+
 
 	</div>
 
 	<div class="version">
 		FlyBy v1.0
+	</div> -->
+
+	<div style="display: flex;">
+		<p class="currentUTC"> </p>
+
+		<div>
+			<p class="txt">MENU</p>
+			<p class="txt" style="position:relative; top: -3px;font-size: 1.1em; padding-left: 30px;">PRINCIPAL</p>
+		</div>
 	</div>
 
+	<div style="display: flex; margin-top: 10px;">
 
+		<div class="main_panel">
+			<p class="logo">FlyBy</p>
+			<img src="../../img/orbit.png" class="orbit">
 
+			<img src="../../img/circles/blue_circle.png" class="circles" id="b">
+			<img src="../../img/circles/green_circle.png" class="circles" id="g">
+			<img src="../../img/circles/yellow_circle.png" class="circles" id="y">
+			<img src="../../img/circles/red_circle.png" class="circles" id="r">
 
+			<div class="prg_launch">Programmer un nouveau lancement</div>
 
+		</div>
 
+		<div class="annex_panel">
+			
+			<div class="selector_zone">
+				<form>
+			       <select name="annex" id="annex">
+			           <option value="historic" selected>Historique des missions</option>
+			           <option value="known">Grandes missions</option>
+			       </select>
+				</form>
+			</div>
+
+			<div class="annex_displayer">
+				
+			</div>
+
+		</div>
+		
+	</div>
+
+	<div style="display: flex;">
+	 	
+		<div class="bottom_panel"></div>
+		<div class="version">FlyBy v1.0</div>
+
+	</div>
 
 
 	<script type="text/javascript">

@@ -25,6 +25,7 @@
 			"corps ref": "Earth",
 			"color": "m",
 			"maneuvers": [{
+			"name" : "Apogee reduction",
 			"sat name": "SAT1",
 			"man name": "custom acceleration",
 			"value": 1000,
@@ -78,6 +79,7 @@
 			"corps ref": "Earth",
 			"color": "m",
 			"maneuvers": [{
+			"name" : "Apogee reduction",
 			"sat name": "SAT1",
 			"man name": "custom acceleration",
 			"value": 1000,

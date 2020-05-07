@@ -1,0 +1,33 @@
+{	
+	"creation_date": "",
+
+	"general" : {
+		"mission name": "",
+		"dpt date": "",
+		"end date": "",
+		"dt": 0,
+		"perturbations" : []
+	},
+
+	"celestial bodies": {
+		"to load": []
+	},
+
+	"satellites": [],
+
+	"renderer_prm": {
+		"spatial view": {
+			"on": true
+		},
+
+		"ground track": {
+			"on": true,
+			"sat_names": []
+		},
+
+		"graphics": {
+			"on": true,
+			"values": {}
+		}
+	}
+}

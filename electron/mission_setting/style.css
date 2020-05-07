@@ -1,0 +1,192 @@
+@font-face
+{
+	font-family: "CMU Serif";
+	src : url("../../fonts/cmunrm.ttf");
+}
+
+@font-face
+{
+	font-family: "Earth Orbiter Punch";
+	src : url("../../fonts/EarthOrbiterPunch-gzL3.otf");
+}
+
+body {
+	background-color: #1A1C2A;
+}
+
+
+.frame {
+	margin-top: 30px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+
+
+#generals_menu {
+	position:absolute;
+	top: 32px;
+	left: 240px;
+	font-family: "CMU Serif";
+	color: white;
+}
+
+
+#celestial_bodies_menu {
+	position:absolute;
+	top: 32px;
+	left: 395px;
+	font-size: 95%;
+	font-family: "CMU Serif";
+	color: white;
+}
+
+
+
+#satellites_menu {
+	position:absolute;
+	top: 32px;
+	left: 592px;
+	font-family: "CMU Serif";
+	color: white;
+}
+
+
+
+#exploitation_menu {
+	position:absolute;
+	top: 32px;
+	left: 755px;
+	font-family: "CMU Serif";
+	color: white;
+}
+
+.bar {
+	position: absolute;
+	top: 52px;
+	left: 0px;
+	opacity: 0.7;
+}
+
+.txt {
+	font-family: "CMU Serif";
+	color: white;
+}
+
+
+.info_box {
+	position: absolute;
+
+	top: 510px;
+	left: 30px;
+
+	width: 80%;
+	height: 50px;
+	border : 1px #FFFFFF solid;
+	border-radius: 10px;
+
+
+}
+
+.session_title {
+	font-family: "CMU Serif";
+	color: white;
+	/*position: relative;*/
+
+	text-decoration: underline;
+
+	top: 15p/*x;
+	left: 50px;*/
+
+	font-size: 1.3em;
+}
+
+.text_input {
+	font-size: 1.0em;
+	text-align: center;
+	font-family: "CMU Serif";
+	background: rgba(0,0,0,0.0);
+	border-radius: 5px;
+	color: #FFFFFF;
+	border: 1px #FFFFFF solid;
+	width: 180px;
+	height: 27px;
+}
+
+.text_input_mini {
+	font-size: 0.8em;
+	text-align: center;
+	font-family: "CMU Serif";
+	background: rgba(0,0,0,0.0);
+	border-radius: 5px;
+	color: #FFFFFF;
+	border: 1px #FFFFFF solid;
+	width: 160px;
+	height: 22px;
+}
+
+
+.prm_window {
+	position: relative;
+	top: -20px;
+	transition: all 1s ease;
+}
+
+.title {
+	font-size: 1.3em; 
+	margin-top: 0px; 
+	padding-top: 0px; 
+	margin-left: 50px;
+}
+
+.planet_choice {
+	font-size: 1.3em;
+}
+
+
+
+.satellite_frame {
+	position: relative;
+	top: -50px;
+	display: flex; 
+	flex-wrap: wrap;
+	width: 750px; 
+	height: 270px; 
+	border: 1px white solid; 
+	border-radius: 5px 5px 5px 0px;
+
+	margin-left: 50px;
+}
+
+.maneuvers_panel {
+	margin-left: 10px;
+	/*border-radius: 5px;*/
+	font-size: 0.9em;
+	font-family: "CMU Serif";
+	background: rgba(0,0,0,0);
+	color: #FFFFFF;
+	border: none;
+
+	text-align: center;
+}
+
+.maneuvers_frame {
+	position:relative; 
+	border: 1px white solid; 
+	width:715px;
+	top: 5px; 
+	margin-left: -1px; 
+	border-radius: 0px 0px 5px 5px;
+
+	transition: all 0s ease;
+}
+
+.maneuvers_frame.invite {
+	height: 70px;
+}
+
+.maneuvers_frame.creation {
+	z-index: 10;
+	background-color: #1A1C2A;
+	height: 190px;
+}

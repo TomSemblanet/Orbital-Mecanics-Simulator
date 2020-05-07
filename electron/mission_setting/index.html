@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="./style.css">
+	<title>Parametrage mission</title>
+</head>
+<body>
+
+	<div class="header" style="display: flex; padding-bottom: 0px; margin-bottom: 0px;">
+
+		<div class="main_title" style="padding-bottom: 0px; margin-bottom: 0px;">
+			<p class="txt" style="font-size: 1.3em; margin-top: 0px; padding-top: 0px; margin-bottom: 0px; padding-bottom: 0px;">PARAMÉTRAGE</p>	
+			<p class="txt" style="font-size: 1.2em; margin-top: 0px; padding-top: 0px; margin-bottom: 0px; padding-bottom: 0px; margin-left: 70px;">MISSION</p>	
+		</div>
+
+		<div class="frame" id="1" style="margin-left: 60px;">
+			<img src="../../img/frames/blue_frame.png">
+			<p class="txt" style="position: absolute; top:30px; left:275px;">GÉNÉRAUX</p>
+		</div>
+
+		<div class="frame" id="2" >
+			<img src="../../img/frames/green_frame.png">
+			<p class="txt" style="position: absolute; top:30px; left:428px;">CORPS CÉLESTES</p>
+		</div>
+
+		<div class="frame" id="3">
+			<img src="../../img/frames/yellow_frame.png">
+			<p class="txt" style="position: absolute; top:30px; left:625px;">SATELLITES</p>
+		</div>
+
+		<div class="frame" id="4">
+			<img src="../../img/frames/red_frame.png">
+			<p class="txt" style="position: absolute; top:30px; left:790px;">EXPLOITATION</p>
+		</div>
+	</div>
+
+	<img src="../../img/white_bar.png" style="position: relative; top:-16px; margin-top: 0px; padding-top: 0px;">
+
+	<div class="prm_window" id="generals" style="display: block;">
+
+		<div class="title">
+			<p class="txt" style="text-decoration: underline;">PARAMÉTRES GÉNÉRAUX</p>
+		</div>
+
+		<div style="display: flex">
+			<div class="block" id="left" style="margin-left: 90px;">
+					
+				<div style="margin-top: 30px; margin-bottom: 50px;">
+					<label for="mission_name" class="txt" style="font-size: 1.3em">Nom de mission :</label> <input style="margin-left: 10px; " type="text" class="text_input" name="mission_name" id="mission_name">
+				</div>
+
+				<div style="margin-bottom: 20px;">
+					<label for="departure_date" class="txt" style="font-size: 1.3em">Date de départ :</label> <input style="margin-left: 15px;" type="text" class="text_input" name="departure_date" id="departure_date">
+				</div>
+
+				<div style="margin-bottom: 50px;">
+					<label for="end_date" class="txt" style="font-size: 1.3em">Date de fin :</label> <input style="margin-left: 50px;" type="text" class="text_input" name="end_date" id="end_date">
+				</div>
+
+				<div>
+					<label for="dt" class="txt" style="font-size: 1.3em">Pas de temps :</label> <input style="margin-left: 30px; width: 100px;" type="number" class="text_input" name="dt" id="dt" style="width:70px;">
+				</div>
+
+			</div>
+
+			<img src="../../img/vertic_white_bar.png" style="margin-left: 40px; margin-top: 30px;	">
+
+			<div class="block txt" id="center" style="padding-top: 5px; padding-left: 30px;	">
+
+				<p style="font-size: 1.4em;">Perturbations : </p>
+
+				<form style="padding-left: 30px; font-size: 1.2em;">
+					<div style="padding-top: 10px;">
+						<input type="checkbox" name="LS" id="LS" class="perturbations" /> <label for="LS">Potentiel Luni-Solaire</label> <br />
+					</div>
+
+					<div style="padding-top: 10px;">
+						<input type="checkbox" name="J2" id="J2" class="perturbations" /> <label for="J2">Effet J2</label> <br />
+					</div>
+
+					<div style="padding-top: 10px;">
+						<input type="checkbox" name="SPR" id="SPR" class="perturbations" /> <label for="SPR">Pression de radiations Solaires</label> <br />
+					</div>
+
+					<div style="padding-top: 10px;">
+						<input type="checkbox" name="D" id="D" class="perturbations" /> <label for="D">Trainée athmosphérique</label> <br />
+					</div>
+				</form>
+
+			</div>
+
+			<img src="../../img/vertic_white_bar.png" style="margin-left: 40px; margin-top: 30px;	">
+
+			<div class="block txt" id="right" style="padding-top: 5px; padding-left: 30px;	">
+
+				<p style="font-size: 1.4em;">Fichier ephemerides : </p>
+				<input style="margin-left: 0px; width: 240px;" type="text" class="text_input" name="ephemerides" id="ephemerides">
+
+			</div>
+		</div>
+	</div>
+
+	<div class="prm_window" id="celestial_bodies" style="display: none; margin-bottom: 103px;">
+
+		<div class="title">
+			<p class="txt" style="text-decoration: underline; margin-bottom: 50px;">CORPS CÉLESTES</p>
+		</div>
+
+		<div>
+			
+			<form style="display: flex; justify-content: space-around;">
+				<div class="planet_choice">
+					<input type="checkbox" name="sun" id="sun" /> <label for="sun" class="txt">Soleil</label> 
+				</div>
+
+				<div class="planet_choice">
+					<input type="checkbox" name="mercury" id="mercury" /> <label for="mercury" class="txt" >Mercure</label> 
+				</div>
+
+				<div class="planet_choice">
+					<input type="checkbox" name="venus" id="venus" /> <label for="venus" class="txt" >Venus</label> 
+				</div>
+
+				<div class="planet_choice">
+					<input type="checkbox" name="earth" id="earth" /> <label for="earth" class="txt" >Terre</label> <br/>
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="moon" id="moon" /> <label for="moon" class="txt" >Lune</label> </span>
+					</div>
+
+				</div>
+
+				<div class="planet_choice">
+					<input type="checkbox" name="mars" id="mars" /> <label for="mars" class="txt" >Mars</label>
+
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="demos" id="demos" /> <label for="demos" class="txt" >Demos</label> </span>
+					</div> 
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="phobos" id="phobos" /> <label for="phobos" class="txt" >Phobos</label> </span>
+					</div> 
+				</div>
+
+				<div class="planet_choice">
+					<input type="checkbox" name="jupiter" id="jupiter" /> <label for="jupiter" class="txt" >Jupiter</label> 
+
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="callisto" id="callisto" /> <label for="callisto" class="txt" >Callisto</label> </span>
+					</div> 
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="europe" id="europe" /> <label for="europe" class="txt" >Europe</label> </span>
+					</div> 
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="ganymede" id="ganymede" /> <label for="ganymede" class="txt" >Ganymede</label> </span>
+					</div> 
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="Io" id="Io" /> <label for="Io" class="txt" >Io</label> </span>
+					</div> 
+				</div>
+
+				<div class="planet_choice">
+					<input type="checkbox" name="saturn" id="saturn" /> <label for="saturn" class="txt" >Saturne</label>
+
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="encelade" id="encelade" /> <label for="encelade" class="txt" >Encelade</label> </span>
+					</div> 
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="titan" id="titan" /> <label for="titan" class="txt" >Titan</label> </span>
+					</div> 
+				</div>
+
+				<div class="planet_choice">
+					<input type="checkbox" name="uranus" id="uranus" /> <label for="uranus" class="txt" >Uranus</label>
+
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="oberon" id="oberon" /> <label for="oberon" class="txt" >Oberon</label> </span>
+					</div> 
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="titania" id="titania" /> <label for="titania" class="txt" >Titania</label> </span>
+					</div>  
+				</div>
+
+				<div class="planet_choice">
+					<input type="checkbox" name="neptune" id="neptune" /> <label for="neptune" class="txt" >Neptune</label>
+
+					<div style="display: flex;" class="natural_satellites_choice">
+						<img src="../../img/branche.png" style="margin-left: 8px;">
+						<span style="position:relative; top:33px;"> <input type="checkbox" name="triton" id="triton" /> <label for="triton" class="txt" >Triton</label> </span>
+					</div> 
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="prm_window" id="satellites" style="display: none;">
+
+		<div class="title">
+			<p class="txt" style="text-decoration: underline;">SATELLITES</p>
+		</div>
+
+		<div style="display: flex;">
+			
+			<div class="satellites_live_displayer" style="margin-left: 60px;width: 30%; height: 100%">
+				<!-- Ajouter les noms des satellites via appendChild -->
+				
+			</div>
+
+			<div class="satellite_frame">
+				
+				<div style="margin-left: 20px; margin-top: 20px; margin-bottom: 10px;">
+					<label for="sat_name" class="txt" style="font-size: 1.0em">Nom :</label> <input style="margin-left: 97px; " type="text" class="text_input_mini" name="sat_name" id="sat_name">
+				</div>
+
+				<div style="margin-left: 43px; margin-top: 20px;">
+					<label for="mass" class="txt" style="font-size: 1.0em">Masse :</label> <input style="margin-left: 15px; " type="number" class="text_input_mini" name="mass" id="mass">
+				</div>
+
+				<div style="margin-left: 20px;">
+					<label for="ref_body" class="txt" style="font-size: 1.0em">Corps référent :</label> <input style="margin-left: 30px; " type="text" class="text_input_mini" name="ref_body" id="ref_body">
+				</div>
+
+				<div style="margin-left: 40px;">
+					<label for="surface" class="txt" style="font-size: 1.0em">Surface :</label> <input style="margin-left: 10px; " type="number" class="text_input_mini" name="surface" id="surface">
+				</div>
+
+				<div class="initial_position" style="margin-left: 20px;">
+					<p class="txt" style="text-decoration: underline;">Position initiale : </p>
+					<div style="display: flex; justify-content: space-between;">
+						<label for="xi" class="txt" style="font-size: 1.0em; margin-left: 20px;">x :</label> <input style="margin-left: 10px;" class="text_input_mini" type="number" name="xi" id="xi">
+						<label for="yi" class="txt" style="font-size: 1.2em; margin-left: 20px;">y :</label> <input style="margin-left: 10px;" class="text_input_mini" type="number" name="yi" id="yi">
+						<label for="zi" class="txt" style="font-size: 1.2em; margin-left: 20px;">z :</label> <input style="margin-left: 10px;" class="text_input_mini" type="number" name="zi" id="zi">
+					</div>
+				</div>
+
+				<div class="initial_velocity" style="margin-left: 20px; margin-bottom: 15px;">
+					<p class="txt" style="text-decoration: underline;">Vitesse initiale : </p>
+					<div style="display: flex; justify-content: space-around; margin-bottom: 10px;">
+						<label for="vxi" class="txt" style="font-size: 1.0em; margin-left: 20px;">x :</label> <input style="margin-left: 10px;" class="text_input_mini" type="number" name="vxi" id="vxi">
+						<label for="vyi" class="txt" style="font-size: 1.2em; margin-left: 20px;">y :</label> <input style="margin-left: 10px;" class="text_input_mini" type="number" name="vyi" id="vyi">
+						<label for="vzi" class="txt" style="font-size: 1.2em; margin-left: 20px;">z :</label> <input style="margin-left: 10px;" class="text_input_mini" type="number" name="vzi" id="vzi">
+					</div>
+				</div>
+
+				<div>
+					<img class="add_satellite" style="position: relative; left: 30px; margin-top: 55px; padding:5px; border-radius: 5px;" src="../../img/plus.png">
+				</div>
+
+				<div class="maneuvers_frame invite"> 
+					<!-- the 2nd class can either be displayer or creation -->
+					
+					<div class="maneuvers_invite">
+						 <div class="txt" style="position: relative; width: 200px; padding: 10px; left:270px; top:15px; border: 1px white solid; border-radius: 5px; opacity: 0.7;"><img src="../../img/plus.png">  Ajouter une manoeuvre</div>
+					</div>
+
+					<div class="maneuvers_creator" style="display: none;">
+						
+						<div id="first_line" style="display: flex; margin-top: 10px; margin-left: 10px;">
+							<span class="txt">Type de manoeuvre : </span>
+							<form>
+								<select name="maneuvers_panel" class="maneuvers_panel" id="maneuvers_panel">
+						       	    <option value="custom" selected>Accélération</option>	
+						            <option value="ap_mod">Modification de l'apogée</option>
+						            <option value="pe_mod">Modification du périgée</option>
+						            <option value="in_mod">Modification de l'inclinaison</option>
+						            <option value="rdv">Problème de Lambert</option>
+						       	</select>
+							</form>	
+
+							<label for="maneuver_name" class="txt" style="margin-left:60px;">Nom :</label> <input style="margin-left: 10px; width: 200px;" type="text" class="text_input_mini" name="maneuver_name" id="maneuver_name">
+						</div>
+
+
+						<div id="second_line" style="display: flex; margin-top: 20px; margin-left: 10px;">
+							<span class="txt">Déclenchement : </span>
+							<form>
+								<select name="maneuver_trigger" class="maneuvers_panel" id="maneuver_trigger">
+					       	    	<option value="date" selected>Date</option>	
+					            	<option value="angle">Angle</option>
+					       		</select>
+							</form>
+
+							<label for="trigger_value" class="txt" style="margin-left: 113px;">Valeur du déclencheur :</label> <input style="margin-left: 10px;  " type="text" class="text_input_mini" name="trigger_value" id="trigger_value">
+						</div>
+
+						<div id="classic_third_line" style="display: flex; margin-top: 20px; margin-left: 10px; ">
+							<label for="maneuver_value" class="txt">Valeur :</label> <input style="margin-left: 10px;  " type="text" class="text_input_mini" name="maneuver_value" id="maneuver_value">
+						</div>
+
+						<div id="Lambert_third_line" style="display: flex; margin-top: 20px; margin-left: 10px; display: none;">
+							<label for="arvl_date" class="txt">Date :</label> <input style="margin-left: 10px;  " type="text" class="text_input_mini" name="arvl_date" id="arvl_date">
+							<label for="x_rdv" class="txt" style="margin-left: 20px;">x :</label> <input style="margin-left: 10px; width:100px;" type="text" class="text_input_mini" name="x_rdv" id="x_rdv">
+							<label for="y_rdv" class="txt" style="margin-left: 20px;">y :</label> <input style="margin-left: 10px; width:100px;" type="text" class="text_input_mini" name="y_rdv" id="y_rdv">
+							<label for="z_rdv" class="txt" style="margin-left: 20px;">z :</label> <input style="margin-left: 10px; width:100px;" type="text" class="text_input_mini" name="z_rdv" id="z_rdv">
+						</div>
+
+						<div id="fourth_line" style="display: flex; margin-top: 25px; margin-left: 10px;">
+							<p class="txt" style="position: relative; top:-15px;">Direction   </p>
+							<label for="x_dir" class="txt" style="margin-left: 20px;">x :</label> <input style="margin-left: 10px; width:100px;" type="text" class="text_input_mini" name="x_dir" id="x_dir">
+							<label for="y_dir" class="txt" style="margin-left: 20px;">y :</label> <input style="margin-left: 10px; width:100px;" type="text" class="text_input_mini" name="y_dir" id="y_dir">
+							<label for="z_dir" class="txt" style="margin-left: 20px;">z :</label> <input style="margin-left: 10px; width:100px;" type="text" class="text_input_mini" name="z_dir" id="z_dir">
+
+							<img class="confirm_maneuver" style="position: relative; width: 20px; height: 15px; margin-left: 160px; margin-top: 5px;" src="../../img/plus.png">
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div class="bottom" style="position:absolute; display: flex; top: 540px; left: 30px;">
+		<div style="width: 1000px; height: 40px; border: 1px white solid; border-radius: 5px;">
+			
+		</div>
+
+		<div>
+			<img style="margin-left: 50px; margin-top: 5px;" src="../../img/validation_button_mini.png">
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		require("./index.js")
+		require("./generals.js")
+		require("./celestial_bodies.js")
+		require("./satellites.js")
+		require("./exploitation.js")
+	</script>
+</body>
+</html>
