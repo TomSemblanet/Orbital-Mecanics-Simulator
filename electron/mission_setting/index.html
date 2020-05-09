@@ -322,7 +322,7 @@
 			<div class="main_panels" id="ground_track">
 				<p class="panel_title">Trace au sol</p>
 
-				<form class="satellites_list" style="padding-left: 30px"><!-- Ajout via appendChild --></form>
+				<form class="satellites_list" id="ground_track_selector" style="padding-left: 30px"><!-- Ajout via appendChild --></form>
 
 			</div>
 
@@ -377,9 +377,26 @@
 				<img src="../../img/plus.png" id="add_prm" style="position: absolute; top: 392px; left: 1098px;">
 				<!-- Ajout de balises div via appendChild -->
 			</div>
-
 		</div>
+
+		<div id="space_view_button" style="position: absolute; top: 405px; left: 175px;">
+		<img src="../../img/oui_button_mini.png" class="yes_btn">
+		<img src="../../img/non_button_mini.png" class="no_btn" style="display: none;">
+		
+		</div>
+
+		<div id="ground_track_button" style="position: absolute; top: 405px; left: 580px;">
+			<img src="../../img/oui_button_mini.png" class="yes_btn">
+			<img src="../../img/non_button_mini.png" class="no_btn" style="display: none;">
+		</div>
+
+		<div id="exploitation_button" style="position: absolute; top: 405px; left: 980px;">
+			<img src="../../img/oui_button_mini.png" class="yes_btn">
+			<img src="../../img/non_button_mini.png" class="no_btn" style="display: none;">
+		</div>
+
 	</div>
+
 
 	<div class="bottom" style="position:absolute; display: flex; top: 540px; left: 30px;">
 		<div style="width: 1000px; height: 40px; border: 1px white solid; border-radius: 5px;">
@@ -387,7 +404,7 @@
 		</div>
 
 		<div>
-			<img style="margin-left: 50px; margin-top: 5px;" src="../../img/validation_button_mini.png">
+			<img id="mission_validation" style="margin-left: 50px; margin-top: 5px;" src="../../img/validation_button_mini.png">
 		</div>
 	</div>
 

@@ -1,6 +1,6 @@
 var parameters_dict = {}
 
-function loadParameters () {
+function buildParametersDict () {
 
 	// Ajout des éléments HTML au dictionnaire parameters_dict
 
@@ -28,9 +28,9 @@ function loadParameters () {
 	parameters_dict["ephemerides file"] = ephemerides_file_.value
 }
 
-document.querySelector("html").addEventListener("change", loadParameters)
+document.querySelector("#generals").addEventListener("change", buildParametersDict)
 
 module.exports = 
 {
-	send_generals_prm : function send_generals_prm () {return parameters_dict}
+	sendGeneralsPrm : function sendGeneralsPrm () {return parameters_dict}
 }

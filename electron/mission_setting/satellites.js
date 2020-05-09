@@ -208,7 +208,7 @@ document.querySelector(".add_satellite").addEventListener("click", addSatellite)
 
 module.exports = 
 {
-	send_satellites : function send_satellites () {return sat_list},
+	sendSatellites : function sendSatellites () {return sat_list},
 
 	send_satellites_names : function send_satellites_names () {
 		let names = []

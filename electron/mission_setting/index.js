@@ -42,11 +42,28 @@ header_buttons[3].addEventListener("click", () => {
 
 var generals = require("./generals.js"),
 	satellites = require("./satellites.js"),
-	celestial_bodies = require("./celestial_bodies.js")
-
-var generals_prm_getter = generals.send_generals_prm(),
-	satellites_getter = satellites.send_satellites(),
-	celestial_bodies_getter = celestial_bodies.send_celestial_bodies()
+	celestial_bodies = require("./celestial_bodies.js"),
+	exploitation = require("./exploitation.js")
 
 
+var mission_validation_ = document.querySelector("#mission_validation")
+
+mission_validation_.addEventListener("click", () => {
+	var generals_prm_getter = generals.sendGeneralsPrm(),
+		satellites_getter = satellites.sendSatellites(),
+		celestial_bodies_getter = celestial_bodies.sendCelestialBodies(),
+		renderer_getter = exploitation.sendExploitation()
+
+	console.log("---- GENERALS -----\n")
+	console.log(generals_prm_getter)
+
+	console.log("---- CELESTIAL BODIES -----\n")
+	console.log(celestial_bodies_getter)
+
+	console.log("---- SATELLITES -----\n")
+	console.log(satellites_getter)
+
+	console.log("---- EXPLOITATION -----\n")
+	console.log(renderer_getter)
+})
 

@@ -1,6 +1,6 @@
-var celestial_bodies_names = []
+var celestial_bodies_dict = []
 
-function loadCelestialBodiesList () {
+function buildCelestialBodiesDict () {
 	celestial_bodies_names = []
 
 	let box_list_ = document.querySelectorAll("#celestial_bodies input")
@@ -10,12 +10,12 @@ function loadCelestialBodiesList () {
 			celestial_bodies_names.push(box_list_[i].name)
 	}
 
-	console.log(celestial_bodies_names)
+	celestial_bodies_dict["to load"] = celestial_bodies_names
 }
 
-document.querySelector("html").addEventListener("change", loadCelestialBodiesList)
+document.querySelector("#celestial_bodies").addEventListener("change", buildCelestialBodiesDict)
 
 module.exports = 
 {
-	send_celestial_bodies : function send_celestial_bodies () {return celestial_bodies_names}
+	sendCelestialBodies : function sendCelestialBodies () {return celestial_bodies_dict}
 }

@@ -101,11 +101,11 @@
 
 			"graphics": {
 				"on": true,
-				"values": [{
+				"values": {
 					"i": ["SAT"],
 					"a": ["SAT"],
 					"Lnode": ["SAT"]
-				}]
+				}
 			}
 		}
 	}
