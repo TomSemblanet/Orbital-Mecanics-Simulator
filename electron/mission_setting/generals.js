@@ -1,42 +1,36 @@
-var btn1 = document.querySelector(".maneuvers_invite"),
-	btn2 = document.querySelector(".confirm_maneuver"),
-	frame = document.querySelector(".maneuvers_frame"),
-	displayer_ = document.querySelector(".maneuvers_invite")
-	creator_ = document.querySelector(".maneuvers_creator")
+var parameters_dict = {}
 
-	man_frame = document.querySelector(".maneuvers_frame")
+function loadParameters () {
 
-function func ()  {
-	if(frame.classList.contains("creation")) 
-		frame.classList.replace("creation", "invite")
-	
-	else {
-		frame.classList.replace("invite", "creation")
+	// Ajout des éléments HTML au dictionnaire parameters_dict
+
+	let mission_name_ = document.querySelector("#mission_name")
+	parameters_dict["mission name"] = mission_name_.value
+
+	let dpt_date_ = document.querySelector("#departure_date")
+	parameters_dict["dpt date"] = dpt_date_.value
+
+	let end_date_ = document.querySelector("#end_date")
+	parameters_dict["end date"] = end_date_.value
+
+	let dt_ = document.querySelector("#dt")
+	parameters_dict["dt"] = dt_.value
+
+	let perturbations_ = document.querySelectorAll(".perturbations"),
+		perturbations_list = []
+	for (var i=0 ; i<perturbations_.length ; i++) {
+		if(perturbations_[i].checked == true)
+			perturbations_list.push(perturbations_[i].name)
 	}
+	parameters_dict["perturbations"] = perturbations_list
 
-	if(displayer_.style.display == "none") {
-		displayer_.style.display = "block";
-		creator_.style.display = "none";
-	}
-
-	else {
-		displayer_.style.display = "none";
-		creator_.style.display = "block";
-	}
+	let ephemerides_file_ = document.querySelector("#ephemerides")
+	parameters_dict["ephemerides file"] = ephemerides_file_.value
 }
 
-btn1.addEventListener("click", func)
-btn2.addEventListener("click", func)
+document.querySelector("html").addEventListener("change", loadParameters)
 
-man_frame.addEventListener("change", ()=>{
-	if(document.querySelector("#first_line #maneuvers_panel").value == "rdv") {
-		document.querySelector("#classic_third_line").style.display = "none"
-		document.querySelector("#Lambert_third_line").style.display = "block"
-	}
-
-	else {
-		document.querySelector("#classic_third_line").style.display = "block"
-		document.querySelector("#Lambert_third_line").style.display = "none"
-	}
-})
-
+module.exports = 
+{
+	send_generals_prm : function send_generals_prm () {return parameters_dict}
+}

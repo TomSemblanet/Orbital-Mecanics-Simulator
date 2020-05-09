@@ -4,7 +4,7 @@ var header_buttons = document.querySelectorAll(".frame"),
 var curr_frame_ind = 0 
 
 function setCurrentFrame () {
-	for(var i=0 ; i<3 ; i++) {
+	for(var i=0 ; i<4 ; i++) {
 		if(i == curr_frame_ind && (prm_windows[i].style.display == "none")) {
 			prm_windows[i].style.display = "block"
 		}
@@ -31,15 +31,22 @@ header_buttons[3].addEventListener("click", () => {
 	curr_frame_ind = 3
 	setCurrentFrame()
 })
-
-
-// var div_ = document.querySelectorAll("div")
-
-document.querySelector("html").addEventListener("change", () => {
-	// console.log("--" + document.querySelector("#sat_name").value + "--")
+header_buttons[3].addEventListener("click", () => {
+	curr_frame_ind = 3
+	setCurrentFrame()
 })
 
-// Création de la variable json sur le modèle du fichier empty_mission.json
-var prm_json = require('../empty_mission.json')
+
+
+// Reception des dictionnaires et / ou listes
+
+var generals = require("./generals.js"),
+	satellites = require("./satellites.js"),
+	celestial_bodies = require("./celestial_bodies.js")
+
+var generals_prm_getter = generals.send_generals_prm(),
+	satellites_getter = satellites.send_satellites(),
+	celestial_bodies_getter = celestial_bodies.send_celestial_bodies()
+
 
 

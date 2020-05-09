@@ -22,11 +22,7 @@ annex_.addEventListener("change", ()=>{
 })
 
 function getHistoricList () {
-	let jsonData = require('../historic/template.json');
-	for (var i=0 ; i < jsonData["historic"].length ; i++) {
-	console.log(jsonData["historic"][i]["general"]["mission name"]);
-	console.log("\t"+jsonData["historic"][i]["creation_date"])
-	}
+
 }
 
 

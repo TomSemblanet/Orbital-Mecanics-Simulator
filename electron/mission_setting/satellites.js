@@ -1,3 +1,38 @@
+let open_creator_button_ = document.querySelector("#maneuvers_invite"),
+	confirm_maneuver_button = document.querySelector(".confirm_maneuver"),
+	maneuvers_frame_ = document.querySelector("#maneuvers_frame"),
+	displayer_frame = document.querySelector("#maneuvers_invite"),
+	creator_frame = document.querySelector("#maneuvers_creator")
+
+open_creator_button_.addEventListener("click", openCreator)
+confirm_maneuver_button.addEventListener("click", closeCreator)
+maneuvers_frame_.addEventListener("change", LambertProblemParameters)
+
+function openCreator () {
+	maneuvers_frame_.classList.replace("invite", "creation")
+	displayer_frame.style.display = "none";
+	creator_frame.style.display = "block";
+}
+
+function closeCreator () {
+	maneuvers_frame_.classList.replace("creation", "invite")
+	displayer_frame.style.display = "block";
+	creator_frame.style.display = "none";
+}
+
+function LambertProblemParameters () {
+	if(document.querySelector("#first_line #maneuvers_panel").value == "rdv") {
+		document.querySelector("#classic_third_line").style.display = "none"
+		document.querySelector("#Lambert_third_line").style.display = "block"
+	}
+
+	else {
+		document.querySelector("#classic_third_line").style.display = "block"
+		document.querySelector("#Lambert_third_line").style.display = "none"
+	}
+}
+
+
 let sat_list = [], sat_dict = {},
 	man_list = [], man_dict = {}
 
@@ -5,6 +40,7 @@ let sat_list = [], sat_dict = {},
 function addManeuver () {
 
 	// Ajout de tout les champs HTML au dictionnaire man_dict
+
 
 	let type_ = document.querySelector("#first_line #maneuvers_panel"),
 		name_ = document.querySelector("#maneuver_name"),
@@ -69,9 +105,9 @@ function addManeuver () {
 
 	// Passage en mode invite
 
-	document.querySelector(".maneuvers_invite").style.display = "block"
-	document.querySelector(".maneuvers_creator").style.display = "none"
-	document.querySelector(".maneuvers_frame").classList.replace("creation", "invite")
+	displayer_frame.style.display = "block"
+	creator_frame.style.display = "none"
+	maneuvers_frame_.classList.replace("creation", "invite")
 
 }
 
@@ -155,7 +191,7 @@ function addSatellite () {
 		global_div.appendChild(inner_div_list[i])
 	}
 
-	document.querySelector(".satellites_live_displayer").appendChild(global_div)
+	document.querySelector("#satellites_live_displayer").appendChild(global_div)
 
 	// Réinitialisation du dictionnaire sat_dict 
 
@@ -168,3 +204,17 @@ function addSatellite () {
 
 document.querySelector(".confirm_maneuver").addEventListener("click", addManeuver)
 document.querySelector(".add_satellite").addEventListener("click", addSatellite)
+
+
+module.exports = 
+{
+	send_satellites : function send_satellites () {return sat_list},
+
+	send_satellites_names : function send_satellites_names () {
+		let names = []
+		for(var i=0 ; i<sat_list.length ; i++) {
+			names.push(sat_list[i]["name"])
+		}
+		return names
+	}
+}
