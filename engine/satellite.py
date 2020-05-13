@@ -14,7 +14,7 @@ class Satellite :
 
 	satellites = []
 
-	def __init__ (self, r0, v0, mass, name, corps_ref, color, maneuvers) :
+	def __init__ (self, r0, v0, mass, surface, name, corps_ref, maneuvers) :
 
 		"""
 		Constructor of the class Satellite. Initializes the attributs of each objects at creation before calling
@@ -35,9 +35,10 @@ class Satellite :
 		"""
 
 		self.name = name
-		self.color = color
+		self.color = 'm'
 
 		self.mass = mass
+		self.surface = surface
 
 		self.corps_ref = corps_ref
 

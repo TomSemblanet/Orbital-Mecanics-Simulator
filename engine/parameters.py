@@ -2,6 +2,7 @@
 # It simply reads the parameters text file stored in DATA_FILE and extract from it all the parameters.
 
 import numpy as np
+from datetime import datetime
 
 import constants as cst
 
@@ -29,16 +30,11 @@ def parametersLoader () :
 
 
 
-# def generalParametersLoader (lines) : 
-	
-# 	parameters['general']['Keplerian simulation'] = (lines[0].split('[')[1][0] == 'v')
-
-
 def generalParametersLoader (generals_prm) : 
 
 	parameters['general']["perturbations"] = generals_prm["perturbations"]
 
-	parameters["time"]["general time step"] = generals_prm["time step"]
+	parameters["time"]["general time step"] = int(generals_prm["time step"])
 	parameters["time"]["time step"] = parameters["time"]["general time step"]
 
 	parameters["time"]["starting date"] = generals_prm["starting date"]
@@ -47,49 +43,12 @@ def generalParametersLoader (generals_prm) :
 					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
 
 
-	parameters["time"]["simulation time"] = generals_prm["simulation time"]
+	parameters["time"]["simulation time"] = (datetime.strptime(generals_prm["end date"], "%Y-%m-%d %H:%M:%S.%f") \
+													- datetime.strptime(generals_prm["starting date"], "%Y-%m-%d %H:%M:%S.%f")).total_seconds()
+
 	parameters["time"]["elapsed time"] = 0
 
-# def timeParametersLoader (time_prm) :
-
-# 	parameters["time"]["general time step"] = time_prm["time step"]
-# 	parameters["time"]["time step"] = parameters["time"]["general time step"]
-
-# 	parameters["time"]["starting date"] = time_prm["starting date"]
-# 	parameters["time"]["initial julian date"] = 367*int(parameters["time"]["starting date"][0:4]) - int((7*(int(parameters["time"]["starting date"][0:4])+int((int(parameters["time"]["starting date"][5:7])+9)/12)))/4) \
-# 					+ int(275*int(parameters["time"]["starting date"][5:7])/9) + int(parameters["time"]["starting date"][8:10]) + 1721013.5 + (((int(parameters["time"]["starting date"][17:19])/60) \
-# 					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
-
-
-# 	parameters["time"]["simulation time"] = time_prm["simulation time"]
-# 	parameters["time"]["elapsed time"] = 0
-
-# def timeParametersLoader (lines) :  
-
-# 	""" 
-# 	Loads the parameters related to the passage of time to know : 
-# 				- The general time step : the time step at which the simulation must return after an adaption 
-# 					of the real-time time step (adaption due to a maneuver - for example)
-# 				- The time step : the real-time time step of the simulation, which can be modified to reach 
-# 					a particular epoch 
-# 				- Starting date : the starting date of the simulation under the form YEAR-MONTH-DAY HOUR:MINUTE:SECOND.MILLISECOND
-# 				- Initial Julian date : the starting Julian date 
-
-# 		Input : interesting lines for loading parameters
-
-# 		Return : None 
-# 	"""
-
-# 	parameters["time"]["general time step"] = int(lines[1].split('~')[1])
-# 	parameters["time"]["time step"] = parameters["time"]["general time step"]
-
-# 	parameters["time"]["starting date"] = lines[0].split('~')[1].lstrip()[:-1]
-# 	parameters["time"]["initial julian date"] = 367*int(parameters["time"]["starting date"][0:4]) - int((7*(int(parameters["time"]["starting date"][0:4])+int((int(parameters["time"]["starting date"][5:7])+9)/12)))/4) \
-# 					+ int(275*int(parameters["time"]["starting date"][5:7])/9) + int(parameters["time"]["starting date"][8:10]) + 1721013.5 + (((int(parameters["time"]["starting date"][17:19])/60) \
-# 					+ int(parameters["time"]["starting date"][14:16]))/60+int(parameters["time"]["starting date"][11:13]))/24 - 2451545
-# 	parameters["time"]["simulation time"] = float(lines[2].split('~')[1].lstrip()[:-1])
-	
-# 	parameters["time"]["elapsed time"] = 0
+	open("verif.txt", 'a').write("\n\n---------\nGeneral dict : " + str(parameters))
 
 
 def applicationsParametersLoader (lines) : 

@@ -99,7 +99,7 @@ body {
 	width: 80%;
 	height: 50px;
 	border : 1px #FFFFFF solid;
-	border-radius: 10px;
+	border-radius: 0px;
 
 
 }
@@ -119,9 +119,10 @@ body {
 	text-align: center;
 	font-family: "CMU Serif";
 	background: rgba(0,0,0,0.0);
-	border-radius: 5px;
+	border-radius: 4px;
 	color: #FFFFFF;
-	border: 1px #FFFFFF solid;
+	border: none;
+	border-bottom: 1px #FFFFFF solid;
 	width: 180px;
 	height: 27px;
 }
@@ -131,9 +132,10 @@ body {
 	text-align: center;
 	font-family: "CMU Serif";
 	background: rgba(0,0,0,0.0);
-	border-radius: 5px;
+	border-radius: 3px;
 	color: #FFFFFF;
-	border: 1px #FFFFFF solid;
+	border: none;
+	border-bottom: 1px #FFFFFF solid;
 	width: 160px;
 	height: 22px;
 }
@@ -166,6 +168,7 @@ body {
 #satellite_frame {
 	position: relative;
 	top: -50px;
+	left: -50px;
 	display: flex; 
 	flex-wrap: wrap;
 	width: 750px; 
@@ -189,10 +192,11 @@ body {
 }
 
 #maneuvers_frame {
+	/*background-color: #1A1C2F;*/
 	position:relative; 
 	border: 1px white solid; 
 	width:715px;
-	top: -19px; 
+	top: -17px; 
 	margin-left: -1px; 
 	border-radius: 0px 0px 5px 5px;
 
@@ -213,7 +217,7 @@ body {
 	width: 280px;
 	height: 370px;
 	border: 1px white solid;
-	border-radius: 10px;
+	border-radius: 3px;
 } 
 
 .panel_title {

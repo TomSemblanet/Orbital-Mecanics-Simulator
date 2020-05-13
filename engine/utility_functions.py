@@ -40,11 +40,6 @@ def update_date () :
 
 def Computation () :
 
-	# if(prm.parameters["applications"]["show bodies data"] == True) : 	
-	# 	display_parameters([sat for sat in sat.Satellite.satellites if sat.name in prm.parameters["applications"]["bodies data displayed"]]+\
-	# 		[cel_body for cel_body in c_b.CelestialBody.celestial_bodies if cel_body.name in prm.parameters["applications"]["bodies data displayed"]])
-
-	# for i in range (prm.parameters["applications"]["calculation repeat"]) :  # repetition allow the program to reduce the computational time by reducing the number of plot
 	update_celestial_bodies_position()
 	satellites_accelerations()
 	update_ref_body()
@@ -54,7 +49,11 @@ def Computation () :
 def loadSimulation (parameters_dict) : 
 
 
-	generals_prm = parameters_dict["general"]
+	open("verif.txt", "w").write("Received dictionary : \n" + str(parameters_dict))
+
+	generals_prm = parameters_dict["generals"]
+
+	open("verif.txt", "a").write("\n\n--------\nReceived general dictionnary : \n" + str(generals_prm))
 
 	satellites_prm = parameters_dict["satellites"]
 	celestial_bodies_prm = parameters_dict["celestial bodies"]
@@ -93,6 +92,8 @@ def load_satellites (satellites_data_dicts) :
 
 	"""	
 
+	open("verif.txt", 'a').write("\n\n-------\n Satellites dict received : " + str(satellites_data_dicts))
+
 	satellites_list = []
 
 	for satellite_dict in satellites_data_dicts :
@@ -118,23 +119,17 @@ def load_celestial_bodies (celestial_bodies_to_compute) :
 
 	"""	
 
+	open("verif.txt", 'a').write("\n\n-------\n Celestial bodies dict received : " + str(celestial_bodies_to_compute))
+
 	cst.Celestial_Bodies_Dict[celestial_bodies_to_compute["to load"][0]]['central'] = True
 
 	for celestial_body_name in celestial_bodies_to_compute["to load"] :
 
-		if(celestial_body_name == 'Sun') :
+		if(cst.Celestial_Bodies_Dict[celestial_body_name]['central'] == True) :
 			new_celestial_body = c_b.CelestialBody(celestial_body_name)
 		else : 
 			new_celestial_body = c_b.CelestialBody(celestial_body_name, \
 												   [cel_body for cel_body in c_b.CelestialBody.celestial_bodies if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
-
-		# try : 
-		# 	new_celestial_body = c_b.CelestialBody(celestial_body_name, \
-		# 										   [cel_body for cel_body in c_b.CelestialBody.celestial_bodies if (cel_body.name == cst.Celestial_Bodies_Dict[celestial_body_name]["corps ref"])][0])
-		# except : 
-		# 	print(celestial_body_name)
-		# 	input()
-		# 	new_celestial_body = c_b.CelestialBody(celestial_body_name)
 
 		c_b.CelestialBody.celestial_bodies.append(new_celestial_body)
 

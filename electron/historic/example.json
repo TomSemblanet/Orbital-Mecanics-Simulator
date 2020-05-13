@@ -1,0 +1,46 @@
+{	
+		"creation_date": "2020-05-13 13:30:00",
+
+		"general" : {
+			"mission name": "GEO",
+			"starting date": "2000-01-01 12:00:00.000",
+			"end date": "2000-01-03 12:00:00.000",
+			"time step": 50,
+			"perturbations" : [],
+			"ephemerides file" : "./ephmerides.txt"
+		},
+
+		"celestial bodies": {
+			"to load": ["Sun", "Earth", "Moon"]
+		},
+
+		"satellites": [{
+			"r0" : [42000e3, 0, 0],
+			"v0" : [0, 3078, 0],
+			"mass" : 792,
+			"surface" : 20,
+			"name": "SAT1",
+			"corps_ref": "Earth",
+			"maneuvers": []
+		}],
+
+		"renderer_prm": {
+			"spatial view": {
+				"on": false
+			},
+
+			"ground track": {
+				"on": true,
+				"sat_names": ["SAT"]
+			},
+
+			"graphics": {
+				"on": true,
+				"values": [{
+					"i": ["SAT"],
+					"a": ["SAT"],
+					"Lnode": ["SAT"]
+			}]
+		}
+	}
+}

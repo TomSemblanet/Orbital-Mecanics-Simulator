@@ -15,6 +15,8 @@ import time
 
 def GeneralCalculation () :
 
+	open("verif.txt", 'a').write("\n\nLancement des calculs ...")
+
 	satellites_list = sat.Satellite.satellites
 	celestial_bodies_list = c_b.CelestialBody.celestial_bodies
 
@@ -68,4 +70,6 @@ def GeneralCalculation () :
 					if( str(type(dictionnary[body_name][key][ind])) == "<class 'numpy.ndarray'>" ) : 
 						dictionnary[body_name][key][ind] = list(dictionnary[body_name][key][ind])
 
+	open("verif.txt", 'a').write("\n\nFin des calculs ...")
+	open("verif.txt", 'a').write(str(dictionnary))
 	return dictionnary
