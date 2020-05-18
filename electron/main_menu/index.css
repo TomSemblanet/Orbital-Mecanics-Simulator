@@ -12,12 +12,9 @@
 
 body {
 	background-color: #1A1C2A;
+	/*background: linear-gradient(90deg, #54C7D9, #5C45A2);*/
 }
 
-body:focus {
-	background-color: #1A1C2A;
-	filter: blur(5px);
-}
 
 .currentUTC {
 	font-size: 1.3em;

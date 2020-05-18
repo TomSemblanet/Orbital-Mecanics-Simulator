@@ -1,6 +1,8 @@
 /* Gestion de l'affichage et du masquage des fenêtres de paramétrage en fonction du 
  clique sur les boutons "GÉNÉRAL", "SATELLITES", "CORPS CÉLESTES" et "EXPLOITATION" dans le header */
 
+const BrowserWindow = require('electron').remote.BrowserWindow
+const { ipcRenderer } = require("electron")
 
 var header_buttons = document.querySelectorAll(".frame"), // sélection des boutons dans le header
 	prm_windows = document.querySelectorAll(".prm_window") // sélection de la fenêtre principale où s'affichent les fenêtres
@@ -44,11 +46,12 @@ var generals = require("./generals.js"),
 var mission_validation_ = document.querySelector("#mission_validation") // bouton de validation de mission
 
 // [LISTENER]
-mission_validation_.addEventListener("click", () => {
+mission_validation_.addEventListener("click", simulationLaunch)
+
+function simulationLaunch () {
 	// . Réception des paramétrages de mission
 	// . Création du dictionnaire général de mission
-	// . Stockage du dictionnaire dans l'historique ---> A FAIRE !
-	// . Envoie des paramétres au moteur de calcul et lancement de la simulation
+	// . Envoie du dictionnaire de paramétrage à la fenêtre principale
 
 	var generals_prm_getter = generals.sendGeneralsPrm(),
 		satellites_getter = satellites.sendSatellites(),
@@ -63,12 +66,22 @@ mission_validation_.addEventListener("click", () => {
 		"exploitation" : renderer_getter
 	}
 
-	console.log(final_mission_dict)
-	console.log("\n\nAppel du shell Python ...")
 
-	let pythonShell = require("./python_shell.js")
-	pythonShell.sendPythonShell(final_mission_dict)
-})
+	document.querySelector("#settings").style.opacity = "0"
+	document.querySelector("#confirm").style.display = "inline"
+	
+	setTimeout(() => {document.querySelector("#confirm").style.opacity = "1"}, 300)
+
+	setTimeout(() => {
+		ipcRenderer.send("prm_window_closing", final_mission_dict)
+		window.close()
+	}, 1500)
+
+	// ipcRenderer.send("prm_window_closing")
+
+	// let pythonShell = require("./python_shell.js")
+	// pythonShell.sendPythonShell(final_mission_dict)
+}
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------
 

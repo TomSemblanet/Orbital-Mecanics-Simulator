@@ -7,55 +7,6 @@
 </head>
 <body>
 
-	<!-- <div>
-
-		<span class="currentUTC"></span>
-		<span id="menu_title">MENU</span>
-		<span id="prc_title">PRINCIPAL</span>
-	</div>
-
-	<div class="main_panel">
-
-		<span class="logo">FlyBy</span>
-		<img src="../../img/orbit.png" class="orbit">
-
-		<img src="../../img/circles/blue_circle.png" class="circles" id="b">
-		<img src="../../img/circles/green_circle.png" class="circles" id="g">
-		<img src="../../img/circles/yellow_circle.png" class="circles" id="y">
-		<img src="../../img/circles/red_circle.png" class="circles" id="r">
-		
-
-		<div class="prg_launch">Programmer un nouveau lancement</div>
-	</div>
-
-	<div class="annex_panel">
-
-		<div class="selector_zone">
-			<form>
-			   	<p>
-			       <select name="annex" id="annex">
-			           <option value="historic" selected>Historique des missions</option>
-			           <option value="known">Grandes missions</option>
-			       </select>
-			   </p>
-			</form>	
-		</div>
-
-		<div class="annex_displayer">
-			<span></span>
-		</div>
-
-	</div>
-
-	<div class="bottom_panel">
-
-
-	</div>
-
-	<div class="version">
-		FlyBy v1.0
-	</div> -->
-
 	<div style="display: flex;">
 		<p class="currentUTC"> </p>
 
@@ -108,7 +59,10 @@
 
 
 	<script type="text/javascript">
+		require("../data_processing/python_shell.js")
 		require("./index.js")
+		require("./mission_setting_manager.js")
+		require("../data_processing/data_processing.js")
 	</script>
 
 </body>

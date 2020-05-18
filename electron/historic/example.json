@@ -4,9 +4,9 @@
 		"general" : {
 			"mission name": "GEO",
 			"starting date": "2000-01-01 12:00:00.000",
-			"end date": "2000-01-03 12:00:00.000",
+			"end date": "2000-01-01 13:00:00.000",
 			"time step": 50,
-			"perturbations" : [],
+			"perturbations" : ["LS", "J2"],
 			"ephemerides file" : "./ephmerides.txt"
 		},
 
@@ -31,16 +31,12 @@
 
 			"ground track": {
 				"on": true,
-				"sat_names": ["SAT"]
+				"sat_names": []
 			},
 
 			"graphics": {
 				"on": true,
-				"values": [{
-					"i": ["SAT"],
-					"a": ["SAT"],
-					"Lnode": ["SAT"]
-			}]
+				"values": []
 		}
 	}
 }

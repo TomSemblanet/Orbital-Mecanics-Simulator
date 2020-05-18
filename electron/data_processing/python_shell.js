@@ -1,8 +1,6 @@
 module.exports = 
 {
 	sendPythonShell : function sendPythonShell (dict_to_send) {
-		/* Liaison entre l'UI (HTML / CSS / JS) et le moteur de calcul (PYTHON) via python shell */ 
-
 		const {PythonShell} = require('python-shell')
 
 		var file_ = JSON.stringify(dict_to_send)
@@ -15,9 +13,12 @@ module.exports =
 		}
 
 		PythonShell.run('main.py', options, (err, simulation_results) => {
-			let data_processing = require("../data_processing/data_processing.js")
-			data_processing.getData(simulation_results[0], dict_to_send.exploitation)
-			
+			if(err) 
+				console.log(err)
+			else {
+				let data_processing = require("../data_processing/data_processing.js")
+				data_processing.getData(simulation_results[0], dict_to_send.exploitation)
+			}
 		})
 	}
 }

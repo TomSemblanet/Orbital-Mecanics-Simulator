@@ -103,8 +103,6 @@ def load_satellites (satellites_data_dicts) :
 				satellite_dict[key]=np.array(val)
 
 		satellite_dict["corps_ref"] = [body for body in c_b.CelestialBody.celestial_bodies if body.name==satellite_dict["corps_ref"]][0]
-		for key, val in satellite_dict.items() : 
-			open('x.txt', 'a').write(str(key)+'\n')
 		new_satellite = sat.Satellite(**satellite_dict)
 		sat.Satellite.satellites.append(new_satellite)
 
