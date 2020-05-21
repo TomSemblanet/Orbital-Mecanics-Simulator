@@ -332,8 +332,8 @@
 
 					<div id="add_prm_to_graphs" style="display: none;">
 						<div id="parameter">
-							<p class="text medium" style="position: relative; margin: 20px 0px 0px 30px;font-size: 1.5em;">PARAMÈTRE</p>
-							<p class="text medium" style="position: relative; margin: 0px 0px 0px 90px;font-size: 1.0em;">À AJOUTER</p>
+							<p class="text medium" style="position: relative; margin: 20px 0px 0px 130px;font-size: 1.5em;">PARAMÈTRE</p>
+							<p class="text medium" style="position: relative; margin: 0px 0px 0px 190px;font-size: 1.0em;">À AJOUTER</p>
 							<form>
 								<select name="prm_to_add" id="adding_prm_panel">
 								    <optgroup label="Paramètres orbitaux">
@@ -342,7 +342,7 @@
 									    <option value="i">Inclinaison</option>
 									    <option value="Lnode">Longitude du noeud ascendant</option>
 									    <option value="Lperi">Argument du périgée</option>
-									    <option value="theta">Anomalie vraie</option>
+									    <option value="true_anomaly">Anomalie vraie</option>
 									</optgroup>
 									<optgroup label="Paramètres cartésiens (rèf. planétrocentrique)">   
 									    <option value="x_cr">x</option>
@@ -364,12 +364,15 @@
 							</form>	
 						</div>
 
+						<img src="../../img/mini_hor_bar.png" style="margin: 30px 0px 0px 180px">
+
 						<div id="sat_to_display">
-							<p class="text medium" style="position: relative; margin: 20px 0px 0px 30px;font-size: 1.5em;">SATELLITE</p>
-							<p class="text medium" style="position: relative; margin: 0px 0px 0px 90px;font-size: 1.0em;">À AFFICHER</p>
-							<div class="satellites_list" style="margin-top: 20px; width: 250px; height: 180px;"></div>
-							<img src="../../img/plus.png" id="validate" style="position: relative; margin-top: 5px; margin-left: 230px;">
+							<p class="text medium" style="position: relative; margin: 30px 0px 0px 150px;font-size: 1.5em;">SATELLITE</p>
+							<p class="text medium" style="position: relative; margin: 0px 0px 0px 210px;font-size: 1.0em;">À AFFICHER</p>
+							<div class="satellites_list" style="display: flex; justify-content: space-around; width: 500px; margin-top: 20px;"></div>
 						</div>
+
+						<img src="../../img/plus.png" id="validate" style="position: relative; margin-top: 30px; margin-left: 460px;">
 					</div>
 
 					<div id="prm_displayer"><!-- Ajout via appendChild --></div>

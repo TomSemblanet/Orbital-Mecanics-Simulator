@@ -12,6 +12,7 @@
 
 body {
 	background-color: #1A1C2A;
+	/*background-color: #FFFFFF;*/
 	/*background: linear-gradient(90deg, #54C7D9, #5C45A2);*/
 }
 
@@ -42,13 +43,11 @@ body {
 }
 
 
-
-
 .main_panel {
 	/*background-color: lightblue;*/
 	border : 1px #97DFEC solid;
-	border-radius: 10px;
-	width: 1775px;
+	border-radius: 3px;
+	width: 1190px;
 	height: 650px;
 }
 
@@ -57,7 +56,7 @@ body {
 	font-size: 6em;
 	font-family: "Earth Orbiter Punch";
 	color: white;
-	top: 20%;
+	top: 120px;
 	left: 38%;
 	z-index: 10;
 }
@@ -106,28 +105,45 @@ body {
 	transform-origin: 50% 50%;
 }
 
-#b {
+#b.normal {
 	-webkit-animation: rotating 90s linear infinite;
 	}
 
-#g {
+#g.normal {
 	-webkit-animation: rotating 80s linear infinite;
 	}
 
-#y {
+#y.normal {
 	-webkit-animation: rotating 75s linear infinite;
 	}
 
-#r {
+#r.normal {
 	-webkit-animation: rotating 70s linear infinite;
+	}
+
+
+#b.speed {
+	-webkit-animation: rotating 10s linear infinite;
+	}
+
+#g.speed {
+	-webkit-animation: rotating 8s linear infinite;
+	}
+
+#y.speed {
+	-webkit-animation: rotating 6s linear infinite;
+	}
+
+#r.speed {
+	-webkit-animation: rotating 3s linear infinite;
 	}
 
 
 
 .annex_panel {
 	border : 1px #97DFEC solid;
-	border-radius: 10px;
-	width: 325px;
+	border-radius: 3px;
+	width: 215px;
 	height: 650px;
 
 	margin-left: 15px;
@@ -155,7 +171,7 @@ body {
 .bottom_panel {
 	color: lightyellow;
 	border : 1px #97DFEC solid;
-	border-radius: 10px;
+	border-radius: 3px;
 	width: 1188px;
 	height: 40px;
 
@@ -165,6 +181,6 @@ body {
 .version {
 	color: #97DFEC;
 	font-size: 1.5em;
-	margin-left: 120px;
+	margin-left: 90px;
 	margin-top: 40px;
 }

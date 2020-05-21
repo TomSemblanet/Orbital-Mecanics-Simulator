@@ -261,7 +261,7 @@ body {
 	top: 20px;
 
 	width: 500px;
-	height: 300px;
+	height: 370px;
 
 	background-color: #1A1C2A;
 	border: 2px white solid;
@@ -275,8 +275,8 @@ body {
 }
 
 #adding_prm_panel {
-	margin-left: 5px;
-	margin-top: 30%;
+	margin-left: 120px;
+	margin-top: 40px;
 
 	width: 230px;
 

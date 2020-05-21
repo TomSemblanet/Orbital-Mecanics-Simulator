@@ -16,7 +16,7 @@ module.exports =
 			if(err) 
 				console.log(err)
 			else {
-				let data_processing = require("../data_processing/data_processing.js")
+				let data_processing = require("./data_processing.js")
 				data_processing.getData(simulation_results[0], dict_to_send.exploitation)
 			}
 		})
