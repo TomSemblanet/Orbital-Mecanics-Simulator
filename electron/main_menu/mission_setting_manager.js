@@ -11,7 +11,7 @@ function createNewSimulationWindow () {
 
 	new_simulation_window = new BrowserWindow({width: 1200,height: 600, frame:false, webPreferences: {nodeIntegration: true}})
 	new_simulation_window.loadFile('./electron/mission_setting/index.html')
-	new_simulation_window.webContents.openDevTools()
+	// new_simulation_window.webContents.openDevTools()
 
 	general_display.missionSettingInProgress()
 

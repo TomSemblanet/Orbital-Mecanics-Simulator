@@ -14,25 +14,25 @@
 				<p class="text medium" style="margin-top: 0px; padding-top: 0px; margin-bottom: 0px; padding-bottom: 0px; margin-left: 110px;">MISSION</p>	
 			</div>
 
-			<div class="frame" id="generals_frame" style="margin-left: 60px;">
+			<a href="#" class="frame" id="generals_frame" style="margin-left: 60px;">
 				<img src="../../img/frames/blue_frame.png">
 				<p class="text small" style="position: absolute; top:33px; left:306px;">GÉNÉRAUX</p>
-			</div>
+			</a href="#">
 
-			<div class="frame" id="celestial_bodies_frame" >
+			<a href="#" class="frame" id="celestial_bodies_frame" >
 				<img src="../../img/frames/green_frame.png">
 				<p class="text small" style="position: absolute; top:33px; left:459px;">CORPS CÉLESTES</p>
-			</div>
+			</a href="#">
 
-			<div class="frame" id="satellites_frame">
+			<a href="#" class="frame" id="satellites_frame">
 				<img src="../../img/frames/yellow_frame.png">
 				<p class="text small" style="position: absolute; top:33px; left:656px;">SATELLITES</p>
-			</div>
+			</a href="#">
 
-			<div class="frame" id="renderer_frame">
+			<a href="#" class="frame" id="renderer_frame">
 				<img src="../../img/frames/red_frame.png">
 				<p class="text small" style="position: absolute; top:33px; left:821px;">EXPLOITATION</p>
-			</div>
+			</a href="#">
 		</div>
 
 		<img src="../../img/white_bar.png" style="position: relative; top:-16px; margin-top: 0px; padding-top: 0px;">
@@ -337,28 +337,32 @@
 							<form>
 								<select name="prm_to_add" id="adding_prm_panel">
 								    <optgroup label="Paramètres orbitaux">
-									    <option value="a" selected>Demi grand-axe</option>	
-									    <option value="e">Excentricité</option>
-									    <option value="i">Inclinaison</option>
-									    <option value="Lnode">Longitude du noeud ascendant</option>
-									    <option value="Lperi">Argument du périgée</option>
-									    <option value="true_anomaly">Anomalie vraie</option>
+									    <option value="Demi grand-axe" selected>Demi grand-axe</option>	
+									    <option value="Excentricité">Excentricité</option>
+									    <option value="Inclinaison">Inclinaison</option>
+									    <option value="Longitude du noeud ascendant">Longitude du noeud ascendant</option>
+									    <option value="Argument du périgé">Argument du périgée</option>
+									    <option value="Anomalie vraie">Anomalie vraie</option>
 									</optgroup>
 									<optgroup label="Paramètres cartésiens (rèf. planétrocentrique)">   
-									    <option value="x_cr">x</option>
-									    <option value="y_cr">y</option>
-									    <option value="z_cr">z</option>
-									    <option value="vx_cr">v_x</option>
-									    <option value="vy_cr">v_y</option>
-									    <option value="vz_cr">v_z</option>
+									    <option value="x (planeto)">x</option>
+									    <option value="y (planeto)">y</option>
+									    <option value="z (planeto)">z</option>
+									    <option value="vx (planeto)">v_x</option>
+									    <option value="vy (planeto)">v_y</option>
+									    <option value="vz (planeto)">v_z</option>
+									    <option value="Distance (planeto)">||r||</option>
+									    <option value="Vitesse (planeto)">||v||</option>
 									</optgroup>
 									<optgroup label="Paramètres cartésiens (rèf. absolu)">   
-									    <option value="x_abs">x</option>
-									    <option value="y_abs">y</option>
-									    <option value="z_abs">z</option>
-									    <option value="vx_abs">v_x</option>
-									    <option value="vy_abs">v_y</option>
-									    <option value="vz_abs">v_z</option>
+									    <option value="x (absolu)">x</option>
+									    <option value="y (absolu)">y</option>
+									    <option value="z (absolu)">z</option>
+									    <option value="vx (absolu)">v_x</option>
+									    <option value="vy (absolu)">v_y</option>
+									    <option value="vz (absolu)">v_z</option>
+									    <option value="Distance (absolu)">||r||</option>
+									    <option value="Vitesse (absolu)">||v||</option>
 									</optgroup>
 								</select>
 							</form>	

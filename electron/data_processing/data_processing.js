@@ -17,7 +17,7 @@ function parseGraphicsPrm (raw_results, renderer_prm) {
 	/* Construit les dictionnaires {date, valeur} pour chaque paramètre orbital et chaque
 			corps demandé  */ 
 
-	var orb_param_dict = {}
+	var orb_param_dict = {}	
 
 	for (const orb_param in renderer_prm.graphics.values) {
 		orb_param_dict[orb_param] = []

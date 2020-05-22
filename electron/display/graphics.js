@@ -5,6 +5,8 @@ function graphicsDisplayer (data_dict) {
 
 	var n_graphs = Object.keys(data_dict).length
 
+	console.log(data_dict)
+
 	for (var i=0 ; i<n_graphs ; i++) {
 		makeUnitGraph(Object.keys(data_dict)[i], data_dict[Object.keys(data_dict)[i]], i, n_graphs)
 	}

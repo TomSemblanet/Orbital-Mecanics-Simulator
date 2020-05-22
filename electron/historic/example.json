@@ -4,7 +4,7 @@
 		"general" : {
 			"mission name": "GEO",
 			"starting date": "2000-01-01 12:00:00.000",
-			"end date": "2000-01-02 12:00:00.000",
+			"end date": "2000-01-05 12:00:00.000",
 			"time step": 50,
 			"perturbations" : ["LS", "J2", "SPR"],
 			"ephemerides file" : "./ephmerides.txt"
@@ -15,9 +15,9 @@
 		},
 
 		"satellites": [{
-			"r0" : [42000e3, 0, 0],
-			"v0" : [0, 3100, 0],
-			"mass" : 10,
+			"r0" : [12000e3, 0, 0],
+			"v0" : [0, 6100, 0],
+			"mass" : 1,
 			"surface" : 2,
 			"name": "SAT1",
 			"corps_ref": "Earth",
@@ -26,8 +26,8 @@
 						{
 			"r0" : [42000e3, 0, 0],
 			"v0" : [0, 3100, 0],
-			"mass" : 1000,
-			"surface" : 200,
+			"mass" : 10000,
+			"surface" : 2000,
 			"name": "SAT2",
 			"corps_ref": "Earth",
 			"maneuvers": []
