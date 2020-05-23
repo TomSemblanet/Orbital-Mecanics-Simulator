@@ -7,6 +7,7 @@ Celestial_Bodies_Dict = {
 			"mu"     : 1.32712440018e20,
 			"radius" : 696342e3,
 			"corps ref" : None,
+			"J2" : 0,
 			"initial_position" : [0., 0., 0.],
 			"initial_velocity" : [0., 0., 0.],
 			"color" : 'gold',

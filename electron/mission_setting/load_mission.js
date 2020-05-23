@@ -2,6 +2,7 @@ module.exports = {
 	missionLoader : function missionLoader (file_name) {
 
 		const json_file = require('../historic/' + file_name + '.json')
+
 		const generals = require("./generals.js"),
 			  satellites = require("./satellites.js"),
 			  celestial_bodies = require("./celestial_bodies.js"),

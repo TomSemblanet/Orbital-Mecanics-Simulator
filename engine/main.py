@@ -7,11 +7,16 @@ import sys, json
 import utility_functions as u_f
 import gross_calculation as g_c
 
+
+
+json_simu = json.loads(sys.argv[1])
+
 # Instanciation des objets de la simulation & chargement des paramètres
-u_f.loadSimulation(json.loads(sys.argv[1]))
+u_f.loadSimulation(json_simu)
 
 # Boucles principale de calcul
-dict_ = g_c.GeneralCalculation()
+dict_ = g_c.GeneralCalculation(json_simu["exploitation"])
 
 # Envoie des données à l'UI
 print(json.dumps(dict_))
+

@@ -23,8 +23,8 @@ function makeUnitGraph (prm_name, orb_parm_data, num, n_graphs) {
 
 
 
-	var margin = {top: 30, right: 70, bottom: 30, left: 100},
-	    width = 1150 - margin.left - margin.right,
+	var margin = {top: 30, right: 150, bottom: 30, left: 100},
+	    width = 1200 - margin.left - margin.right,
 	    height = (650/n_graphs) - margin.top - margin.bottom
 
 	var svg = d3.select("#graph_visual")

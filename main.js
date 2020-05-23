@@ -27,3 +27,12 @@ ipcMain.on("prm_window_closing", (event, prm_dict) => {
 
 	window_.send("hand again", prm_dict)
 })
+
+// ipcMain.on("mission_to_load", (event, mission_to_load) => {
+// 	/* Envoie au module 'mission_setting' le nom du fichier .json à pré-charger pour le paramétrage
+// 		de la mission */
+// 	console.log(BrowserWindow.getAllWindows())
+// 	BrowserWindow.getAllWindows()[0].send("mission_to_load", mission_to_load)
+// 	// window_.send("mission_to_load", mission_to_load)
+// 	// console.log(mission_to_load)
+// }) 
