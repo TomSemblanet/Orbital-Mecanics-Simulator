@@ -33,7 +33,7 @@ function makeUnitGraph (prm_name, orb_parm_data, num, n_graphs) {
 			    .attr("height", height + margin.top + margin.bottom)
 			    .append("g")
 			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-
+ 
 	for (var i=1 ; i<Object.keys(orb_parm_data).length ; i++) {
 		concat_values = concat_values.concat(orb_parm_data[Object.keys(orb_parm_data)[i]].vals) }
 
