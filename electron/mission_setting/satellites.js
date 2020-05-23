@@ -124,7 +124,7 @@ function addManeuver () {
 	else 
 		value_.value = null
 
-	type_.value = "custom"
+	type_.value = "custom acceleration"
 	name_.value = null
 	trigger_type_.value = "date"
 	trigger_value_.value = null

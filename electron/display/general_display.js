@@ -1,13 +1,13 @@
 function removeHeader () {
 	document.querySelector("#header").style.display = "none"
 	document.querySelector(".main_panel").style.height = "700px"
-	document.querySelector(".annex_panel").style.height = "700px"
+	document.querySelector("#annex_panel").style.height = "700px"
 }
 
 function showHeader () {
 	document.querySelector("#header").style.display = "block"
 	document.querySelector(".main_panel").style.height = "650px"
-	document.querySelector(".annex_panel").style.height = "650px"
+	document.querySelector("#annex_panel").style.height = "650px"
 }
 
 function accelerateCircles () {

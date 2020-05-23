@@ -60,7 +60,7 @@ function simulationLaunch () {
 
 	let final_mission_dict = {
 		"creation date" : new Date().toUTCString(),
-		"generals" : generals_prm_getter,
+		"general" : generals_prm_getter,
 		"celestial bodies" : celestial_bodies_getter,
 		"satellites" : satellites_getter,
 		"exploitation" : renderer_getter
@@ -87,6 +87,7 @@ function simulationLaunch () {
 
 /* Appel de la fonction de pré-remplissage des champs HTML pour le chargement du paramétrage d'une mission */
 
-var mission_loader = require("./load_mission.js")
-mission_loader.missionLoader('example')
-
+ipcRenderer.on("mission_to_load", (event, mission_name) => {
+	console.log("Loading : " + mission_name)
+	var mission_loader = require("./load_mission.js")
+	mission_loader.missionLoader(mission_name)				})

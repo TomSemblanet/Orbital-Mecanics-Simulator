@@ -51,7 +51,7 @@ def loadSimulation (parameters_dict) :
 
 	open("verif.txt", "w").write("Received dictionary : \n" + str(parameters_dict))
 
-	generals_prm = parameters_dict["generals"]
+	generals_prm = parameters_dict["general"]
 
 	open("verif.txt", "a").write("\n\n--------\nReceived general dictionnary : \n" + str(generals_prm))
 
@@ -345,9 +345,14 @@ def CartesianToKeplerian (r, v, mu, all=False) :
 		if(w_norm < 0) : 
 			true_anomaly = 2*math.pi - true_anomaly
 	else : 
-		true_anomaly = math.acos(np.dot(n, r)/(n_norm*r_norm))
-		if(np.cross(n, r)[2] < 0) : 
-			true_anomaly = 2*math.pi - true_anomaly
+		if(n_norm != 0) :
+			true_anomaly = math.acos(np.dot(n, r)/(n_norm*r_norm))
+			if(np.cross(n, r)[2] < 0) : 
+				true_anomaly = 2*math.pi - true_anomaly
+		else : 
+			true_anomaly = math.acos(r[0]/r_norm)
+			if(v[0] > 0) : 
+				true_anomaly = 2*math.pi - true_anomaly
 
 	a = h_norm*h_norm/(mu*(1-e_norm*e_norm))
 
