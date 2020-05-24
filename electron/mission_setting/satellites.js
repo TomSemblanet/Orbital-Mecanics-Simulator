@@ -101,7 +101,8 @@ function addManeuver () {
 	man_dict["man_name"] = type_.value
 	man_dict["name"] = name_.value 
 	man_dict["trigger_type"] = trigger_type_.value
-	if(man_dict["trigger_type"] == "angle")
+
+	if(man_dict["trigger_type"] == "true anomaly") 
 		man_dict["trigger_value"] = Number(trigger_value_.value)
 	else
 		man_dict["trigger_value"] = trigger_value_.value
@@ -126,7 +127,7 @@ function addManeuver () {
 
 	type_.value = "custom acceleration"
 	name_.value = null
-	trigger_type_.value = "date"
+	trigger_type_.value = ""
 	trigger_value_.value = null
 
 	x_dir_.value = null
@@ -272,6 +273,7 @@ module.exports =
 
 		// Ajout du nouveau satellite dans la liste des satellites
 		sat_list.push(sat_dict_from_file)
+		console.log(sat_dict_from_file)
 
 		// Ajout du nouveau satellite dans la liste HTML
 		var sat_name_parag = document.createElement("p")

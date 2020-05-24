@@ -16,6 +16,7 @@ class TriggerDetector :
 
 		self.satellite = satellite
 		self.trigger_value = trigger_value
+		open('__.txt','a').write(type)
 		self.trigger_time = self.dict.get(type)(self)
 
 

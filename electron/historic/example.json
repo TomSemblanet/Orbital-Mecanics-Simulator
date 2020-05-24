@@ -4,7 +4,7 @@
 		"general" : {
 			"mission name": "GEO",
 			"starting date": "2000-01-01 12:00:00.000",
-			"end date": "2000-01-05 12:00:00.000",
+			"end date": "2000-01-01 12:10:00.000",
 			"time step": 50,
 			"perturbations" : ["LS", "J2", "SPR"],
 			"ephemerides file" : "./ephmerides.txt"

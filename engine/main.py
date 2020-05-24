@@ -10,6 +10,7 @@ import gross_calculation as g_c
 
 
 json_simu = json.loads(sys.argv[1])
+open("__.txt", 'w').write(str(json_simu))
 
 # Instanciation des objets de la simulation & chargement des paramètres
 u_f.loadSimulation(json_simu)
