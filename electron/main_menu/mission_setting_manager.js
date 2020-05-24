@@ -2,7 +2,7 @@ const BrowserWindow = require('electron').remote.BrowserWindow
 const { ipcRenderer } = require("electron")
 
 var new_simulation_btn = document.querySelector(".prg_launch")
-new_simulation_btn.addEventListener("click", () => {createNewSimulationWindow("Comparaison masses")})
+new_simulation_btn.addEventListener("click", () => {createNewSimulationWindow("empty mission")})
 
 var new_simulation_window // variable contenant la fenêtre de paramétrage mission
 
