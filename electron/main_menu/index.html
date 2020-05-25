@@ -23,7 +23,7 @@
 
 			<div class="main_panel">
 
-				<div id="welcome_panel">
+				<div id="welcome_panel" style="display:block;">
 					<p class="logo">FlyBy</p>
 					<img src="../../img/orbit.png" class="orbit">
 
@@ -45,17 +45,33 @@
 
 			<div id="annex_panel" style="display: block">
 				
-				<div id="selector_zone">
-					<form>
-				       <select name="annex" id="annex">
-				           <option value="historic" selected>Historique des missions</option>
-				           <option value="known">Grandes missions</option>
-				       </select>
-					</form>
+				<div id="historic" style="display:block">
+					<div id="selector_zone">
+						<form>
+					       <select name="annex" id="annex">
+					           <option value="historic" selected>Historique des missions</option>
+					           <option value="known">Grandes missions</option>
+					       </select>
+						</form>
+					</div>
+
+					<div id="annex_displayer">
+						
+					</div>
 				</div>
 
-				<div id="annex_displayer">
-					
+				<div id="exploitation" style="display:none">
+
+					<div id="exploitation_selector" style="display: flex; justify-content:space-around;	">
+						<a href="#" id="space_view_selector"><img src="../../img/icones/space_view_selector.png"></a>
+						<a href="#" id="ground_track_selector"><img src="../../img/icones/ground_track_selector.png"></a>
+						<a href="#" id="graphics_selector"><img src="../../img/icones/chart_selector.png"></a>
+					</div>
+
+					<div id="graphics">
+						
+					</div>
+
 				</div>
 
 			</div>
@@ -80,6 +96,7 @@
 
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script type="text/javascript">
+		require("./historic_manager.js")
 		require("../display/general_display.js")
 		require("../display/graphics.js")
 		require("../data_processing/python_shell.js")

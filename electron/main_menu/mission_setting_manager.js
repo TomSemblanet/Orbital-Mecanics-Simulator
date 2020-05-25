@@ -1,13 +1,25 @@
 const BrowserWindow = require('electron').remote.BrowserWindow
-const { ipcRenderer } = require("electron")
+const { ipcRenderer } = require("electron"),	
+	  historic_manager = require("./historic_manager")
 
 var new_simulation_btn = document.querySelector(".prg_launch")
-new_simulation_btn.addEventListener("click", () => {createNewSimulationWindow("empty mission")})
+new_simulation_btn.addEventListener("click", () => {createNewSimulationWindow("empty_window")})
+
+// Ajout des listeners sur les éléments de l'historique
+setTimeout(() => {
+	let nodes = document.querySelectorAll("#historic_list li a")
+
+	for (var i=0 ; i<nodes.length ; i++) {
+
+		nodes[i].addEventListener("click", (e) => {createNewSimulationWindow(e.target.innerHTML)})
+	}
+}, 100)
 
 var new_simulation_window // variable contenant la fenêtre de paramétrage mission
 
 function createNewSimulationWindow (mission_to_load) {
 	const general_display = require("../display/general_display.js")
+			
 
 	new_simulation_window = new BrowserWindow({width: 1200,height: 600, frame:false, webPreferences: {nodeIntegration: true}})
 	new_simulation_window.loadFile('./electron/mission_setting/index.html')
@@ -33,36 +45,11 @@ function createNewSimulationWindow (mission_to_load) {
 	    	if (err) 
         		console.error(err) })
 
-		historicManager() // mise à jour de l'historique
+		historic_manager.clearHistoric()
+		historic_manager.historicManager() // mise à jour de l'historique
 
 		let pythonShell = require("../data_processing/python_shell.js")
 		pythonShell.sendPythonShell(prm_dict)
 	})
-}
+} 
 
-
-function historicManager () {
-
-	const fs = require('fs');
-
-	var div_ = document.querySelector("#annex_displayer")
-	var ol_ = document.createElement("ul")
-
-	fs.readdir('./electron/historic' , (err, files) => {
-		
-	for (var i=1 ; i<files.length ; i++) {
-
-		var name = document.createElement("a")
-		name.href = "#"
-		name.innerHTML = files[i].replace(".json", "")
-		name.classList.add("historic_cell_text")
-
-		var li_ = document.createElement("li")
-		li_.appendChild(name)
-		li_.style.color = "white"
-		li_.style.marginBottom = "10px"
-
-		ol_.appendChild(li_) 	}
-	  
-	  div_.appendChild(ol_)			});
-}

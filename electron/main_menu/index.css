@@ -13,7 +13,7 @@
 body {
 	background-color: #1A1C2A;
 	/*background-color: #FFFFFF;*/
-	/*background: linear-gradient(90deg, #54C7D9, #5C45A2);*/
+	/*background: linear-gradient(90deg, #90ee90, #c1cefa);*/
 }
 
 
@@ -56,9 +56,10 @@ body {
 	font-size: 6em;
 	font-family: "Earth Orbiter Punch";
 	color: white;
+	width: 300px;
 	top: 120px;
 	left: 38%;
-	z-index: 10;
+	/*z-index: 10;*/
 }
 
 .orbit {
@@ -140,7 +141,7 @@ body {
 
 
 
-#annex_panel {
+#annex_panel #historic {
 	border : 1px #97DFEC solid;
 	border-radius: 3px;
 	width: 215px;
@@ -193,4 +194,22 @@ body {
 	margin-top: 40px;
 
 	text-decoration: none;
+}
+
+li {
+	color: white;
+}
+
+#historic_list {
+	position: relative;
+	left: -10px;
+}
+
+.historic_date {
+	position: relative;
+	font-family: "CMU Serif";
+	color: #BBBBBB;
+	font-size: 0.8em;
+	top: -10px;
+	left: 15px;
 }

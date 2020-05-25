@@ -92,7 +92,6 @@ function makeUnitGraph (prm_name, orb_parm_data, num, n_graphs) {
     // lines.append("text")
     // .attr("class","serie_label")
     // .datum((d) => { 
-    // 	console.log(d.name)
     //     return { name: d.name, vals: d.vals[d.vals.length - 1]}; })
     // .attr("transform", function(d) { 
     //         return "translate(" + (x_scale(d.vals.time) + 0)  

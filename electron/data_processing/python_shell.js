@@ -19,9 +19,7 @@ module.exports =
 				console.log(err)
 			else {
 				let data_processing = require("./data_processing.js")
-				console.log(":(")
 				data_processing.getData(simulation_results[0], dict_to_send.exploitation)
-				console.log(":)")
 			}
 		})
 	}
