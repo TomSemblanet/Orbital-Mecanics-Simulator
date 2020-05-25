@@ -12,7 +12,7 @@ module.exports.historicManager =  function historicManager () {
 
 		if(files[i] != "empty_mission.json") {
 
-		let file_ = require('../historic/'+files[i]) 
+		let file_ = require('../historic/'+files[i])
 
 		var cr_date = document.createElement('p')
 		cr_date.innerHTML = file_["creation date"].replace(" GMT", "")
