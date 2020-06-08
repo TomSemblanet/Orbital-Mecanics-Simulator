@@ -7,12 +7,63 @@ function graphicsDisplayer (data_dict) {
 
 	var graphics_div = document.querySelector("#graph_visual")
 
+	// Ajout de la légend
+	let div_ = document.createElement('div')
+	div_.id = "legend"
+	document.querySelector("#graph_visual").appendChild(div_)
+	makeLegend(data_dict)
+
+	// Ajout des graphes
 	for (var i=0 ; i<n_graphs ; i++) {
 		let div_ = document.createElement('div')
 		div_.id = "frame-"+i+""
 		document.querySelector("#graph_visual").appendChild(div_)
 		makeUnitGraph(Object.keys(data_dict)[i], data_dict[Object.keys(data_dict)[i]], i, n_graphs)
 	}
+
+}
+
+function makeLegend (data_dict) {
+	let names = []
+	// Récupération des noms des satellites
+	for (const attr in data_dict) {
+		for (var i=0 ; i<data_dict[String(attr)].length ; i++) {
+  			if(!(names.indexOf(data_dict[String(attr)][i].name) > -1))
+				names.push(data_dict[String(attr)][i].name)
+		}
+	}
+
+	var margin = {top: 10, right: 10, bottom: 10, left: 10},
+	    width = 300 - margin.left - margin.right,
+	    height = 100 - margin.top - margin.bottom
+
+	var svg = d3.select("#legend")
+				.append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom)
+			    .append("g")
+			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+			    	.selectAll('g')
+			  		.data(names)
+			  		.enter()
+					.append('g')
+
+	svg.append('rect')
+					.attr("class", (d, i) => {return "line-"+i+" line"})
+					// .attr('fill', (d, i) => {return "lightgreen"})
+					.attr('width', 30)
+					.attr('height', 1)
+					.attr('x', 0)	
+					.attr('y', (d, i) => {return 15*i;})
+
+	svg.append("text")
+					.attr("class", "legend")
+	  				.attr("dx", 40)
+	  				.attr("dy", 4)
+	  				.style("text-anchor", "start")
+	  				.text((d, i) => {console.log(names[i]); return names[i]}) 
+	  				.attr('x', 0)	
+					.attr('y', (d, i) => {return 15*i;})
 
 }
 
@@ -26,7 +77,7 @@ function makeUnitGraph (prm_name, orb_parm_data, num, n_graphs) {
 
 
 	var margin = {top: 30, right: 150, bottom: 30, left: 100},
-	    width = 1200 - margin.left - margin.right,
+	    width = 1300 - margin.left - margin.right,
 	    height = (650/n_graphs) - margin.top - margin.bottom
 
 	var svg = d3.select("#frame-"+num+"")
@@ -89,15 +140,15 @@ function makeUnitGraph (prm_name, orb_parm_data, num, n_graphs) {
  	 .attr("class", (d, i) => {return "line-"+i+" line"})
 	 .attr("d", (d) => { return line(d.vals); } )
 
-    // lines.append("text")
-    // .attr("class","serie_label")
-    // .datum((d) => { 
-    //     return { name: d.name, vals: d.vals[d.vals.length - 1]}; })
-    // .attr("transform", function(d) { 
-    //         return "translate(" + (x_scale(d.vals.time) + 0)  
-    //         + "," + (y_scale(d.vals.value) + 5 ) + ")";})
-    // .attr("x", 5)
-    // .text(function(d) { return d.name; });
+    lines.append("text")
+    .attr("class","serie_label")
+    .datum((d) => { 
+        return { name: d.name, vals: d.vals[d.vals.length - 1]}; })
+    .attr("transform", function(d) { 
+            return "translate(" + (x_scale(d.vals.time) + 0)  
+            + "," + (y_scale(d.vals.value) + 5 ) + ")";})
+    .attr("x", 5)
+    .text(function(d) { return d.name; });
 
     let brush = d3.brushX() 
     .extent( [ [0,0], [width,height] ] )

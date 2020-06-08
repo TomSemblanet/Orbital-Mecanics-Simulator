@@ -4,6 +4,7 @@
   "description": "FlyBy project",
   "main": "main.js",
   "dependencies": {
+    "d3-geo": "^1.12.1",
     "electron": "^8.2.4",
     "python-shell": "^1.0.8"
   },

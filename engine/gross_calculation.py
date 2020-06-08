@@ -55,8 +55,8 @@ def GeneralCalculation (exploitation_dict) :
 	requested_bodies = [body for body in np.concatenate((satellites_list, celestial_bodies_list)) if body.name in requested_bodies_names]
 
 	position_attributes_names = ["r_cr", "v_cr", "r_abs", "v_abs"] # contient les paramètres à récupérer nécessairement 
-	orbit_attributes_names = [] # contient les paramètres optionnels que peut demander l'utilisateur
-	optional_position_attributes_name = [] # contient les paramètres optionnels que peut demander l'utilisateur
+	orbit_attributes_names = [] # contient les paramètres orbitaux optionnels que peut demander l'utilisateur 
+	optional_position_attributes_name = ["longitude", "latitude"] # contient les paramètres optionnels que peut demander l'utilisateur
 
 	inv_conv_table = {v: k for k, v in conv_table.items()} # inversion du dictionnaire conv_table
 
@@ -71,6 +71,10 @@ def GeneralCalculation (exploitation_dict) :
 			orbit_attributes_names.append(translated_key)
 		else : 
 			optional_position_attributes_name.append(translated_key)
+
+	# Suppression des doublons
+	orbit_attributes_names = list(set(orbit_attributes_names))
+	optional_position_attributes_name = list(set(optional_position_attributes_name))
 
 	dictionnary = dict()
 
