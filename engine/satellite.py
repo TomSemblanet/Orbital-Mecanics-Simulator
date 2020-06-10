@@ -151,7 +151,7 @@ class Satellite :
 		self.true_anomaly = self.orbit.true_anomaly
 		self.initial_true_anomaly = self.true_anomaly
 
-		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1))) % (2*math.pi) - math.pi
+		self.longitude = (math.atan(self.r_cr[1]/self.r_cr[0]) + math.pi/2*(1-np.sign(self.r_cr[0]*1)) - cst.wTe*prm.parameters["time"]["elapsed time"]) % (2*math.pi) - math.pi
 		self.latitude = (math.atan(self.r_cr[2]/math.sqrt(self.r_cr[0]*self.r_cr[0]+self.r_cr[1]*self.r_cr[1])))
 
 

@@ -52,13 +52,14 @@ function getLongitudeLatitude (raw_results, renderer_prm) {
 	for (var i=0 ; i<sat_list.length ; i++) 
 		sats_dict[sat_list[i]] = []
 
+
 	// Récupération des données depuis le fichier renvoyé par le moteur de calcul
 	for (var j=0 ; j<sat_list.length ; j++) {
 		for (var i=0 ; i<raw_results["time steps"].length ; i++) {
 			sats_dict[sat_list[j]].push([raw_results[sat_list[j]].Longitude[i], raw_results[sat_list[j]].Latitude[i]])
 		}
 	}
-
+	
 	const fsLibrary  = require('fs')
 	fsLibrary.writeFile('long_lat.json', JSON.stringify(sats_dict["SAT"]), (error) => { 
       
@@ -67,8 +68,6 @@ function getLongitudeLatitude (raw_results, renderer_prm) {
     	console.log("ERROR "); 
 	}) 
 
-	console.log(">>>")
-	console.log(sats_dict)
 	return sats_dict
 }
 
